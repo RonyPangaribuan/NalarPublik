@@ -1,35 +1,72 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next'
+import { DM_Sans, Manrope } from 'next/font/google'
+import './globals.css'
+import { Navbar } from '@/components/navbar'
+import { Footer } from '@/components/footer'
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const dmSans = DM_Sans({
+  variable: '--font-dm-sans',
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+})
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const manrope = Manrope({
+  variable: '--font-manrope',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
-  title: "NalarPublik",
+  title: {
+    default: 'NalarPublik — Transparansi Anggaran Daerah Kabupaten Toba',
+    template: '%s | NalarPublik',
+  },
   description:
-    "Sistem pendukung keputusan alokasi anggaran daerah berbasis data terbuka.",
-};
+    'Platform data-driven decision support yang menyandingkan data BPS, APBD Kabupaten Toba, dan aspirasi warga untuk kebijakan anggaran berbasis bukti.',
+  keywords: ['APBD', 'Kabupaten Toba', 'transparansi anggaran', 'BPS', 'Musrenbang', 'civic tech'],
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+  },
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const stored = localStorage.getItem('nalarpublik-theme');
+                const isDark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                if (isDark) {
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.setAttribute('data-theme', 'light');
+                }
+              } catch (_) {}
+            `,
+          }}
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${dmSans.variable} ${manrope.variable} antialiased min-h-screen flex flex-col bg-background text-foreground transition-colors duration-200`}
+        style={{ fontFamily: 'var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif' }}
       >
-        {children}
+        <Navbar />
+        <main className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
-  );
+  )
 }
