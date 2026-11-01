@@ -107,13 +107,45 @@ Isi nilai pada `.env.local` saat integrasi Supabase dan BPS mulai dikerjakan. Ga
 
 **Status implementasi aktual:** perbarui bagian ini berdasarkan commit dan fitur yang sudah diuji. Jangan mencentang fitur sebelum benar-benar berjalan.
 
-## Tim
+## Tim dan Pembagian Tugas
 
-| Anggota | Peran | Fokus |
+| Anggota | Peran | Tanggung Jawab Utama |
 | --- | --- | --- |
-| Rony | Project Manager & Hustler | Riset APBD/BPS, dokumentasi, proposal, administrasi, pitching |
-| Boy | Data & Backend Engineer | Next.js setup, Supabase, API BPS, kalkulasi, penyimpanan simulator |
-| Max | Design & Frontend Engineer | UI/UX, halaman, visualisasi Recharts, peta React-Leaflet |
+| Rony | Project Manager & Hustler | Koordinasi proyek, proposal, dokumentasi, administrasi kompetisi, dan video *pitching* |
+| Boy | Data & Visualization Engineer | Pengumpulan dan pembersihan data publik APBD/BPS serta integrasi data ke grafik dan peta |
+| Max | Frontend Engineer | Kerangka Next.js, komponen UI Tailwind CSS, *routing*, dan logika **Quick Role Switcher** |
+
+### Rincian Tanggung Jawab
+
+#### Rony - Project Manager & Hustler
+
+- Mengoordinasikan target, jadwal, dan hasil serahan tim pada setiap milestone.
+- Menyusun proposal final maksimal 30 halaman dan memelihara dokumentasi proyek, termasuk `README.md`.
+- Menyiapkan berkas administrasi kompetisi, termasuk Surat Orisinalitas bermeterai.
+- Menyusun materi dan memproduksi video *pitching* maksimal 5 menit.
+- Mengoordinasikan pengumpulan final melalui kanal resmi kompetisi pada 11 November 2026.
+
+#### Boy - Data & Visualization Engineer
+
+- Mengumpulkan data publik APBD dan BPS yang relevan serta mencatat sumber, tahun, satuan, dan cakupan wilayahnya.
+- Membersihkan, memvalidasi, dan menyiapkan data agar dapat digunakan secara konsisten oleh aplikasi.
+- Mengintegrasikan data ke grafik menggunakan Recharts.
+- Mengintegrasikan data geospasial ke peta menggunakan React-Leaflet.
+- Memastikan visualisasi menggunakan data nyata yang telah diverifikasi dan memberi label yang jelas pada data simulasi atau *dummy*.
+
+#### Max - Frontend Engineer
+
+- Membangun dan memelihara kerangka aplikasi Next.js beserta struktur navigasi dan *routing*.
+- Merakit komponen antarmuka yang responsif menggunakan Tailwind CSS dan shadcn/ui.
+- Mengimplementasikan *landing page*, *navbar*, serta **Quick Role Switcher** untuk Mode Warga dan Mode Admin.
+- Mengelola *state* antarmuka dengan Zustand, termasuk interaksi slider pada Simulator Anggaran Partisipatif.
+- Menghubungkan komponen frontend dengan grafik, peta, dan data yang telah disiapkan.
+
+### Kolaborasi Lintas Peran
+
+- **Max dan Boy:** mengintegrasikan peta, grafik, data publik, dan logika simulator agar dapat digunakan secara fungsional.
+- **Rony dan seluruh tim:** meninjau kesesuaian karya dengan aturan kompetisi serta memastikan narasi proposal, demo, dan data konsisten.
+- **Seluruh tim:** melakukan pengujian, perbaikan bug, perapian UI, pengecekan deployment, dan validasi hasil sebelum penyerahan final.
 
 ## Prinsip Data & Privasi
 
