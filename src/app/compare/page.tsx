@@ -79,21 +79,21 @@ export default function ComparePage() {
             <select
               value={districtAId}
               onChange={(e) => setDistrictAId(e.target.value)}
-              className="w-full rounded-xl border border-border bg-muted/30 px-4 py-3 text-base font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+              className="w-full rounded-xl border border-border/80 dark:border-slate-700 bg-muted/70 dark:bg-slate-800 px-4 py-3 text-base font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer shadow-xs hover:border-border dark:hover:border-slate-600 transition-colors"
             >
               {INITIAL_DISTRICTS.map((d) => (
-                <option key={d.id} value={d.id} className="bg-card text-foreground">
+                <option key={d.id} value={d.id} className="bg-card dark:bg-slate-800 text-foreground">
                   {d.name}
                 </option>
               ))}
             </select>
 
             <div className="grid grid-cols-2 gap-3 pt-1 text-xs">
-              <div className="bg-muted/30 p-3 rounded-xl border border-border">
+              <div className="bg-muted/50 dark:bg-slate-800/60 p-3 rounded-xl border border-border/70 dark:border-slate-700/60">
                 <span className="text-muted-foreground block text-[10px] font-mono uppercase tracking-wider">Total Alokasi APBD</span>
                 <strong className="text-sm font-mono text-foreground">{formatRupiah(distA.total_budget_idr)}</strong>
               </div>
-              <div className="bg-muted/30 p-3 rounded-xl border border-border">
+              <div className="bg-muted/50 dark:bg-slate-800/60 p-3 rounded-xl border border-border/70 dark:border-slate-700/60">
                 <span className="text-muted-foreground block text-[10px] font-mono uppercase tracking-wider">Jumlah Penduduk</span>
                 <strong className="text-sm font-mono text-foreground">{distA.population.toLocaleString('id-ID')} jiwa</strong>
               </div>
@@ -116,21 +116,21 @@ export default function ComparePage() {
             <select
               value={districtBId}
               onChange={(e) => setDistrictBId(e.target.value)}
-              className="w-full rounded-xl border border-border bg-muted/30 px-4 py-3 text-base font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+              className="w-full rounded-xl border border-border/80 dark:border-slate-700 bg-muted/70 dark:bg-slate-800 px-4 py-3 text-base font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer shadow-xs hover:border-border dark:hover:border-slate-600 transition-colors"
             >
               {INITIAL_DISTRICTS.map((d) => (
-                <option key={d.id} value={d.id} className="bg-card text-foreground">
+                <option key={d.id} value={d.id} className="bg-card dark:bg-slate-800 text-foreground">
                   {d.name}
                 </option>
               ))}
             </select>
 
             <div className="grid grid-cols-2 gap-3 pt-1 text-xs">
-              <div className="bg-muted/30 p-3 rounded-xl border border-border">
+              <div className="bg-muted/50 dark:bg-slate-800/60 p-3 rounded-xl border border-border/70 dark:border-slate-700/60">
                 <span className="text-muted-foreground block text-[10px] font-mono uppercase tracking-wider">Total Alokasi APBD</span>
                 <strong className="text-sm font-mono text-foreground">{formatRupiah(distB.total_budget_idr)}</strong>
               </div>
-              <div className="bg-muted/30 p-3 rounded-xl border border-border">
+              <div className="bg-muted/50 dark:bg-slate-800/60 p-3 rounded-xl border border-border/70 dark:border-slate-700/60">
                 <span className="text-muted-foreground block text-[10px] font-mono uppercase tracking-wider">Jumlah Penduduk</span>
                 <strong className="text-sm font-mono text-foreground">{distB.population.toLocaleString('id-ID')} jiwa</strong>
               </div>
@@ -169,7 +169,7 @@ export default function ComparePage() {
             <div className="space-y-4">
 
               {/* Sektor 1: Infrastruktur */}
-              <div className="bg-muted/20 border border-border rounded-xl p-4 space-y-2.5">
+              <div className="bg-muted/40 dark:bg-slate-800/60 border border-border/80 dark:border-slate-700/60 rounded-xl p-4 space-y-2.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-foreground flex items-center gap-2">
                     <Building2 className="size-3.5 text-muted-foreground" /> Infrastruktur Jalan
@@ -194,7 +194,7 @@ export default function ComparePage() {
                         Masalah <strong className="text-foreground">{distA.infra_problem_pct}%</strong> · APBD <strong className="text-foreground">{distA.budget_infra_pct}%</strong>
                       </span>
                     </div>
-                    <div className="h-1.5 bg-muted rounded-sm overflow-hidden flex">
+                    <div className="h-1.5 bg-muted-foreground/15 dark:bg-slate-700/70 rounded-sm overflow-hidden flex">
                       <div className="h-full bg-primary" style={{ width: `${distA.infra_problem_pct}%` }} />
                     </div>
                   </div>
@@ -206,7 +206,7 @@ export default function ComparePage() {
                         Masalah <strong className="text-foreground">{distB.infra_problem_pct}%</strong> · APBD <strong className="text-foreground">{distB.budget_infra_pct}%</strong>
                       </span>
                     </div>
-                    <div className="h-1.5 bg-muted rounded-sm overflow-hidden flex">
+                    <div className="h-1.5 bg-muted-foreground/15 dark:bg-slate-700/70 rounded-sm overflow-hidden flex">
                       <div className="h-full bg-emerald-500" style={{ width: `${distB.infra_problem_pct}%` }} />
                     </div>
                   </div>
@@ -214,7 +214,7 @@ export default function ComparePage() {
               </div>
 
               {/* Sektor 2: Kesehatan */}
-              <div className="bg-muted/20 border border-border rounded-xl p-4 space-y-2.5">
+              <div className="bg-muted/40 dark:bg-slate-800/60 border border-border/80 dark:border-slate-700/60 rounded-xl p-4 space-y-2.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-foreground flex items-center gap-2">
                     <Heart className="size-3.5 text-muted-foreground" /> Kesehatan &amp; Stunting
@@ -239,7 +239,7 @@ export default function ComparePage() {
                         Masalah <strong className="text-foreground">{distA.health_problem_pct}%</strong> · APBD <strong className="text-foreground">{distA.budget_health_pct}%</strong>
                       </span>
                     </div>
-                    <div className="h-1.5 bg-muted rounded-sm overflow-hidden flex">
+                    <div className="h-1.5 bg-muted-foreground/15 dark:bg-slate-700/70 rounded-sm overflow-hidden flex">
                       <div className="h-full bg-primary" style={{ width: `${distA.health_problem_pct}%` }} />
                     </div>
                   </div>
@@ -251,7 +251,7 @@ export default function ComparePage() {
                         Masalah <strong className="text-foreground">{distB.health_problem_pct}%</strong> · APBD <strong className="text-foreground">{distB.budget_health_pct}%</strong>
                       </span>
                     </div>
-                    <div className="h-1.5 bg-muted rounded-sm overflow-hidden flex">
+                    <div className="h-1.5 bg-muted-foreground/15 dark:bg-slate-700/70 rounded-sm overflow-hidden flex">
                       <div className="h-full bg-emerald-500" style={{ width: `${distB.health_problem_pct}%` }} />
                     </div>
                   </div>
@@ -259,7 +259,7 @@ export default function ComparePage() {
               </div>
 
               {/* Sektor 3: Pendidikan */}
-              <div className="bg-muted/20 border border-border rounded-xl p-4 space-y-2.5">
+              <div className="bg-muted/40 dark:bg-slate-800/60 border border-border/80 dark:border-slate-700/60 rounded-xl p-4 space-y-2.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-foreground flex items-center gap-2">
                     <GraduationCap className="size-3.5 text-muted-foreground" /> Pendidikan &amp; Ruang Kelas
@@ -284,7 +284,7 @@ export default function ComparePage() {
                         Masalah <strong className="text-foreground">{distA.edu_problem_pct}%</strong> · APBD <strong className="text-foreground">{distA.budget_edu_pct}%</strong>
                       </span>
                     </div>
-                    <div className="h-1.5 bg-muted rounded-sm overflow-hidden flex">
+                    <div className="h-1.5 bg-muted-foreground/15 dark:bg-slate-700/70 rounded-sm overflow-hidden flex">
                       <div className="h-full bg-primary" style={{ width: `${distA.edu_problem_pct}%` }} />
                     </div>
                   </div>
@@ -296,7 +296,7 @@ export default function ComparePage() {
                         Masalah <strong className="text-foreground">{distB.edu_problem_pct}%</strong> · APBD <strong className="text-foreground">{distB.budget_edu_pct}%</strong>
                       </span>
                     </div>
-                    <div className="h-1.5 bg-muted rounded-sm overflow-hidden flex">
+                    <div className="h-1.5 bg-muted-foreground/15 dark:bg-slate-700/70 rounded-sm overflow-hidden flex">
                       <div className="h-full bg-emerald-500" style={{ width: `${distB.edu_problem_pct}%` }} />
                     </div>
                   </div>
@@ -304,7 +304,7 @@ export default function ComparePage() {
               </div>
 
               {/* Sektor 4: Sosial */}
-              <div className="bg-muted/20 border border-border rounded-xl p-4 space-y-2.5">
+              <div className="bg-muted/40 dark:bg-slate-800/60 border border-border/80 dark:border-slate-700/60 rounded-xl p-4 space-y-2.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-foreground flex items-center gap-2">
                     <Users className="size-3.5 text-muted-foreground" /> Penduduk Miskin &amp; Sosial

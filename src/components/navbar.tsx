@@ -27,7 +27,7 @@ const ADMIN_LINKS = [
 ]
 
 // ── Mode Switch ──────────────────────────────────────────────────────────────
-function ModeSwitch() {
+function ModeSwitch({ className, fullWidth }: { className?: string; fullWidth?: boolean }) {
   const { role, setRole } = useRoleStore()
   const [mounted, setMounted] = useState(false)
   useEffect(() => { setMounted(true) }, [])
@@ -35,7 +35,11 @@ function ModeSwitch() {
 
   return (
     <div
-      className="flex items-center rounded-lg border border-border bg-muted p-0.5 text-xs font-semibold"
+      className={cn(
+        'flex items-center rounded-lg border border-border bg-muted p-0.5 text-xs font-semibold',
+        fullWidth && 'w-full',
+        className
+      )}
       role="group"
       aria-label="Pilih mode"
     >
@@ -43,8 +47,9 @@ function ModeSwitch() {
         onClick={() => setRole('public')}
         className={cn(
           'rounded-md px-3 py-1.5 transition-all duration-200',
+          fullWidth && 'flex-1 text-center',
           role === 'public'
-            ? 'bg-card text-foreground shadow-sm'
+            ? 'bg-card text-foreground shadow-sm font-bold'
             : 'text-muted-foreground hover:text-foreground'
         )}
       >
@@ -54,8 +59,9 @@ function ModeSwitch() {
         onClick={() => setRole('admin')}
         className={cn(
           'rounded-md px-3 py-1.5 transition-all duration-200',
+          fullWidth && 'flex-1 text-center',
           role === 'admin'
-            ? 'bg-card text-foreground shadow-sm'
+            ? 'bg-card text-foreground shadow-sm font-bold'
             : 'text-muted-foreground hover:text-foreground'
         )}
       >
@@ -66,7 +72,7 @@ function ModeSwitch() {
 }
 
 // ── Theme Toggle — sets .dark & [data-theme="dark"] on <html> globally ───────
-function ThemeToggle() {
+function ThemeToggle({ className, fullWidth }: { className?: string; fullWidth?: boolean }) {
   const [dark, setDark] = useState(false)
   const [mounted, setMounted] = useState(false)
 
@@ -102,7 +108,11 @@ function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={dark ? 'Ubah ke tema terang' : 'Ubah ke tema gelap'}
-      className="flex items-center gap-1.5 rounded-lg border border-border bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+      className={cn(
+        'flex items-center justify-center gap-1.5 rounded-lg border border-border bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors',
+        fullWidth && 'w-full',
+        className
+      )}
     >
       {dark ? <Sun size={15} /> : <Moon size={15} />}
       <span>{dark ? 'Terang' : 'Gelap'}</span>
@@ -138,11 +148,11 @@ export function Navbar() {
       {/* Floating inner nav */}
       <div
         className={cn(
-          'mx-auto mt-3.5 flex items-center justify-between px-4 transition-all duration-300',
+          'mx-auto mt-2.5 sm:mt-3.5 flex items-center justify-between px-3 sm:px-4 transition-all duration-300',
           'rounded-[14px] border border-border',
           'bg-card/95 backdrop-blur-[16px]',
-          'w-[calc(100%-24px)] max-w-[1400px]',
-          'h-[58px]',
+          'w-[calc(100%-20px)] sm:w-[calc(100%-24px)] max-w-[1400px]',
+          'h-[54px] sm:h-[58px]',
           scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.18)]' : 'shadow-[0_4px_24px_rgba(0,0,0,0.06)]'
         )}
       >
@@ -151,7 +161,7 @@ export function Navbar() {
           <Logo size="sm" />
         </Link>
 
-        {/* Desktop Nav */}
+        {/* Desktop Nav (Hidden on Mobile) */}
         <nav className="hidden md:flex items-center gap-0.5" aria-label="Navigasi utama">
           {links.map((link) => {
             const active = isActive(link.href)
@@ -176,17 +186,20 @@ export function Navbar() {
         </nav>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2">
-          {/* Search bar di sebelah kiri toggle mode warga/admin */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Search bar: desktop inline input, mobile icon trigger modal */}
           <NavbarSearch />
 
-          <div className="hidden sm:flex items-center gap-2">
+          {/* Desktop Only: Role Switch & Theme Toggle (HIDDEN on Mobile/Tablet to eliminate redundancy) */}
+          <div className="hidden md:flex items-center gap-2">
             <ModeSwitch />
             <ThemeToggle />
           </div>
+
+          {/* Mobile Only: Hamburger Toggle Button */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className="md:hidden flex items-center justify-center rounded-lg border border-border p-2 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            className="md:hidden flex items-center justify-center size-9 rounded-lg border border-border bg-muted/30 p-2 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0"
             aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
           >
             {mobileOpen ? <X size={18} /> : <Menu size={18} />}
@@ -194,14 +207,22 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Dropdown */}
+      {/* Mobile Backdrop Overlay (Tap to close) */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Mobile Dropdown Drawer */}
       <div
         className={cn(
-          'md:hidden mx-3 mt-1 overflow-hidden rounded-[10px] border border-border bg-card shadow-lg transition-all duration-300',
-          mobileOpen ? 'max-h-96 opacity-100 p-2' : 'max-h-0 opacity-0 p-0 border-transparent shadow-none'
+          'md:hidden relative z-50 mx-2.5 sm:mx-3 mt-1.5 overflow-hidden rounded-2xl border border-border bg-card/95 backdrop-blur-xl shadow-2xl transition-all duration-300',
+          mobileOpen ? 'max-h-[500px] opacity-100 p-3' : 'max-h-0 opacity-0 p-0 border-transparent shadow-none pointer-events-none'
         )}
       >
-        <div className="space-y-0.5">
+        <div className="space-y-1">
           {links.map((link) => {
             const active = isActive(link.href)
             const isAdminLink = link.href.startsWith('/admin')
@@ -209,22 +230,32 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={() => setMobileOpen(false)}
                 className={cn(
-                  'flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                  'flex items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-colors',
                   active
-                    ? 'bg-accent text-primary font-semibold'
+                    ? 'bg-primary/10 text-primary'
                     : isAdminLink
                       ? 'text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-500/10'
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
               >
-                {link.label}
+                <span>{link.label}</span>
+                {active && <span className="size-2 rounded-full bg-primary" />}
               </Link>
             )
           })}
-          <div className="flex items-center gap-2 px-3 pt-2 pb-1 border-t border-border mt-1">
-            <ModeSwitch />
-            <ThemeToggle />
+
+          {/* Section Divider & Settings in Mobile Drawer */}
+          <div className="pt-3 pb-1 border-t border-border mt-2 space-y-2">
+            <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-muted-foreground px-1">
+              <span>Peran Pengguna</span>
+              <span>Tampilan</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <ModeSwitch fullWidth />
+              <ThemeToggle fullWidth />
+            </div>
           </div>
         </div>
       </div>

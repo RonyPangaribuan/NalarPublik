@@ -31,20 +31,18 @@ export function TobaTopoBackground({ className = '', variant = 'hero' }: TobaTop
           }}
         />
 
-        {/* ── Layer 2: Editorial Subtle Gradient Wash ── */}
+        {/* ── Layer 2: Editorial Gradient Wash (Feature vs Hero) ── */}
         {isFeature ? (
           <>
-            {/* Top-to-bottom soft fade so text & navbar remain pristine */}
             <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/60 to-background dark:from-background/50 dark:via-background/80 dark:to-background" />
-            {/* Lateral vignette */}
             <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/60 dark:from-background/70 dark:via-transparent dark:to-background/70" />
           </>
         ) : (
           <>
-            {/* Soft, minimal vignette on the left for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-background/40 to-transparent/10 dark:from-background/80 dark:via-background/50 dark:to-transparent/20" />
-            {/* Vertical fade ONLY at the bottom 20% edge of the 100vh first fold */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent via-80% to-background dark:from-transparent dark:via-transparent dark:via-80% to-background" />
+            {/* ── Lapisan Transparan MERATA di Seluruh Homepage Hero (Tanpa Belang, Tanpa Spot, Intensitas Lembut) ── */}
+            <div className="absolute inset-0 bg-white/35 dark:bg-[#0a0e16]/55 transition-colors duration-300" />
+            {/* Transisi halus di bagian paling ujung bawah 100vh */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent via-[92%] to-background/80 dark:to-background/80" />
           </>
         )}
       </div>

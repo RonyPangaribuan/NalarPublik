@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 88" width="430" height="88" fill="none">
+  <!-- Ikon NalarPublik (Perspektif Publik - Dark Mode) -->
+  <path fill-rule="evenodd" d="M8 66L23 33C25 28.5 30.5 28.5 32.5 33L41 51L55 21C61 9.5 73.5 6 87 8C104 10.5 114 24.5 112 41.5C110 56.5 97 65.5 81 64.5L74 64C72.5 71 67.5 75.5 61 78V29L46 60C44 64.5 38.5 64.5 36.5 60L27.5 42L17 66H8ZM87 20C96.4 20 104 27.6 104 37C104 46.4 96.4 54 87 54C83 54 79.3 52.7 76.3 50.5L68.5 54.5L71.2 46C70.4 43.2 70 40.2 70 37C70 27.6 77.6 20 87 20Z" fill="#9BC5DF" />
+  
+  <!-- Tipografi NalarPublik -->
+  <text x="130" y="57" font-family="&#39;Plus Jakarta Sans&#39;, &#39;Inter&#39;, system-ui, -apple-system, sans-serif" font-size="44" letter-spacing="-0.03em">
+    <tspan font-weight="800" fill="#FFFFFF">Nalar</tspan><tspan font-weight="400" fill="#FFFFFF">Publik</tspan>
+  </text>
+</svg>

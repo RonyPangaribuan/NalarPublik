@@ -10,10 +10,10 @@ import {
   Database,
   MapPin,
   TrendingDown,
+  Check,
   CheckCircle2,
   AlertCircle,
   Activity,
-  ExternalLink,
   Users,
   Building2,
 } from 'lucide-react'
@@ -136,65 +136,71 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════════════
           MODULE 1: HERO SECTION (FULL 100VH 1-PAGE VIEWPORT)
       ══════════════════════════════════════════════════════════════════ */}
-      <section className="relative z-10 min-h-screen flex flex-col justify-between pt-24 pb-8 sm:pt-28 sm:pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="relative z-10 min-h-0 lg:min-h-screen flex flex-col justify-start lg:justify-between pt-[84px] sm:pt-24 lg:pt-28 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         
-        {/* Main Hero Row (Centered Vertically) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center my-auto">
+        {/* Main Hero Row (Mobile: Map First [order-1] then Text [order-2], Desktop: Side-by-Side Centered) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 lg:gap-12 items-center my-0 lg:my-auto">
 
-          {/* Left Column: Headline (Strictly 2 lines) & Action */}
-          <div className="lg:col-span-7 space-y-6">
+          {/* Left Column: Headline (Strictly 2 lines) & Action — order-2 di mobile, order-1 di desktop */}
+          <div className="lg:col-span-7 order-2 lg:order-1 space-y-4 sm:space-y-6 text-center lg:text-left">
             <h1
-              className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold tracking-tight leading-[1.14] text-foreground"
+              className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold tracking-tight leading-[1.14] text-slate-950 dark:text-white mx-auto lg:mx-0"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Kawal APBD Kabupaten Toba,
               <br />
-              <span className="text-primary">Berbasis Data Nyata.</span>
+              <span className="text-blue-900 dark:text-sky-300 font-black">Berbasis Data Nyata.</span>
             </h1>
 
-            <p className="text-sm sm:text-base text-slate-800 dark:text-slate-200 font-normal leading-relaxed max-w-xl">
+            <p className="text-sm sm:text-base text-slate-900 dark:text-slate-100 font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
               Menyandingkan data kebutuhan warga dengan alokasi anggaran daerah untuk memastikan
               setiap rupiah tepat sasaran bagi masyarakat Kabupaten Toba. 
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            {/* CTAs — Centered & Dikecilkan di Mobile */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2.5 sm:gap-3 pt-1">
               <Link
                 href="/map"
-                className="inline-flex items-center gap-2.5 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 active:scale-[0.98] shadow-sm"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 active:scale-[0.98] shadow-sm"
               >
                 <span>Peta Kesenjangan Anggaran</span>
-                <ArrowRight size={16} />
+                <ArrowRight size={15} />
               </Link>
               <Link
                 href="/simulator"
-                className="inline-flex items-center gap-2.5 rounded-lg border border-border bg-card/90 backdrop-blur-sm px-5 py-3 text-sm font-semibold text-foreground transition-all hover:bg-muted active:scale-[0.98] shadow-sm"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-card/90 backdrop-blur-sm px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold text-foreground transition-all hover:bg-muted active:scale-[0.98] shadow-sm"
               >
-                <Sliders size={16} className="text-muted-foreground" />
+                <Sliders size={15} className="text-muted-foreground" />
                 <span>Simulasi Anggaran Warga</span>
               </Link>
             </div>
 
-            {/* Verification Proofs */}
-            <div className="flex flex-wrap items-center gap-6 pt-1 text-xs font-medium text-slate-700 dark:text-slate-300">
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
-                Data BPS &amp; Anggaran Resmi
-              </span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
-                Formula Terbuka
-              </span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
-                Tanpa Login
-              </span>
+            {/* Verification Proofs — Centered & Dikecilkan di Mobile (No Card) */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-4 gap-y-1.5 sm:gap-x-6 sm:gap-y-2 pt-1 text-[11px] sm:text-xs font-bold text-slate-950 dark:text-white">
+              <div className="inline-flex items-center gap-1.5 sm:gap-2">
+                <span className="size-4 sm:size-4.5 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <Check className="size-2.5 sm:size-3 stroke-[3.5]" />
+                </span>
+                <span>Data BPS &amp; Anggaran Resmi</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 sm:gap-2">
+                <span className="size-4 sm:size-4.5 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <Check className="size-2.5 sm:size-3 stroke-[3.5]" />
+                </span>
+                <span>Formula Terbuka</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 sm:gap-2">
+                <span className="size-4 sm:size-4.5 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <Check className="size-2.5 sm:size-3 stroke-[3.5]" />
+                </span>
+                <span>Tanpa Login</span>
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Peta & Animasi Borderless (Tanpa Card Box Apapun) */}
-          <div className="lg:col-span-5 flex flex-col items-center lg:items-end justify-center select-none">
-            <div className="w-full max-w-[420px] space-y-3">
+          {/* Right Column: Peta & Animasi Borderless — order-1 di mobile (tampil pertama), order-2 di desktop */}
+          <div className="lg:col-span-5 order-1 lg:order-2 flex flex-col items-center lg:items-end justify-center select-none w-full">
+            <div className="w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[420px] space-y-2 sm:space-y-3">
               
               {/* Header HUD Borderless */}
               <div className="flex items-center justify-between px-1">
@@ -217,46 +223,63 @@ export default function HomePage() {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <defs>
-                    {/* Circular ambient radar glow */}
+                    {/* Circular ambient radar glow — dipertegas */}
                     <radialGradient id="radarAmbient" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="#0284c7" stopOpacity="0.16" />
-                      <stop offset="70%" stopColor="#0284c7" stopOpacity="0.05" />
-                      <stop offset="100%" stopColor="#0284c7" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#1668e8" stopOpacity="0.30" />
+                      <stop offset="70%" stopColor="#1668e8" stopOpacity="0.12" />
+                      <stop offset="100%" stopColor="#1668e8" stopOpacity="0" />
                     </radialGradient>
 
-                    {/* Sweeping radar scanner sector gradient */}
+                    {/* Siluet Danau Toba Blue Gradient — dipertegas & solid */}
+                    <linearGradient id="lakeFillGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#1668e8" stopOpacity="0.55" />
+                      <stop offset="60%" stopColor="#0284c7" stopOpacity="0.42" />
+                      <stop offset="100%" stopColor="#0369a1" stopOpacity="0.32" />
+                    </linearGradient>
+
+                    {/* Sweeping radar scanner sector gradient — dipertegas */}
                     <linearGradient id="radarSweepGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#0284c7" stopOpacity="0.38" />
-                      <stop offset="100%" stopColor="#0284c7" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#1668e8" stopOpacity="0.65" />
+                      <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.05" />
                     </linearGradient>
                   </defs>
 
                   {/* Radar Scope Ambient Glow */}
                   <circle cx="160" cy="140" r="110" fill="url(#radarAmbient)" />
 
-                  {/* Concentric Radar Rings */}
-                  <circle cx="160" cy="140" r="110" fill="none" stroke="currentColor" strokeWidth="0.8" className="text-slate-500/40 dark:text-slate-400/40" strokeDasharray="3 3" />
-                  <circle cx="160" cy="140" r="70" fill="none" stroke="currentColor" strokeWidth="0.8" className="text-slate-500/50 dark:text-slate-400/50" />
-                  <circle cx="160" cy="140" r="30" fill="none" stroke="currentColor" strokeWidth="1" className="text-primary/40" />
+                  {/* Concentric Radar Rings — Garis Hitam Pekat Dipertegas */}
+                  <circle cx="160" cy="140" r="110" fill="none" stroke="#0f172a" strokeWidth="1.6" strokeOpacity="0.75" strokeDasharray="4 3" className="dark:stroke-slate-200 dark:stroke-opacity-70" />
+                  <circle cx="160" cy="140" r="70" fill="none" stroke="#0f172a" strokeWidth="1.8" strokeOpacity="0.85" className="dark:stroke-slate-200 dark:stroke-opacity-80" />
+                  <circle cx="160" cy="140" r="30" fill="none" stroke="#0f172a" strokeWidth="2.0" strokeOpacity="0.9" className="dark:stroke-slate-200 dark:stroke-opacity-90" />
                   
-                  {/* Radar Crosshairs */}
-                  <line x1="160" y1="20" x2="160" y2="250" stroke="currentColor" strokeWidth="0.7" className="text-slate-500/40 dark:text-slate-400/40" />
-                  <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="0.7" className="text-slate-500/40 dark:text-slate-400/40" />
+                  {/* Radar Crosshairs — Garis Hitam Pekat Dipertegas */}
+                  <line x1="160" y1="20" x2="160" y2="250" stroke="#0f172a" strokeWidth="1.6" strokeOpacity="0.75" className="dark:stroke-slate-200 dark:stroke-opacity-75" />
+                  <line x1="40" y1="140" x2="280" y2="140" stroke="#0f172a" strokeWidth="1.6" strokeOpacity="0.75" className="dark:stroke-slate-200 dark:stroke-opacity-75" />
                   
-                  {/* Lake Toba Southern Coastline Silhouette */}
+                  {/* Radar Center Pivot Point */}
+                  <circle cx="160" cy="140" r="2.5" fill="#0f172a" className="dark:fill-slate-200" />
+                  
+                  {/* Lake Toba Southern Coastline Silhouette — Garis & Warna Biru Dipertegas Nyata */}
                   <path
                     d="M 60,30 
                        C 80,70 100,100 115,130 
                        C 125,150 120,180 145,210 
                        C 160,225 180,215 200,225 
                        L 20,240 L 20,30 Z"
-                    fill="#0284c7"
-                    fillOpacity="0.18"
-                    stroke="#0284c7"
-                    strokeWidth="1.4"
-                    strokeOpacity="0.55"
+                    fill="url(#lakeFillGradient)"
+                    stroke="#1668e8"
+                    strokeWidth="2.4"
+                    strokeOpacity="0.95"
                   />
-                  <text x="75" y="115" className="font-mono text-[9px] fill-sky-800 dark:fill-sky-300 font-bold italic select-none">
+                  <text
+                    x="75"
+                    y="115"
+                    className="font-mono text-[10px] fill-blue-700 dark:fill-sky-300 font-extrabold italic select-none"
+                    stroke="white"
+                    strokeWidth="2.5"
+                    strokeLinejoin="round"
+                    paintOrder="stroke fill"
+                  >
                     Danau Toba
                   </text>
 
@@ -275,16 +298,16 @@ export default function HomePage() {
                       d="M 160,140 L 160,30 A 110,110 0 0,1 224.65,51.01 Z"
                       fill="url(#radarSweepGradient)"
                     />
-                    {/* Leading beam line */}
+                    {/* Leading beam line — dipertegas */}
                     <line
                       x1="160"
                       y1="140"
                       x2="224.65"
                       y2="51.01"
-                      stroke="#38bdf8"
-                      strokeWidth="1.5"
+                      stroke="#2563eb"
+                      strokeWidth="2.2"
                       strokeLinecap="round"
-                      strokeOpacity="0.9"
+                      strokeOpacity="0.95"
                     />
                   </g>
 
@@ -294,22 +317,32 @@ export default function HomePage() {
                     onClick={() => setSelectedDistrict('balige')}
                   >
                     {/* Hitbox to prevent hover jitter */}
-                    <circle cx="150" cy="190" r="20" fill="transparent" />
+                    <circle cx="150" cy="190" r="22" fill="transparent" />
 
-                    {/* Animated Pulse Wave when Selected */}
+                    {/* Continuous Dual Radar Waves (Selalu Aktif & Jelas Terlihat) */}
+                    <circle cx="150" cy="190" r="7" fill="none" stroke="#10b981" strokeWidth="2">
+                      <animate attributeName="r" values="7;18;27" dur="2.4s" begin="0s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.95;0.4;0" dur="2.4s" begin="0s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="150" cy="190" r="7" fill="none" stroke="#10b981" strokeWidth="1.6">
+                      <animate attributeName="r" values="7;18;27" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.75;0.25;0" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
+                    </circle>
+
+                    {/* Extra Selected Accent Wave */}
                     {selectedDistrict === 'balige' && (
-                      <circle cx="150" cy="190" r="7" fill="none" stroke="#10b981" strokeWidth="1.5">
-                        <animate attributeName="r" values="7;16;22" dur="2.2s" repeatCount="indefinite" />
-                        <animate attributeName="opacity" values="0.8;0.3;0" dur="2.2s" repeatCount="indefinite" />
+                      <circle cx="150" cy="190" r="10" fill="none" stroke="#10b981" strokeWidth="2.2">
+                        <animate attributeName="r" values="7;22;32" dur="1.8s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="1;0.4;0" dur="1.8s" repeatCount="indefinite" />
                       </circle>
                     )}
 
                     <circle
                       cx="150"
                       cy="190"
-                      r={selectedDistrict === 'balige' ? 7 : 5}
+                      r={selectedDistrict === 'balige' ? 7.5 : 6}
                       className={cn(
-                        'fill-emerald-500 stroke-white dark:stroke-slate-900 stroke-2 transition-all duration-150',
+                        'fill-emerald-500 stroke-white dark:stroke-slate-900 stroke-[2.5px] transition-all duration-150',
                         'group-hover:stroke-emerald-300 dark:group-hover:stroke-emerald-400 group-hover:stroke-[3.5px]'
                       )}
                     />
@@ -317,9 +350,13 @@ export default function HomePage() {
                       x="162"
                       y="194"
                       className={cn(
-                        'font-mono text-[10px] select-none font-bold transition-colors',
-                        selectedDistrict === 'balige' ? 'fill-emerald-600 dark:fill-emerald-400' : 'fill-slate-900 dark:fill-slate-100'
+                        'font-mono text-[10.5px] select-none font-extrabold transition-colors',
+                        selectedDistrict === 'balige' ? 'fill-emerald-700 dark:fill-emerald-300' : 'fill-slate-950 dark:fill-slate-100'
                       )}
+                      stroke="white"
+                      strokeWidth="2.5"
+                      strokeLinejoin="round"
+                      paintOrder="stroke fill"
                     >
                       Balige
                     </text>
@@ -331,22 +368,32 @@ export default function HomePage() {
                     onClick={() => setSelectedDistrict('laguboti')}
                   >
                     {/* Hitbox to prevent hover jitter */}
-                    <circle cx="205" cy="175" r="20" fill="transparent" />
+                    <circle cx="205" cy="175" r="22" fill="transparent" />
 
-                    {/* Animated Pulse Wave when Selected */}
+                    {/* Continuous Dual Radar Waves (Selalu Aktif & Jelas Terlihat) */}
+                    <circle cx="205" cy="175" r="7" fill="none" stroke="#f59e0b" strokeWidth="2">
+                      <animate attributeName="r" values="7;18;27" dur="2.4s" begin="0.6s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.95;0.4;0" dur="2.4s" begin="0.6s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="205" cy="175" r="7" fill="none" stroke="#f59e0b" strokeWidth="1.6">
+                      <animate attributeName="r" values="7;18;27" dur="2.4s" begin="1.8s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.75;0.25;0" dur="2.4s" begin="1.8s" repeatCount="indefinite" />
+                    </circle>
+
+                    {/* Extra Selected Accent Wave */}
                     {selectedDistrict === 'laguboti' && (
-                      <circle cx="205" cy="175" r="7" fill="none" stroke="#f59e0b" strokeWidth="1.5">
-                        <animate attributeName="r" values="7;16;22" dur="2.2s" repeatCount="indefinite" />
-                        <animate attributeName="opacity" values="0.8;0.3;0" dur="2.2s" repeatCount="indefinite" />
+                      <circle cx="205" cy="175" r="10" fill="none" stroke="#f59e0b" strokeWidth="2.2">
+                        <animate attributeName="r" values="7;22;32" dur="1.8s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="1;0.4;0" dur="1.8s" repeatCount="indefinite" />
                       </circle>
                     )}
 
                     <circle
                       cx="205"
                       cy="175"
-                      r={selectedDistrict === 'laguboti' ? 7 : 5}
+                      r={selectedDistrict === 'laguboti' ? 7.5 : 6}
                       className={cn(
-                        'fill-amber-500 stroke-white dark:stroke-slate-900 stroke-2 transition-all duration-150',
+                        'fill-amber-500 stroke-white dark:stroke-slate-900 stroke-[2.5px] transition-all duration-150',
                         'group-hover:stroke-amber-300 dark:group-hover:stroke-amber-400 group-hover:stroke-[3.5px]'
                       )}
                     />
@@ -354,9 +401,13 @@ export default function HomePage() {
                       x="216"
                       y="179"
                       className={cn(
-                        'font-mono text-[10px] select-none font-bold transition-colors',
-                        selectedDistrict === 'laguboti' ? 'fill-amber-600 dark:fill-amber-400' : 'fill-slate-900 dark:fill-slate-100'
+                        'font-mono text-[10.5px] select-none font-extrabold transition-colors',
+                        selectedDistrict === 'laguboti' ? 'fill-amber-700 dark:fill-amber-300' : 'fill-slate-950 dark:fill-slate-100'
                       )}
+                      stroke="white"
+                      strokeWidth="2.5"
+                      strokeLinejoin="round"
+                      paintOrder="stroke fill"
                     >
                       Laguboti
                     </text>
@@ -368,22 +419,32 @@ export default function HomePage() {
                     onClick={() => setSelectedDistrict('porsea')}
                   >
                     {/* Hitbox to prevent hover jitter */}
-                    <circle cx="180" cy="85" r="20" fill="transparent" />
+                    <circle cx="180" cy="85" r="22" fill="transparent" />
 
-                    {/* Animated Pulse Wave when Selected */}
+                    {/* Continuous Dual Radar Waves (Selalu Aktif & Jelas Terlihat) */}
+                    <circle cx="180" cy="85" r="7" fill="none" stroke="#f59e0b" strokeWidth="2">
+                      <animate attributeName="r" values="7;18;27" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.95;0.4;0" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="180" cy="85" r="7" fill="none" stroke="#f59e0b" strokeWidth="1.6">
+                      <animate attributeName="r" values="7;18;27" dur="2.4s" begin="0.0s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.75;0.25;0" dur="2.4s" begin="0.0s" repeatCount="indefinite" />
+                    </circle>
+
+                    {/* Extra Selected Accent Wave */}
                     {selectedDistrict === 'porsea' && (
-                      <circle cx="180" cy="85" r="7" fill="none" stroke="#f59e0b" strokeWidth="1.5">
-                        <animate attributeName="r" values="7;16;22" dur="2.2s" repeatCount="indefinite" />
-                        <animate attributeName="opacity" values="0.8;0.3;0" dur="2.2s" repeatCount="indefinite" />
+                      <circle cx="180" cy="85" r="10" fill="none" stroke="#f59e0b" strokeWidth="2.2">
+                        <animate attributeName="r" values="7;22;32" dur="1.8s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="1;0.4;0" dur="1.8s" repeatCount="indefinite" />
                       </circle>
                     )}
 
                     <circle
                       cx="180"
                       cy="85"
-                      r={selectedDistrict === 'porsea' ? 7 : 5}
+                      r={selectedDistrict === 'porsea' ? 7.5 : 6}
                       className={cn(
-                        'fill-amber-500 stroke-white dark:stroke-slate-900 stroke-2 transition-all duration-150',
+                        'fill-amber-500 stroke-white dark:stroke-slate-900 stroke-[2.5px] transition-all duration-150',
                         'group-hover:stroke-amber-300 dark:group-hover:stroke-amber-400 group-hover:stroke-[3.5px]'
                       )}
                     />
@@ -391,9 +452,13 @@ export default function HomePage() {
                       x="192"
                       y="89"
                       className={cn(
-                        'font-mono text-[10px] select-none font-bold transition-colors',
-                        selectedDistrict === 'porsea' ? 'fill-amber-600 dark:fill-amber-400' : 'fill-slate-900 dark:fill-slate-100'
+                        'font-mono text-[10.5px] select-none font-extrabold transition-colors',
+                        selectedDistrict === 'porsea' ? 'fill-amber-700 dark:fill-amber-300' : 'fill-slate-950 dark:fill-slate-100'
                       )}
+                      stroke="white"
+                      strokeWidth="2.5"
+                      strokeLinejoin="round"
+                      paintOrder="stroke fill"
                     >
                       Porsea
                     </text>
@@ -405,22 +470,32 @@ export default function HomePage() {
                     onClick={() => setSelectedDistrict('habinsaran')}
                   >
                     {/* Hitbox to prevent hover jitter */}
-                    <circle cx="280" cy="145" r="22" fill="transparent" />
+                    <circle cx="280" cy="145" r="24" fill="transparent" />
 
-                    {/* Animated Pulse Wave when Selected */}
+                    {/* Continuous Dual Radar Waves (Selalu Aktif & Jelas Terlihat) */}
+                    <circle cx="280" cy="145" r="8" fill="none" stroke="#f43f5e" strokeWidth="2.2">
+                      <animate attributeName="r" values="8;19;28" dur="2.4s" begin="1.8s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.95;0.4;0" dur="2.4s" begin="1.8s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="280" cy="145" r="8" fill="none" stroke="#f43f5e" strokeWidth="1.6">
+                      <animate attributeName="r" values="8;19;28" dur="2.4s" begin="0.6s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.75;0.25;0" dur="2.4s" begin="0.6s" repeatCount="indefinite" />
+                    </circle>
+
+                    {/* Extra Selected Accent Wave */}
                     {selectedDistrict === 'habinsaran' && (
-                      <circle cx="280" cy="145" r="8" fill="none" stroke="#f43f5e" strokeWidth="1.5">
-                        <animate attributeName="r" values="8;18;24" dur="2s" repeatCount="indefinite" />
-                        <animate attributeName="opacity" values="0.85;0.3;0" dur="2s" repeatCount="indefinite" />
+                      <circle cx="280" cy="145" r="11" fill="none" stroke="#f43f5e" strokeWidth="2.4">
+                        <animate attributeName="r" values="8;24;34" dur="1.8s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="1;0.45;0" dur="1.8s" repeatCount="indefinite" />
                       </circle>
                     )}
 
                     <circle
                       cx="280"
                       cy="145"
-                      r={selectedDistrict === 'habinsaran' ? 7.5 : 5.5}
+                      r={selectedDistrict === 'habinsaran' ? 8 : 6.5}
                       className={cn(
-                        'fill-rose-500 stroke-white dark:stroke-slate-900 stroke-2 transition-all duration-150',
+                        'fill-rose-500 stroke-white dark:stroke-slate-900 stroke-[2.5px] transition-all duration-150',
                         'group-hover:stroke-rose-300 dark:group-hover:stroke-rose-400 group-hover:stroke-[3.5px]'
                       )}
                     />
@@ -428,9 +503,13 @@ export default function HomePage() {
                       x="235"
                       y="130"
                       className={cn(
-                        'font-mono text-[10px] select-none font-bold transition-colors',
-                        selectedDistrict === 'habinsaran' ? 'fill-rose-600 dark:fill-rose-400' : 'fill-slate-900 dark:fill-slate-100'
+                        'font-mono text-[10.5px] select-none font-black transition-colors',
+                        selectedDistrict === 'habinsaran' ? 'fill-rose-700 dark:fill-rose-300' : 'fill-rose-600 dark:fill-rose-400'
                       )}
+                      stroke="white"
+                      strokeWidth="2.5"
+                      strokeLinejoin="round"
+                      paintOrder="stroke fill"
                     >
                       Habinsaran
                     </text>
@@ -439,22 +518,22 @@ export default function HomePage() {
               </div>
 
               {/* Micro Status Readout Borderless */}
-              <div className="flex items-center justify-between text-xs px-1 pt-1">
-                <div>
-                  <div className="font-bold text-foreground flex items-center gap-1.5">
+              <div className="flex items-center justify-between text-xs px-1 pt-1 gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="font-bold text-foreground flex items-center gap-1.5 flex-wrap">
                     <span>Kecamatan {current.name}</span>
-                    <span className={cn('text-[10px] font-mono px-1.5 py-0.2 rounded border', statusInfo.badgeClass)}>
+                    <span className={cn('text-[10px] font-mono px-1.5 py-0.2 rounded border shrink-0', statusInfo.badgeClass)}>
                       Selisih {current.gapScore}%
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-700 dark:text-slate-300 mt-0.5">
+                  <p className="text-[11px] text-slate-700 dark:text-slate-300 mt-0.5 truncate sm:whitespace-normal">
                     {current.topSector} · Kebutuhan {current.bpsIssue}% vs Anggaran {current.apbdBudget}%
                   </p>
                 </div>
 
                 <Link
                   href={current.href}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary/15 hover:bg-primary/25 text-primary text-xs font-semibold transition-colors shrink-0 ml-2"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary/15 hover:bg-primary/25 text-primary text-xs font-semibold transition-colors shrink-0"
                 >
                   <span>Lihat Peta</span>
                   <ArrowRight size={13} />
@@ -469,7 +548,7 @@ export default function HomePage() {
         {/* ── Bottom Scroll Indicator (Pemberitahuan Menuju Modul Data - Auto-Hide Saat Scrolled) ── */}
         <div
           className={cn(
-            'flex items-center justify-center pt-4 transition-all duration-300 ease-out',
+            'flex items-center justify-center pt-6 sm:pt-8 lg:pt-4 pb-2 transition-all duration-300 ease-out',
             scrolledPastHero ? 'opacity-0 pointer-events-none translate-y-3' : 'opacity-100 translate-y-0'
           )}
         >
@@ -640,28 +719,23 @@ export default function HomePage() {
         {/* Modular Card Container */}
         <div className="rounded-2xl border border-border bg-card/90 backdrop-blur-md shadow-xl overflow-hidden">
           
-          {/* Tab Selector Bar */}
-          <div className="flex items-center overflow-x-auto border-b border-border bg-muted/40 p-2 gap-1.5">
+          {/* Tab Selector Bar - Text Only, No Card Background */}
+          <div className="flex items-center overflow-x-auto border-b border-border px-4 sm:px-6 gap-6 sm:gap-8 bg-card/60">
             {(Object.keys(DISTRICTS_CONFIG) as DistrictId[]).map((key) => {
               const d = DISTRICTS_CONFIG[key]
               const isSelected = selectedDistrict === key
-              const badge = getStatusBadge(d.status)
               return (
                 <button
                   key={key}
                   onClick={() => setSelectedDistrict(key)}
                   className={cn(
-                    'flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer',
+                    'py-3.5 text-xs sm:text-sm transition-all whitespace-nowrap cursor-pointer border-b-2',
                     isSelected
-                      ? 'bg-card text-foreground shadow-sm border border-border'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
+                      ? 'border-primary text-primary font-bold'
+                      : 'border-transparent text-muted-foreground hover:text-foreground font-medium'
                   )}
                 >
-                  <span className={cn('size-2 rounded-full', badge.dotClass)} />
-                  <span>Kec. {d.name}</span>
-                  <span className={cn('text-[10px] font-mono px-1.5 py-0.2 rounded border', badge.badgeClass)}>
-                    Selisih {d.gapScore}%
-                  </span>
+                  <span>Kecamatan {d.name}</span>
                 </button>
               )
             })}
@@ -686,11 +760,9 @@ export default function HomePage() {
                   </h3>
                 </div>
 
-                <div className="flex items-center gap-2 font-mono text-xs">
+                <div className="flex items-center gap-1.5 font-mono text-xs">
                   <span className="text-muted-foreground">KODE WILAYAH:</span>
-                  <span className="font-bold text-foreground bg-muted px-2 py-0.5 rounded border border-border">
-                    {current.bpsCode}
-                  </span>
+                  <span className="font-bold text-foreground">{current.bpsCode}</span>
                 </div>
               </div>
 
@@ -766,7 +838,12 @@ export default function HomePage() {
                   <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
                     STATUS PRIORITAS
                   </span>
-                  <span className={cn('px-2 py-0.5 rounded text-[10px] font-mono font-bold border', statusInfo.badgeClass)}>
+                  <span className={cn(
+                    'text-xs font-mono font-bold uppercase tracking-wider',
+                    current.status === 'CRITICAL' ? 'text-rose-600 dark:text-rose-400' :
+                    current.status === 'WASPADA' ? 'text-amber-600 dark:text-amber-400' :
+                    'text-emerald-600 dark:text-emerald-400'
+                  )}>
                     {statusInfo.label}
                   </span>
                 </div>
@@ -954,115 +1031,76 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════════════
           MODULE 5: DUA SUDUT PANDANG TRANSPARANSI (INTERACTIVE TAB SWITCHER)
       ══════════════════════════════════════════════════════════════════ */}
-      <section className="relative z-10 py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-slate-100/70 dark:bg-slate-950/70 overflow-hidden">
-        {/* Ambient Radial Atmosphere (Tanpa Grid Kotak-Kotak) */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                'radial-gradient(ellipse 60% 50% at 50% 30%, rgba(2, 132, 199, 0.08) 0%, transparent 70%)',
-            }}
-          />
-        </div>
-
-        <div className="max-w-3xl mx-auto space-y-8 text-center">
+      <section className="relative z-10 py-10 sm:py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#edf4fe] via-[#eaf2fc] to-[#e4eefb] dark:from-[#091122] dark:via-[#0c162b] dark:to-[#091122] overflow-hidden border-t border-blue-200/60 dark:border-blue-900/40">
+        <div className="max-w-3xl mx-auto space-y-4 text-center">
           
           {/* Section Header */}
-          <div className="space-y-2">
-            <p className="text-[11px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
+          <div className="space-y-1.5">
+            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400">
               DUA SUDUT PANDANG TRANSPARANSI
             </p>
             <h2
-              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground sm:whitespace-nowrap"
+              className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:whitespace-nowrap"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Satu Data, Dua Peran untuk Kabupaten Toba
             </h2>
-            <p className="text-sm text-muted-foreground max-w-xl mx-auto">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-lg mx-auto">
               Pilih sudut pandang Anda untuk merasakan bagaimana data terbuka dapat digunakan
               oleh masyarakat luas maupun tim pengambil kebijakan daerah.
             </p>
           </div>
 
           {/* Segmented Switcher Control (Swiss Pill Toggle) */}
-          <div className="inline-flex items-center p-1.5 rounded-2xl bg-card border border-border shadow-sm">
+          <div className="inline-flex items-center p-1 rounded-2xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-blue-200/80 dark:border-blue-800/60 shadow-sm">
             <button
               type="button"
               onClick={() => setActivePerspective('warga')}
               className={cn(
-                'flex items-center gap-2.5 px-5 sm:px-7 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer',
+                'flex items-center gap-2 px-5 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer',
                 activePerspective === 'warga'
                   ? 'bg-primary text-primary-foreground shadow-sm font-bold'
-                  : 'text-muted-foreground hover:text-foreground'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               )}
             >
-              <Users size={16} />
+              <Users size={15} />
               <span>Untuk Warga (Publik)</span>
             </button>
             <button
               type="button"
               onClick={() => setActivePerspective('pengelola')}
               className={cn(
-                'flex items-center gap-2.5 px-5 sm:px-7 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer',
+                'flex items-center gap-2 px-5 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer',
                 activePerspective === 'pengelola'
                   ? 'bg-primary text-primary-foreground shadow-sm font-bold'
-                  : 'text-muted-foreground hover:text-foreground'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               )}
             >
-              <Building2 size={16} />
+              <Building2 size={15} />
               <span>Untuk Pengelola (Pemda)</span>
             </button>
           </div>
 
-          {/* Tombol Aksi yang Ter-spawn (Sederhana & Tanpa Card) */}
-          <div className="pt-2 min-h-[96px] flex flex-col items-center justify-center">
+          {/* Tombol Aksi Borderless Terpusat (Tanpa Deskripsi Tambahan & Ruang Ramping) */}
+          <div className="pt-1 flex items-center justify-center">
             {activePerspective === 'warga' ? (
-              <div className="space-y-4 animate-in fade-in duration-300 flex flex-col items-center">
-                <p className="text-xs sm:text-sm text-muted-foreground max-w-lg">
-                  Rancang simulasi alokasi anggaran daerah secara mandiri dan sampaikan aspirasi warga tanpa hambatan.
-                </p>
-                <div className="flex flex-wrap items-center justify-center gap-3">
-                  <Link
-                    href="/simulator"
-                    onClick={() => setRole('public')}
-                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-xs sm:text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-all shadow-sm hover:shadow"
-                  >
-                    <span>Mulai Simulasi Anggaran Warga</span>
-                    <ArrowRight size={15} />
-                  </Link>
-                  <Link
-                    href="/map"
-                    className="inline-flex items-center gap-2 rounded-xl border border-border bg-card hover:bg-muted px-5 py-3.5 text-xs sm:text-sm font-semibold text-foreground transition-all"
-                  >
-                    <span>Buka Peta Kesenjangan</span>
-                  </Link>
-                </div>
-              </div>
+              <Link
+                href="/simulator"
+                onClick={() => setRole('public')}
+                className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-primary dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-all cursor-pointer py-1.5 px-3 rounded-lg hover:bg-blue-600/10"
+              >
+                <span>Mulai Simulasi Anggaran Warga</span>
+                <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
             ) : (
-              <div className="space-y-4 animate-in fade-in duration-300 flex flex-col items-center">
-                <p className="text-xs sm:text-sm text-muted-foreground max-w-lg">
-                  Akses dasbor perencanaan dan evaluasi kebijakan belanja daerah berbasis bukti lapangan Bappeda.
-                </p>
-                <div className="flex flex-wrap items-center justify-center gap-3">
-                  <Link
-                    href="/admin"
-                    onClick={() => setRole('admin')}
-                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-xs sm:text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-all shadow-sm hover:shadow"
-                  >
-                    <span>Buka Dasbor Anggaran Daerah</span>
-                    <ArrowRight size={15} />
-                  </Link>
-                  <Link
-                    href="/admin/report"
-                    onClick={() => setRole('admin')}
-                    className="inline-flex items-center gap-2 rounded-xl border border-border bg-card hover:bg-muted px-5 py-3.5 text-xs sm:text-sm font-semibold text-foreground transition-all"
-                  >
-                    <span>Lihat Format Laporan PDF</span>
-                    <ExternalLink size={14} />
-                  </Link>
-                </div>
-              </div>
+              <Link
+                href="/admin"
+                onClick={() => setRole('admin')}
+                className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-primary dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-all cursor-pointer py-1.5 px-3 rounded-lg hover:bg-blue-600/10"
+              >
+                <span>Buka Dasbor Anggaran Daerah</span>
+                <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
             )}
           </div>
 

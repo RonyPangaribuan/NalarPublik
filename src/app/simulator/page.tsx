@@ -162,10 +162,10 @@ export default function SimulatorPage() {
                 <select
                   value={selectedDistrictId}
                   onChange={(e) => setSelectedDistrictId(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-muted/30 px-4 py-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+                  className="w-full rounded-xl border border-border/80 dark:border-slate-700 bg-muted/70 dark:bg-slate-800 px-4 py-3 text-sm font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer shadow-xs hover:border-border dark:hover:border-slate-600 transition-colors"
                 >
                   {INITIAL_DISTRICTS.map((d) => (
-                    <option key={d.id} value={d.id} className="bg-card text-foreground">
+                    <option key={d.id} value={d.id} className="bg-card dark:bg-slate-800 text-foreground">
                       {d.name} (Pagu: {formatRupiah(d.total_budget_idr)})
                     </option>
                   ))}
@@ -300,7 +300,7 @@ export default function SimulatorPage() {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Tuliskan catatan konkret lapangan..."
-                  className="w-full rounded-xl border border-border bg-muted/30 p-3 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none"
+                  className="w-full rounded-xl border border-border/80 dark:border-slate-700 bg-muted/70 dark:bg-slate-800 p-3 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none shadow-xs hover:border-border dark:hover:border-slate-600 transition-colors"
                 />
               </div>
 
