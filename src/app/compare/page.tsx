@@ -17,6 +17,7 @@ import { INITIAL_DISTRICTS, formatRupiah } from '@/lib/data'
 import { calculateSectorGaps, calculateOverallGap, calculateGapStatus, getStatusColor } from '@/lib/gap-calculator'
 import { CompareRadarChart } from '@/components/charts/compare-radar-chart'
 import { cn } from '@/lib/utils'
+import { TobaTopoBackground } from '@/components/toba-topo-background'
 
 export default function ComparePage() {
   const [districtAId, setDistrictAId] = useState<string>('habinsaran')
@@ -38,8 +39,9 @@ export default function ComparePage() {
   const colorB = getStatusColor(statusB)
 
   return (
-    <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-[1240px] mx-auto space-y-8">
+    <div className="relative min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+      <TobaTopoBackground variant="feature" />
+      <div className="relative z-10 max-w-[1240px] mx-auto space-y-8">
 
         {/* ── Page Header (Editorial Swiss Style) ── */}
         <div className="text-center max-w-4xl mx-auto space-y-2">
@@ -137,16 +139,16 @@ export default function ComparePage() {
 
         </div>
 
-        {/* ── Visual Bar & Radar Comparison per Sector ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* ── Visual Bar & Radar Comparison per Sector (Ukuran Sama: 50% - 50% & Tinggi Sejajar) ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
 
-          {/* Left: Interactive Radar Polygon Chart (Span 6) */}
-          <div className="lg:col-span-6 bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm">
+          {/* Left: Interactive Radar Polygon Chart (Equal 50% & Full Height) */}
+          <div className="flex flex-col h-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm">
             <CompareRadarChart distA={distA} distB={distB} />
           </div>
 
-          {/* Right: Technical Sector Progress Rows (Span 6) */}
-          <div className="lg:col-span-6 bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm space-y-5">
+          {/* Right: Technical Sector Progress Rows (Equal 50% & Full Height) */}
+          <div className="flex flex-col justify-between h-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm space-y-5">
             <div className="border-b border-border pb-3 flex items-center justify-between">
               <div>
                 <h2

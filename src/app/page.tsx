@@ -14,9 +14,12 @@ import {
   AlertCircle,
   Activity,
   ExternalLink,
+  Users,
+  Building2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { TobaTopoBackground } from '@/components/toba-topo-background'
+import { useRoleStore } from '@/store/use-role-store'
 
 // ── Master District Data (Synced with official Kabupaten Toba BPS & APBD 2026) ──
 const DISTRICTS_CONFIG = {
@@ -111,6 +114,8 @@ function getStatusBadge(status: string) {
 export default function HomePage() {
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictId>('habinsaran')
   const [scrolledPastHero, setScrolledPastHero] = useState(false)
+  const [activePerspective, setActivePerspective] = useState<'warga' | 'pengelola'>('warga')
+  const { setRole } = useRoleStore()
   const current = DISTRICTS_CONFIG[selectedDistrict]
   const statusInfo = getStatusBadge(current.status)
 
@@ -148,8 +153,8 @@ export default function HomePage() {
             </h1>
 
             <p className="text-sm sm:text-base text-slate-800 dark:text-slate-200 font-normal leading-relaxed max-w-xl">
-              Menyandingkan data kebutuhan nyata warga dengan alokasi anggaran daerah untuk memastikan
-              setiap rupiah tepat sasaran bagi masyarakat Kabupaten Toba.
+              Menyandingkan data kebutuhan warga dengan alokasi anggaran daerah untuk memastikan
+              setiap rupiah tepat sasaran bagi masyarakat Kabupaten Toba. 
             </p>
 
             {/* CTAs */}
@@ -196,7 +201,7 @@ export default function HomePage() {
                 <div className="flex items-center gap-2">
                   <span className="size-2 rounded-full bg-rose-500 animate-pulse" />
                   <span className="text-[11px] font-mono font-bold tracking-wider text-foreground uppercase drop-shadow-xs">
-                    PANTAUAN WILAYAH TOBA
+                    PANTAUAN KABUPATEN TOBA
                   </span>
                 </div>
                 <span className="text-[10px] font-mono text-slate-600 dark:text-slate-400">
@@ -482,7 +487,24 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════════════
           MODULE 2: FISCAL & SOCIAL KPI STRIP (TERPISAH & MODULAR)
       ══════════════════════════════════════════════════════════════════ */}
-      <section id="ringkasan-fiskal" className="relative z-10 border-y border-border bg-card/85 backdrop-blur-md py-14 px-4 sm:px-6 lg:px-8">
+      <section
+        id="ringkasan-fiskal"
+        className="relative z-10 border-y border-border/80 bg-slate-50/70 dark:bg-slate-900/50 py-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      >
+        {/* Decorative Square Grid & Gradient Glow */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          {/* Subtle Blueprint Square Grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#0000000a_1px,transparent_1px),linear-gradient(to_bottom,#0000000a_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff0c_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0c_1px,transparent_1px)] bg-[size:32px_32px]" />
+          {/* Ambient Top Glow */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(2, 132, 199, 0.08) 0%, transparent 70%)',
+            }}
+          />
+        </div>
+
         <div className="max-w-7xl mx-auto">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
@@ -510,7 +532,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
             {/* KPI 1 */}
-            <div className="rounded-xl border border-border bg-background/80 p-5 shadow-sm space-y-2">
+            <div className="rounded-2xl border border-border/80 bg-card p-5 sm:p-6 shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-md transition-all duration-200 space-y-2">
               <div className="flex items-center justify-between text-muted-foreground">
                 <span className="text-[11px] font-mono uppercase">TOTAL BELANJA ANGGARAN</span>
                 <Database size={15} className="text-primary" />
@@ -527,7 +549,7 @@ export default function HomePage() {
             </div>
 
             {/* KPI 2 */}
-            <div className="rounded-xl border border-border bg-background/80 p-5 shadow-sm space-y-2">
+            <div className="rounded-2xl border border-border/80 bg-card p-5 sm:p-6 shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-md transition-all duration-200 space-y-2">
               <div className="flex items-center justify-between text-muted-foreground">
                 <span className="text-[11px] font-mono uppercase">TINGKAT KEMISKINAN</span>
                 <TrendingDown size={15} className="text-emerald-500" />
@@ -544,7 +566,7 @@ export default function HomePage() {
             </div>
 
             {/* KPI 3 */}
-            <div className="rounded-xl border border-border bg-background/80 p-5 shadow-sm space-y-2">
+            <div className="rounded-2xl border border-border/80 bg-card p-5 sm:p-6 shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-md transition-all duration-200 space-y-2">
               <div className="flex items-center justify-between text-muted-foreground">
                 <span className="text-[11px] font-mono uppercase">WILAYAH DENGAN SELISIH TINGGI</span>
                 <AlertCircle size={15} className="text-rose-500" />
@@ -561,7 +583,7 @@ export default function HomePage() {
             </div>
 
             {/* KPI 4 */}
-            <div className="rounded-xl border border-border bg-background/80 p-5 shadow-sm space-y-2">
+            <div className="rounded-2xl border border-border/80 bg-card p-5 sm:p-6 shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-md transition-all duration-200 space-y-2">
               <div className="flex items-center justify-between text-muted-foreground">
                 <span className="text-[11px] font-mono uppercase">PARTISIPASI WARGA</span>
                 <Activity size={15} className="text-amber-500" />
@@ -585,24 +607,35 @@ export default function HomePage() {
       {/* ══════════════════════════════════════════════════════════════════
           MODULE 3: LIVE ANOMALY & GAP INSPECTOR (TERPISAH & BERNAFAS)
       ══════════════════════════════════════════════════════════════════ */}
-      <section className="relative z-10 py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        
-        {/* Section Header */}
-        <div className="max-w-2xl mb-8">
-          <p className="text-[11px] font-mono font-bold uppercase tracking-wider text-muted-foreground mb-1">
-            DETEKSI KESENJANGAN KEBIJAKAN
-          </p>
-          <h2
-            className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground"
-            style={{ fontFamily: "'Manrope', sans-serif" }}
-          >
-            Pantauan Kesenjangan Antarwilayah
-          </h2>
-          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-            Sandingkan data kebutuhan masyarakat dengan alokasi anggaran daerah tahun 2026.
-            Pilih kecamatan untuk memeriksa bidang prioritas.
-          </p>
+      <section className="relative z-10 py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-border/70">
+        {/* Background Decor: Radial Mesh & Technical Dot Grid */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          {/* Soft Floating Ambient Orbs */}
+          <div className="absolute top-1/4 -left-20 size-[550px] rounded-full bg-sky-500/10 dark:bg-sky-500/15 blur-[120px]" />
+          <div className="absolute bottom-1/4 -right-20 size-[550px] rounded-full bg-emerald-500/8 dark:bg-emerald-500/10 blur-[120px]" />
+          
+          {/* Fine Precision Dot Grid */}
+          <div className="absolute inset-0 bg-[radial-gradient(#94a3b8_1.2px,transparent_1.2px)] dark:bg-[radial-gradient(#475569_1.2px,transparent_1.2px)] [background-size:24px_24px] opacity-45 dark:opacity-35" />
         </div>
+
+        <div className="max-w-7xl mx-auto">
+          
+          {/* Section Header */}
+          <div className="max-w-2xl mb-8">
+            <p className="text-[11px] font-mono font-bold uppercase tracking-wider text-muted-foreground mb-1">
+              DETEKSI KESENJANGAN KEBIJAKAN
+            </p>
+            <h2
+              className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
+            >
+              Pantauan Kesenjangan Antarwilayah
+            </h2>
+            <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+              Sandingkan data kebutuhan masyarakat dengan alokasi anggaran daerah tahun 2026.
+              Pilih kecamatan untuk memeriksa bidang prioritas.
+            </p>
+          </div>
 
         {/* Modular Card Container */}
         <div className="rounded-2xl border border-border bg-card/90 backdrop-blur-md shadow-xl overflow-hidden">
@@ -789,17 +822,31 @@ export default function HomePage() {
 
         </div>
 
+        </div>
+
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════
           MODULE 4: MODULAR FEATURE ECOSYSTEM (BENTO GRID 4 PILAR)
       ══════════════════════════════════════════════════════════════════ */}
-      <section className="relative z-10 border-t border-border bg-card/85 backdrop-blur-md py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+      <section className="relative z-10 border-b border-border/80 bg-slate-100/70 dark:bg-slate-950/70 py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Background Decor: Large Square Architectural Grid */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#0000000a_1px,transparent_1px),linear-gradient(to_bottom,#0000000a_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:48px_48px]" />
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 85% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 60%)',
+            }}
+          />
+        </div>
+
         <div className="max-w-7xl mx-auto">
           
           <div className="max-w-2xl mb-12">
             <p className="text-[11px] font-mono font-bold uppercase tracking-wider text-muted-foreground mb-1">
-              ALAT ANALISIS WARGA & PEMDA
+              ALAT ANALISIS WARGA &amp; PEMDA
             </p>
             <h2
               className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground"
@@ -818,7 +865,7 @@ export default function HomePage() {
             {/* Feature 1: Peta Kesenjangan */}
             <Link
               href="/map"
-              className="group rounded-2xl border border-border bg-background/80 p-6 sm:p-8 hover:border-primary/50 transition-all duration-200 shadow-sm flex flex-col justify-between"
+              className="group rounded-2xl border border-border/80 bg-card p-6 sm:p-8 hover:border-primary/60 hover:shadow-lg transition-all duration-200 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col justify-between"
             >
               <div className="space-y-3">
                 <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors" style={{ fontFamily: "'Manrope', sans-serif" }}>
@@ -839,7 +886,7 @@ export default function HomePage() {
             {/* Feature 2: Simulasi Anggaran */}
             <Link
               href="/simulator"
-              className="group rounded-2xl border border-border bg-background/80 p-6 sm:p-8 hover:border-primary/50 transition-all duration-200 shadow-sm flex flex-col justify-between"
+              className="group rounded-2xl border border-border/80 bg-card p-6 sm:p-8 hover:border-primary/60 hover:shadow-lg transition-all duration-200 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col justify-between"
             >
               <div className="space-y-3">
                 <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors" style={{ fontFamily: "'Manrope', sans-serif" }}>
@@ -860,7 +907,7 @@ export default function HomePage() {
             {/* Feature 3: Perbandingan Antarwilayah */}
             <Link
               href="/compare"
-              className="group rounded-2xl border border-border bg-background/80 p-6 sm:p-8 hover:border-primary/50 transition-all duration-200 shadow-sm flex flex-col justify-between"
+              className="group rounded-2xl border border-border/80 bg-card p-6 sm:p-8 hover:border-primary/60 hover:shadow-lg transition-all duration-200 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col justify-between"
             >
               <div className="space-y-3">
                 <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors" style={{ fontFamily: "'Manrope', sans-serif" }}>
@@ -881,7 +928,7 @@ export default function HomePage() {
             {/* Feature 4: Portal Data Terbuka */}
             <Link
               href="/open-data"
-              className="group rounded-2xl border border-border bg-background/80 p-6 sm:p-8 hover:border-primary/50 transition-all duration-200 shadow-sm flex flex-col justify-between"
+              className="group rounded-2xl border border-border/80 bg-card p-6 sm:p-8 hover:border-primary/60 hover:shadow-lg transition-all duration-200 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col justify-between"
             >
               <div className="space-y-3">
                 <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors" style={{ fontFamily: "'Manrope', sans-serif" }}>
@@ -905,43 +952,120 @@ export default function HomePage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════
-          MODULE 5: PRINSIP TANPA LOGIN & INTEGRASI PEMDA (MODULAR CTA)
+          MODULE 5: DUA SUDUT PANDANG TRANSPARANSI (INTERACTIVE TAB SWITCHER)
       ══════════════════════════════════════════════════════════════════ */}
-      <section className="relative z-10 py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="rounded-3xl border border-border bg-card/90 backdrop-blur-md p-8 sm:p-12 shadow-xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            <div className="lg:col-span-8 space-y-4">
-              <h2
-                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground sm:whitespace-nowrap"
-                style={{ fontFamily: "'Manrope', sans-serif" }}
-              >
-                Dari Warga Biasa hingga Pembuat Kebijakan
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
-                Beralih antara mode Warga (untuk menyampaikan usulan &amp; simulasi mandiri) dan mode Pengelola
-                (untuk perencanaan dan evaluasi anggaran daerah) hanya dengan satu klik di pojok kanan atas.
-              </p>
-            </div>
+      <section className="relative z-10 py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-slate-100/70 dark:bg-slate-950/70 overflow-hidden">
+        {/* Ambient Radial Atmosphere (Tanpa Grid Kotak-Kotak) */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                'radial-gradient(ellipse 60% 50% at 50% 30%, rgba(2, 132, 199, 0.08) 0%, transparent 70%)',
+            }}
+          />
+        </div>
 
-            <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3">
-              <Link
-                href="/simulator"
-                className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
-              >
-                <span>Mulai Simulasi Warga</span>
-                <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/admin"
-                className="flex items-center justify-center gap-2 rounded-xl border border-border bg-background px-5 py-3 text-sm font-semibold text-foreground hover:bg-muted transition-colors shadow-sm"
-              >
-                <span>Buka Dasbor Anggaran</span>
-                <ExternalLink size={15} />
-              </Link>
-            </div>
-
+        <div className="max-w-3xl mx-auto space-y-8 text-center">
+          
+          {/* Section Header */}
+          <div className="space-y-2">
+            <p className="text-[11px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
+              DUA SUDUT PANDANG TRANSPARANSI
+            </p>
+            <h2
+              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground sm:whitespace-nowrap"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
+            >
+              Satu Data, Dua Peran untuk Kabupaten Toba
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-xl mx-auto">
+              Pilih sudut pandang Anda untuk merasakan bagaimana data terbuka dapat digunakan
+              oleh masyarakat luas maupun tim pengambil kebijakan daerah.
+            </p>
           </div>
+
+          {/* Segmented Switcher Control (Swiss Pill Toggle) */}
+          <div className="inline-flex items-center p-1.5 rounded-2xl bg-card border border-border shadow-sm">
+            <button
+              type="button"
+              onClick={() => setActivePerspective('warga')}
+              className={cn(
+                'flex items-center gap-2.5 px-5 sm:px-7 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer',
+                activePerspective === 'warga'
+                  ? 'bg-primary text-primary-foreground shadow-sm font-bold'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+            >
+              <Users size={16} />
+              <span>Untuk Warga (Publik)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActivePerspective('pengelola')}
+              className={cn(
+                'flex items-center gap-2.5 px-5 sm:px-7 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer',
+                activePerspective === 'pengelola'
+                  ? 'bg-primary text-primary-foreground shadow-sm font-bold'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+            >
+              <Building2 size={16} />
+              <span>Untuk Pengelola (Pemda)</span>
+            </button>
+          </div>
+
+          {/* Tombol Aksi yang Ter-spawn (Sederhana & Tanpa Card) */}
+          <div className="pt-2 min-h-[96px] flex flex-col items-center justify-center">
+            {activePerspective === 'warga' ? (
+              <div className="space-y-4 animate-in fade-in duration-300 flex flex-col items-center">
+                <p className="text-xs sm:text-sm text-muted-foreground max-w-lg">
+                  Rancang simulasi alokasi anggaran daerah secara mandiri dan sampaikan aspirasi warga tanpa hambatan.
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <Link
+                    href="/simulator"
+                    onClick={() => setRole('public')}
+                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-xs sm:text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-all shadow-sm hover:shadow"
+                  >
+                    <span>Mulai Simulasi Anggaran Warga</span>
+                    <ArrowRight size={15} />
+                  </Link>
+                  <Link
+                    href="/map"
+                    className="inline-flex items-center gap-2 rounded-xl border border-border bg-card hover:bg-muted px-5 py-3.5 text-xs sm:text-sm font-semibold text-foreground transition-all"
+                  >
+                    <span>Buka Peta Kesenjangan</span>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4 animate-in fade-in duration-300 flex flex-col items-center">
+                <p className="text-xs sm:text-sm text-muted-foreground max-w-lg">
+                  Akses dasbor perencanaan dan evaluasi kebijakan belanja daerah berbasis bukti lapangan Bappeda.
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <Link
+                    href="/admin"
+                    onClick={() => setRole('admin')}
+                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-xs sm:text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-all shadow-sm hover:shadow"
+                  >
+                    <span>Buka Dasbor Anggaran Daerah</span>
+                    <ArrowRight size={15} />
+                  </Link>
+                  <Link
+                    href="/admin/report"
+                    onClick={() => setRole('admin')}
+                    className="inline-flex items-center gap-2 rounded-xl border border-border bg-card hover:bg-muted px-5 py-3.5 text-xs sm:text-sm font-semibold text-foreground transition-all"
+                  >
+                    <span>Lihat Format Laporan PDF</span>
+                    <ExternalLink size={14} />
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
         </div>
       </section>
 

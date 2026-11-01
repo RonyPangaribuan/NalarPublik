@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { INITIAL_DISTRICTS, formatRupiah } from '@/lib/data'
 import { calculateSectorGaps, calculateOverallGap } from '@/lib/gap-calculator'
+import { TobaTopoBackground } from '@/components/toba-topo-background'
 
 const CONVERSIONS = [
   {
@@ -107,8 +108,9 @@ export default function OpenDataPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-[1240px] mx-auto space-y-10">
+    <div className="relative min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+      <TobaTopoBackground variant="feature" />
+      <div className="relative z-10 max-w-[1240px] mx-auto space-y-10">
 
         {/* ── Page Header (Editorial Swiss Style) ── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">

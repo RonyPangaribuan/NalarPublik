@@ -2,12 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import {
-  Database,
-  MapPin,
-  Sliders,
-  ArrowUp,
-} from 'lucide-react'
+import { ArrowUp } from 'lucide-react'
 import { Logo } from '@/components/logo'
 import { cn } from '@/lib/utils'
 
@@ -45,61 +40,19 @@ export function Footer() {
           }}
         />
 
-        <div className="relative z-10 mx-auto max-w-3xl px-6 py-6 sm:py-8 flex flex-col items-center text-center space-y-3.5">
+        <div className="relative z-10 mx-auto max-w-3xl px-6 py-5 sm:py-6 flex flex-col items-center text-center space-y-2">
           
-          {/* ── Baris 1: Akses Cepat Menu Utama ── */}
-          <div className="flex items-center justify-center gap-3 sm:gap-4 text-blue-100">
-            {/* Peta Kesenjangan */}
-            <Link
-              href="/map"
-              aria-label="Peta Kesenjangan Anggaran"
-              className="p-2 rounded-full bg-blue-900/40 hover:bg-white/20 border border-blue-300/30 text-white transition-all duration-200 hover:scale-110 shadow-xs"
-              title="Peta Kesenjangan"
-            >
-              <MapPin size={15} />
-            </Link>
+          {/* Logo Utama NalarPublik */}
+          <Link href="/" className="inline-block hover:opacity-95 transition-opacity">
+            <Logo size="md" variant="light" />
+          </Link>
 
-            {/* Simulasi Anggaran */}
-            <Link
-              href="/simulator"
-              aria-label="Simulasi Anggaran Warga"
-              className="p-2 rounded-full bg-blue-900/40 hover:bg-white/20 border border-blue-300/30 text-white transition-all duration-200 hover:scale-110 shadow-xs"
-              title="Simulasi Anggaran"
-            >
-              <Sliders size={15} />
-            </Link>
-
-            {/* Data Terbuka */}
-            <Link
-              href="/open-data"
-              aria-label="Data Terbuka Anggaran"
-              className="p-2 rounded-full bg-blue-900/40 hover:bg-white/20 border border-blue-300/30 text-white transition-all duration-200 hover:scale-110 shadow-xs"
-              title="Data Terbuka"
-            >
-              <Database size={15} />
-            </Link>
-          </div>
-
-          {/* ── Baris 2: Deskripsi Ringkas & Netral (Bahasa Indonesia murni) ── */}
-          <div className="max-w-md mx-auto">
-            <p className="text-xs text-blue-100/85 leading-relaxed font-normal">
-              Platform independen transparansi anggaran Kabupaten Toba untuk mendorong perumusan kebijakan publik yang bernalar.
-            </p>
-          </div>
-
-          {/* ── Baris 3: Logo Utama NalarPublik ── */}
-          <div className="pt-0.5">
-            <Link href="/" className="inline-block hover:opacity-95 transition-opacity">
-              <Logo size="md" variant="light" />
-            </Link>
-          </div>
-
-          {/* ── Baris 4: Lokasi Wilayah Netral & Hak Cipta ── */}
+          {/* Lokasi Wilayah Netral & Hak Cipta */}
           <div className="space-y-0.5">
             <p className="text-xs font-semibold tracking-wide text-white">
               Kabupaten Toba, Sumatera Utara
             </p>
-            <p className="text-[10px] text-blue-200/60">
+            <p className="text-[10px] text-blue-200/70 font-normal">
               © 2026 NalarPublik · Inisiatif independen warga untuk transparansi anggaran Kabupaten Toba.
             </p>
           </div>

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { FileText, Printer, Download, ArrowLeft, CheckCircle2, ShieldCheck, Building2 } from 'lucide-react'
 import { INITIAL_DISTRICTS, formatRupiah } from '@/lib/data'
 import { calculateSectorGaps, calculateOverallGap, calculateGapStatus } from '@/lib/gap-calculator'
+import { TobaTopoBackground } from '@/components/toba-topo-background'
 
 export default function AdminReportPage() {
   const handlePrint = () => {
@@ -11,8 +12,9 @@ export default function AdminReportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-[1000px] mx-auto space-y-8">
+    <div className="relative min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+      <TobaTopoBackground variant="feature" className="no-print" />
+      <div className="relative z-10 max-w-[1000px] mx-auto space-y-8">
 
         {/* Action bar */}
         <div className="flex items-center justify-between no-print">

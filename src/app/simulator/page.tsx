@@ -20,6 +20,7 @@ import { INITIAL_DISTRICTS, formatRupiah } from '@/lib/data'
 import { District, SectorKey } from '@/types'
 import { BudgetDonutChart } from '@/components/charts/budget-donut-chart'
 import { cn } from '@/lib/utils'
+import { TobaTopoBackground } from '@/components/toba-topo-background'
 
 export default function SimulatorPage() {
   const [selectedDistrictId, setSelectedDistrictId] = useState<string>('habinsaran')
@@ -57,8 +58,9 @@ export default function SimulatorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-[1240px] mx-auto space-y-8">
+    <div className="relative min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+      <TobaTopoBackground variant="feature" />
+      <div className="relative z-10 max-w-[1240px] mx-auto space-y-8">
 
         {/* ── Page Header (Editorial Swiss Style) ── */}
         <div className="text-center max-w-4xl mx-auto space-y-2">
@@ -328,7 +330,7 @@ export default function SimulatorPage() {
                     className="text-sm font-bold text-foreground"
                     style={{ fontFamily: "'Manrope', sans-serif" }}
                   >
-                    Visual Donut Proporsi Anggaran
+                    Visual Proporsi Anggaran
                   </h3>
                   <span className="text-[10px] text-muted-foreground font-mono">100% KUOTA</span>
                 </div>

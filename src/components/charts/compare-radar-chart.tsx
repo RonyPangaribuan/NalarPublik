@@ -61,16 +61,21 @@ export function CompareRadarChart({ distA, distB }: CompareRadarChartProps) {
   ]
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col justify-between h-full space-y-4">
       {/* Metric Mode Switcher */}
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-          Matriks Radar Poligon 4 Sektor
-        </span>
-        <div className="flex items-center gap-1 bg-muted p-0.5 rounded-lg border border-border text-[11px] font-semibold">
+      <div className="flex items-center justify-between pb-3 border-b border-border">
+        <div>
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground block">
+            Matriks Radar Poligon 4 Sektor
+          </span>
+          <span className="text-[11px] text-muted-foreground font-mono">
+            {metricMode === 'problem' ? 'Kebutuhan BPS (%)' : 'Alokasi APBD (%)'}
+          </span>
+        </div>
+        <div className="flex items-center gap-1 bg-muted p-1 rounded-xl border border-border text-[11px] font-semibold">
           <button
             onClick={() => setMetricMode('problem')}
-            className={`px-2.5 py-1 rounded-md transition-colors ${
+            className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
               metricMode === 'problem'
                 ? 'bg-card text-foreground shadow-sm font-bold'
                 : 'text-muted-foreground hover:text-foreground'
@@ -80,7 +85,7 @@ export function CompareRadarChart({ distA, distB }: CompareRadarChartProps) {
           </button>
           <button
             onClick={() => setMetricMode('budget')}
-            className={`px-2.5 py-1 rounded-md transition-colors ${
+            className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
               metricMode === 'budget'
                 ? 'bg-card text-foreground shadow-sm font-bold'
                 : 'text-muted-foreground hover:text-foreground'
@@ -91,8 +96,8 @@ export function CompareRadarChart({ distA, distB }: CompareRadarChartProps) {
         </div>
       </div>
 
-      {/* Recharts Radar */}
-      <div className="h-[340px] w-full flex items-center justify-center">
+      {/* Recharts Radar (Flexible Height) */}
+      <div className="w-full flex-1 min-h-[380px] flex items-center justify-center py-2">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
             <PolarGrid stroke="var(--border)" strokeDasharray="3 3" />
@@ -154,13 +159,13 @@ export function CompareRadarChart({ distA, distB }: CompareRadarChartProps) {
         </ResponsiveContainer>
       </div>
 
-      {/* Legend Footer */}
-      <div className="flex items-center justify-center gap-6 text-xs font-semibold pt-1">
-        <span className="flex items-center gap-2 text-primary">
+      {/* Legend Footer (Pinned to bottom) */}
+      <div className="flex items-center justify-center gap-6 text-xs font-semibold pt-3 border-t border-border/60">
+        <span className="flex items-center gap-2 text-primary font-bold">
           <span className="size-2.5 rounded-sm bg-[#1668e8]" />
           {distA.name}
         </span>
-        <span className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+        <span className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold">
           <span className="size-2.5 rounded-sm bg-[#10b981]" />
           {distB.name}
         </span>

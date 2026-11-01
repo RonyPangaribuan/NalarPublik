@@ -72,7 +72,12 @@ function createPinIcon(colorHex: string, label: string, isSelected: boolean) {
 function MapController({ center }: { center: [number, number] }) {
   const map = useMap()
   useEffect(() => {
-    map.flyTo(center, 11, { duration: 1.2 })
+    map.invalidateSize()
+    const timer = setTimeout(() => {
+      map.invalidateSize()
+      map.flyTo(center, 11, { duration: 1.2 })
+    }, 100)
+    return () => clearTimeout(timer)
   }, [center, map])
   return null
 }
@@ -92,8 +97,8 @@ export default function MapView({
       center={centerPosition}
       zoom={11}
       scrollWheelZoom={true}
-      className="w-full h-full rounded-2xl z-0"
-      style={{ minHeight: '520px' }}
+      className="w-full h-full rounded-xl z-0"
+      style={{ height: '100%', minHeight: '100%', width: '100%' }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

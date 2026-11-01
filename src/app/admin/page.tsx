@@ -28,6 +28,7 @@ import {
 import { AdminBarChart } from '@/components/charts/admin-bar-chart'
 import { useRoleStore } from '@/store/use-role-store'
 import { cn } from '@/lib/utils'
+import { TobaTopoBackground } from '@/components/toba-topo-background'
 
 export default function AdminPage() {
   const { role, setRole } = useRoleStore()
@@ -118,8 +119,9 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-[1400px] mx-auto space-y-8">
+    <div className="relative min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+      <TobaTopoBackground variant="feature" />
+      <div className="relative z-10 max-w-[1400px] mx-auto space-y-8">
 
         {/* ── Role Warning Banner if role === 'public' ── */}
         {role !== 'admin' && (
@@ -238,17 +240,17 @@ export default function AdminPage() {
                 </p>
               </div>
 
-              {/* District Selector Tabs */}
-              <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-xl border border-border overflow-x-auto">
+              {/* District Selector Tabs (Solid Blue Bar) */}
+              <div className="flex items-center gap-1 bg-blue-600 dark:bg-blue-700 p-1.5 rounded-xl border border-blue-500 shadow-sm overflow-x-auto">
                 {districts.map((d) => (
                   <button
                     key={d.id}
                     onClick={() => setSelectedDistrictId(d.id)}
                     className={cn(
-                      'px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all',
+                      'px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer',
                       selectedDistrictId === d.id
-                        ? 'bg-card text-foreground shadow-sm font-bold border border-border'
-                        : 'text-muted-foreground hover:text-foreground'
+                        ? 'bg-white text-blue-700 dark:text-blue-800 shadow-md font-bold'
+                        : 'text-white/85 hover:text-white hover:bg-white/15'
                     )}
                   >
                     {d.name.replace('Kecamatan ', '')}
