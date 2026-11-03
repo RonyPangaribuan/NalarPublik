@@ -28,7 +28,12 @@ export const metadata: Metadata = {
   keywords: ['APBD', 'Kabupaten Toba', 'transparansi anggaran', 'BPS', 'Musrenbang', 'civic tech'],
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: 'any' },
       { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
 }

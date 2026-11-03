@@ -100,35 +100,35 @@ export function CompareRadarChart({ distA, distB }: CompareRadarChartProps) {
       <div className="w-full flex-1 min-h-[380px] flex items-center justify-center py-2">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
-            <PolarGrid stroke="var(--border)" strokeDasharray="3 3" />
+            <PolarGrid stroke="var(--border)" strokeDasharray="3 3" className="opacity-80" />
             <PolarAngleAxis
               dataKey="sector"
-              tick={{ fill: 'var(--foreground)', fontSize: 11, fontWeight: 600 }}
+              tick={{ fill: 'var(--foreground)', fontSize: 12, fontWeight: 700 }}
             />
             <PolarRadiusAxis
               angle={30}
               domain={[0, 60]}
-              tick={{ fill: 'var(--muted-foreground)', fontSize: 9 }}
+              tick={{ fill: 'var(--muted-foreground)', fontSize: 10, fontWeight: 600 }}
               stroke="var(--border)"
             />
             <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   return (
-                    <div className="bg-card/95 backdrop-blur-md border border-border p-3 rounded-xl shadow-lg text-xs space-y-1.5">
-                      <p className="font-bold text-foreground">
-                        {payload[0]?.payload?.sector}
+                    <div className="bg-card/95 backdrop-blur-md border border-border p-3.5 rounded-xl shadow-xl text-xs space-y-2">
+                      <p className="font-extrabold text-foreground border-b border-border/80 pb-1">
+                        Sektor {payload[0]?.payload?.sector}
                       </p>
                       {payload.map((entry, index) => (
-                        <div key={index} className="flex items-center justify-between gap-4">
-                          <span className="flex items-center gap-1.5" style={{ color: entry.color }}>
+                        <div key={index} className="flex items-center justify-between gap-5">
+                          <span className="flex items-center gap-2 font-bold" style={{ color: entry.color }}>
                             <span
-                              className="size-2 rounded-full"
+                              className="size-2.5 rounded-full"
                               style={{ backgroundColor: entry.color }}
                             />
                             {entry.name}:
                           </span>
-                          <span className="font-mono font-bold text-foreground">
+                          <span className="font-mono font-extrabold text-foreground">
                             {entry.value}%
                           </span>
                         </div>
@@ -142,31 +142,35 @@ export function CompareRadarChart({ distA, distB }: CompareRadarChartProps) {
             <Radar
               name={distA.name}
               dataKey={distA.name}
-              stroke="#1668e8"
-              fill="#1668e8"
-              fillOpacity={0.35}
-              strokeWidth={2}
+              stroke="#2563eb"
+              fill="#2563eb"
+              fillOpacity={0.45}
+              strokeWidth={3}
+              dot={{ r: 4.5, strokeWidth: 2, fill: '#2563eb', stroke: '#ffffff' }}
+              activeDot={{ r: 6.5, strokeWidth: 2 }}
             />
             <Radar
               name={distB.name}
               dataKey={distB.name}
-              stroke="#10b981"
+              stroke="#059669"
               fill="#10b981"
-              fillOpacity={0.25}
-              strokeWidth={2}
+              fillOpacity={0.42}
+              strokeWidth={3}
+              dot={{ r: 4.5, strokeWidth: 2, fill: '#059669', stroke: '#ffffff' }}
+              activeDot={{ r: 6.5, strokeWidth: 2 }}
             />
           </RadarChart>
         </ResponsiveContainer>
       </div>
 
       {/* Legend Footer (Pinned to bottom) */}
-      <div className="flex items-center justify-center gap-6 text-xs font-semibold pt-3 border-t border-border/60">
-        <span className="flex items-center gap-2 text-primary font-bold">
-          <span className="size-2.5 rounded-sm bg-[#1668e8]" />
+      <div className="flex items-center justify-center gap-8 text-xs font-semibold pt-3 border-t border-border/70">
+        <span className="flex items-center gap-2 text-blue-700 dark:text-blue-400 font-extrabold">
+          <span className="size-3 rounded-full bg-[#2563eb] ring-2 ring-blue-300 dark:ring-blue-900 shadow-xs" />
           {distA.name}
         </span>
-        <span className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold">
-          <span className="size-2.5 rounded-sm bg-[#10b981]" />
+        <span className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-extrabold">
+          <span className="size-3 rounded-full bg-[#059669] ring-2 ring-emerald-300 dark:ring-emerald-900 shadow-xs" />
           {distB.name}
         </span>
       </div>

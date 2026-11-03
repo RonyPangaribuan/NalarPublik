@@ -44,24 +44,24 @@ export default function ComparePage() {
       <div className="relative z-10 max-w-[1240px] mx-auto space-y-8">
 
         {/* ── Page Header (Editorial Swiss Style) ── */}
-        <div className="text-center max-w-4xl mx-auto space-y-2">
-          <div className="flex items-center justify-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
+        <div className="text-center max-w-4xl mx-auto space-y-2 animate-fade-in">
+          <div className="flex items-center justify-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-muted-foreground animate-fade-in">
             <span className="size-1.5 bg-primary" />
             PERBANDINGAN WILAYAH KABUPATEN TOBA
           </div>
           <h1
-            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground sm:whitespace-nowrap"
+            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground sm:whitespace-nowrap animate-fade-in"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Perbandingan Anggaran Antarwilayah
           </h1>
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto animate-fade-in">
             Bandingkan data kebutuhan masyarakat dan alokasi anggaran antar-kecamatan di Kabupaten Toba.
           </p>
         </div>
 
         {/* ── Selectors & Header Cards ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch animate-fade-in" style={{ animationDelay: '180ms' }}>
 
           {/* Kecamatan A Selector Card */}
           <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
@@ -140,7 +140,7 @@ export default function ComparePage() {
         </div>
 
         {/* ── Visual Bar & Radar Comparison per Sector (Ukuran Sama: 50% - 50% & Tinggi Sejajar) ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch animate-fade-in" style={{ animationDelay: '320ms' }}>
 
           {/* Left: Interactive Radar Polygon Chart (Equal 50% & Full Height) */}
           <div className="flex flex-col h-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm">

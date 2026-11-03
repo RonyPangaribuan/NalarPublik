@@ -21,8 +21,10 @@ import { District, SectorKey } from '@/types'
 import { BudgetDonutChart } from '@/components/charts/budget-donut-chart'
 import { cn } from '@/lib/utils'
 import { TobaTopoBackground } from '@/components/toba-topo-background'
+import { useSubmissionsStore } from '@/store/use-submissions-store'
 
 export default function SimulatorPage() {
+  const { addSubmission } = useSubmissionsStore()
   const [selectedDistrictId, setSelectedDistrictId] = useState<string>('habinsaran')
   const [allocations, setAllocations] = useState<{
     infra: number
@@ -54,6 +56,21 @@ export default function SimulatorPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!isValid) return
+
+    // Simpan aspirasi warga ke shared store (localStorage)
+    addSubmission({
+      district_id: selectedDistrictId,
+      district_name: district.name,
+      author: 'Warga Partisipatif',
+      avatar: 'WP',
+      avatarBg: 'bg-blue-500/15 text-blue-600 dark:text-blue-400',
+      alloc_infra_pct: allocations.infra,
+      alloc_health_pct: allocations.health,
+      alloc_edu_pct: allocations.education,
+      alloc_social_pct: allocations.social,
+      notes: notes.trim() || 'Aspirasi mandiri warga untuk prioritas pembangunan.',
+    })
+
     setSubmitted(true)
   }
 
@@ -63,18 +80,18 @@ export default function SimulatorPage() {
       <div className="relative z-10 max-w-[1240px] mx-auto space-y-8">
 
         {/* ── Page Header (Editorial Swiss Style) ── */}
-        <div className="text-center max-w-4xl mx-auto space-y-2">
-          <div className="flex items-center justify-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
+        <div className="text-center max-w-4xl mx-auto space-y-2 animate-fade-in">
+          <div className="flex items-center justify-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-muted-foreground animate-fade-in">
             <span className="size-1.5 bg-primary" />
             SUARA WARGA KABUPATEN TOBA
           </div>
           <h1
-            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground sm:whitespace-nowrap"
+            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground sm:whitespace-nowrap animate-fade-in"
             style={{ fontFamily: "'Manrope', sans-serif" }}
           >
             Andai Anda yang Membagi Anggaran Daerah
           </h1>
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto animate-fade-in">
             Tentukan prioritas dana pembangunan di kecamatan Anda. Bagikan 100% anggaran
             ke 4 bidang utama agar kebutuhan nyata warga terpenuhi.
           </p>
@@ -95,8 +112,8 @@ export default function SimulatorPage() {
                 Aspirasi Berhasil Dicatat
               </h2>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Partisipasi Anda untuk <strong>{district.name}</strong> telah terdata
-                dan diagregasikan secara otomatis ke panel Musrenbang Pemkab Toba.
+                Partisipasi Anda untuk <strong>{district.name}</strong> telah tersimpan dalam pangkalan data
+                aspirasi warga NalarPublik dan langsung disandingkan dengan APBD daerah.
               </p>
             </div>
 
@@ -135,21 +152,21 @@ export default function SimulatorPage() {
                   setSubmitted(false)
                   setNotes('')
                 }}
-                className="flex-1 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-semibold text-foreground hover:bg-muted"
+                className="flex-1 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-semibold text-foreground hover:bg-muted cursor-pointer"
               >
                 Kirim Aspirasi Lain
               </button>
               <Link
                 href="/admin"
-                className="flex-1 rounded-xl bg-primary px-4 py-2.5 text-xs font-bold text-primary-foreground hover:opacity-90 flex items-center justify-center gap-1.5"
+                className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-700 px-4 py-2.5 text-xs font-bold text-white flex items-center justify-center gap-1.5 shadow-sm transition-colors cursor-pointer"
               >
-                Lihat di Dasbor Pemda <ArrowRight className="size-3.5" />
+                Lihat di Dasbor Admin <ArrowRight className="size-3.5" />
               </Link>
             </div>
           </div>
         ) : (
           /* ── Interactive Simulator Form ── */
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fade-in" style={{ animationDelay: '200ms' }}>
 
             {/* Left: Interactive Sliders (Span 7) */}
             <form onSubmit={handleSubmit} className="lg:col-span-7 bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">

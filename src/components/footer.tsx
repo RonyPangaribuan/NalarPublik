@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { ArrowUp } from 'lucide-react'
 import { Logo } from '@/components/logo'
 import { cn } from '@/lib/utils'
 
 export function Footer() {
+  const pathname = usePathname()
   const [showTopBtn, setShowTopBtn] = useState(false)
+  const isAdminDashboard = pathname === '/admin'
 
   useEffect(() => {
     const handleScroll = () => {
@@ -65,11 +68,13 @@ export function Footer() {
       <button
         onClick={scrollToTop}
         aria-label="Kembali ke atas halaman"
+        title="Kembali ke atas"
         className={cn(
-          'fixed bottom-6 right-6 z-50 flex items-center justify-center size-10 rounded-full',
-          'bg-primary text-primary-foreground shadow-xl border border-white/20',
+          'fixed z-40 flex items-center justify-center size-10 rounded-full',
+          'bg-blue-600 hover:bg-blue-700 text-white shadow-xl border border-white/20',
           'transition-all duration-300 ease-out cursor-pointer',
-          'hover:scale-110 active:scale-95 hover:bg-primary/90',
+          'hover:scale-110 active:scale-95',
+          isAdminDashboard ? 'bottom-22 right-7' : 'bottom-6 right-6',
           showTopBtn
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 translate-y-4 pointer-events-none'

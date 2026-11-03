@@ -52,25 +52,25 @@ export default function MapPage() {
       <div className="relative z-10 max-w-[1400px] mx-auto space-y-6">
 
         {/* ── Page Header (Editorial Swiss Style) ── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 animate-fade-in">
           <div>
-            <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-2">
+            <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-2 animate-fade-in">
               <span className="size-1.5 bg-primary" />
               PETA WILAYAH KABUPATEN TOBA
             </div>
             <h1
-              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground sm:whitespace-nowrap"
+              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground sm:whitespace-nowrap animate-fade-in"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
               Peta Kesenjangan Anggaran Kabupaten Toba
             </h1>
-            <p className="text-sm text-muted-foreground max-w-2xl mt-1">
+            <p className="text-sm text-muted-foreground max-w-2xl mt-1 animate-fade-in">
               Pilih kecamatan pada peta untuk melihat perbedaan antara kebutuhan masyarakat dan pembagian anggaran daerah.
             </p>
           </div>
 
           {/* Quick Legend Indicator (Crisp Monospace) */}
-          <div className="flex items-center gap-3 text-[11px] font-mono bg-card border border-border rounded-xl px-4 py-2.5 shadow-sm">
+          <div className="flex items-center gap-3 text-[11px] font-mono bg-card border border-border rounded-xl px-4 py-2.5 shadow-sm animate-fade-in">
             <span className="flex items-center gap-1.5 text-foreground font-medium">
               <span className="size-1.5 rounded-full bg-rose-500" />
               Perlu Perhatian (&ge;+20)
@@ -87,7 +87,7 @@ export default function MapPage() {
         </div>
 
         {/* ── Sector Filter Bar (Clean Segmented Control - Solid Blue Background) ── */}
-        <div className="flex items-center gap-1.5 bg-blue-600 dark:bg-blue-700 p-1.5 rounded-xl border border-blue-500 shadow-sm overflow-x-auto select-none">
+        <div className="flex items-center gap-1.5 bg-blue-600 dark:bg-blue-700 p-1.5 rounded-xl border border-blue-500 shadow-sm overflow-x-auto select-none animate-fade-in" style={{ animationDelay: '150ms' }}>
           <button
             onClick={() => setActiveSector(undefined)}
             className={cn(
@@ -116,7 +116,7 @@ export default function MapPage() {
         </div>
 
         {/* ── Map Canvas & Detail Drawer Grid (Ukuran Sama: 50% - 50% & Tinggi Sejajar) ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch animate-fade-in" style={{ animationDelay: '280ms' }}>
 
           {/* Left: Interactive Map Container (50% Lebar & Tinggi Sejajar) */}
           <div className="flex flex-col h-full bg-card border border-border rounded-2xl p-3 shadow-sm overflow-hidden">
