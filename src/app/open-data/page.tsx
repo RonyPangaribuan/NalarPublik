@@ -500,9 +500,9 @@ export default function OpenDataPage() {
       if (stored) {
         const parsed = JSON.parse(stored)
         if (Array.isArray(parsed) && parsed.length > 0) {
-          const hydrated = parsed.map((doc: any) => ({
+          const hydrated = parsed.map((doc: Omit<SpecificDoc, 'breakdown'> & { breakdown: Array<Omit<SpecificDoc['breakdown'][number], 'icon'>> }) => ({
             ...doc,
-            breakdown: doc.breakdown.map((b: any) => ({
+            breakdown: doc.breakdown.map((b) => ({
               ...b,
               icon:
                 b.sector === 'Infrastruktur'
@@ -944,48 +944,9 @@ export default function OpenDataPage() {
   }
 
   const downloadCSV = () => {
-    const headers = [
-      'id',
-      'bps_code',
-      'name',
-      'population',
-      'total_budget_idr',
-      'infra_problem_pct',
-      'health_problem_pct',
-      'edu_problem_pct',
-      'social_problem_pct',
-      'budget_infra_pct',
-      'budget_health_pct',
-      'budget_edu_pct',
-      'budget_social_pct',
-      'overall_gap_score',
-      'gap_status',
-    ]
-
-    const rows = INITIAL_DISTRICTS.map((d) => [
-      d.id,
-      d.bps_code,
-      `"${d.name}"`,
-      d.population,
-      d.total_budget_idr,
-      d.infra_problem_pct,
-      d.health_problem_pct,
-      d.edu_problem_pct,
-      d.social_problem_pct,
-      d.budget_infra_pct,
-      d.budget_health_pct,
-      d.budget_edu_pct,
-      d.budget_social_pct,
-      d.overall_gap_score,
-      d.gap_status,
-    ])
-
-    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n')
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-    const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
-    link.setAttribute('href', url)
-    link.setAttribute('download', `nalarpublik_toba_apbd_bps_2026.csv`)
+    link.href = '/api/export'
+    link.setAttribute('download', 'nalarpublik_toba_apbd_bps_2026.csv')
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)

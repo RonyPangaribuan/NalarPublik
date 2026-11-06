@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   ArrowLeftRight,
@@ -14,17 +14,30 @@ import {
   CheckCircle2,
 } from 'lucide-react'
 import { INITIAL_DISTRICTS, formatRupiah } from '@/lib/data'
+import { District } from '@/types'
 import { calculateSectorGaps, calculateOverallGap, calculateGapStatus, getStatusColor } from '@/lib/gap-calculator'
 import { CompareRadarChart } from '@/components/charts/compare-radar-chart'
 import { cn } from '@/lib/utils'
 import { TobaTopoBackground } from '@/components/toba-topo-background'
 
 export default function ComparePage() {
+  const [districts, setDistricts] = useState<District[]>(INITIAL_DISTRICTS)
   const [districtAId, setDistrictAId] = useState<string>('habinsaran')
   const [districtBId, setDistrictBId] = useState<string>('balige')
 
-  const distA = INITIAL_DISTRICTS.find((d) => d.id === districtAId) || INITIAL_DISTRICTS[3]
-  const distB = INITIAL_DISTRICTS.find((d) => d.id === districtBId) || INITIAL_DISTRICTS[0]
+  useEffect(() => {
+    fetch('/api/districts')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+          setDistricts(json.data)
+        }
+      })
+      .catch((err) => console.warn('Gagal memuat districts di compare:', err))
+  }, [])
+
+  const distA = districts.find((d) => d.id === districtAId) || districts[3]
+  const distB = districts.find((d) => d.id === districtBId) || districts[0]
 
   const gapsA = calculateSectorGaps(distA)
   const gapsB = calculateSectorGaps(distB)

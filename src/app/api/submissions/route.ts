@@ -1,14 +1,22 @@
 import { NextResponse } from 'next/server'
-import { INITIAL_SUBMISSIONS } from '@/lib/data'
-import { CitizenSubmission } from '@/types'
+import { getAllSubmissions, createCitizenSubmission } from '@/lib/db'
 
-let memorySubmissions: CitizenSubmission[] = [...INITIAL_SUBMISSIONS]
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const districtId = searchParams.get('district_id') || undefined
+    const limit = Number(searchParams.get('limit')) || 50
 
-export async function GET() {
-  return NextResponse.json({
-    total: memorySubmissions.length,
-    data: memorySubmissions,
-  })
+    const submissions = getAllSubmissions(undefined, districtId, limit)
+
+    return NextResponse.json({
+      total: submissions.length,
+      data: submissions,
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Gagal mengambil data aspirasi'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 }
 
 export async function POST(request: Request) {
@@ -20,31 +28,34 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Kecamatan wajib dipilih' }, { status: 400 })
     }
 
-    const total = alloc_infra_pct + alloc_health_pct + alloc_edu_pct + alloc_social_pct
-    if (total !== 100) {
-      return NextResponse.json({ error: 'Total alokasi simulasi wajib tepat 100%' }, { status: 400 })
+    if (
+      typeof alloc_infra_pct !== 'number' ||
+      typeof alloc_health_pct !== 'number' ||
+      typeof alloc_edu_pct !== 'number' ||
+      typeof alloc_social_pct !== 'number'
+    ) {
+      return NextResponse.json({ error: 'Nilai alokasi simulasi harus berupa angka' }, { status: 400 })
     }
 
-    if (notes && notes.length > 200) {
-      return NextResponse.json({ error: 'Catatan aspirasi maksimal 200 karakter' }, { status: 400 })
-    }
-
-    const newSub: CitizenSubmission = {
-      id: `sub-${Date.now()}`,
+    const newSub = createCitizenSubmission({
       district_id,
       alloc_infra_pct,
       alloc_health_pct,
       alloc_edu_pct,
       alloc_social_pct,
-      notes: notes || undefined,
-      created_at: new Date().toISOString(),
-    }
-
-    memorySubmissions.unshift(newSub)
+      notes: typeof notes === 'string' ? notes.trim() : undefined,
+    })
 
     return NextResponse.json({ success: true, data: newSub }, { status: 201 })
   } catch (error) {
-    return NextResponse.json({ error: 'Gagal mencatat aspirasi' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Gagal mencatat aspirasi'
+    const isValidationError =
+      message.includes('100%') ||
+      message.includes('200 karakter') ||
+      message.includes('wajib dipilih') ||
+      message.includes('0% hingga 100%') ||
+      message.includes('tidak valid')
+
+    return NextResponse.json({ error: message }, { status: isValidationError ? 400 : 500 })
   }
 }
-

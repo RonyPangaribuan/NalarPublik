@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Sliders,
@@ -25,6 +25,7 @@ import { useSubmissionsStore } from '@/store/use-submissions-store'
 
 export default function SimulatorPage() {
   const { addSubmission } = useSubmissionsStore()
+  const [districts, setDistricts] = useState<District[]>(INITIAL_DISTRICTS)
   const [selectedDistrictId, setSelectedDistrictId] = useState<string>('habinsaran')
   const [allocations, setAllocations] = useState<{
     infra: number
@@ -40,7 +41,18 @@ export default function SimulatorPage() {
   const [notes, setNotes] = useState<string>('')
   const [submitted, setSubmitted] = useState<boolean>(false)
 
-  const district = INITIAL_DISTRICTS.find((d) => d.id === selectedDistrictId) || INITIAL_DISTRICTS[3]
+  useEffect(() => {
+    fetch('/api/districts')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+          setDistricts(json.data)
+        }
+      })
+      .catch((err) => console.warn('Gagal memuat districts di simulator:', err))
+  }, [])
+
+  const district = districts.find((d) => d.id === selectedDistrictId) || districts[3]
 
   const totalAlloc = allocations.infra + allocations.health + allocations.education + allocations.social
   const remaining = 100 - totalAlloc
@@ -53,11 +65,29 @@ export default function SimulatorPage() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!isValid) return
 
-    // Simpan aspirasi warga ke shared store (localStorage)
+    // Sinkronisasi aspirasi ke SQLite Database melalui Route Handler API
+    try {
+      await fetch('/api/submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          district_id: selectedDistrictId,
+          alloc_infra_pct: allocations.infra,
+          alloc_health_pct: allocations.health,
+          alloc_edu_pct: allocations.education,
+          alloc_social_pct: allocations.social,
+          notes: notes.trim() || undefined,
+        }),
+      })
+    } catch (err) {
+      console.warn('Gagal sinkron ke API submissions:', err)
+    }
+
+    // Simpan aspirasi warga ke shared store (localStorage) untuk persistensi lokal UI
     addSubmission({
       district_id: selectedDistrictId,
       district_name: district.name,
@@ -141,7 +171,7 @@ export default function SimulatorPage() {
               </div>
               {notes && (
                 <div className="pt-2 border-t border-border text-muted-foreground italic font-sans text-xs">
-                  "{notes}"
+                  &ldquo;{notes}&rdquo;
                 </div>
               )}
             </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   ShieldAlert,
@@ -45,6 +45,17 @@ import { TobaTopoBackground } from '@/components/toba-topo-background'
 export default function AdminPage() {
   const { role, setRole } = useRoleStore()
   const [districts, setDistricts] = useState<District[]>(INITIAL_DISTRICTS)
+
+  useEffect(() => {
+    fetch('/api/districts')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+          setDistricts(json.data)
+        }
+      })
+      .catch((err) => console.warn('Gagal memuat data districts dari API:', err))
+  }, [])
   const [selectedDistrictId, setSelectedDistrictId] = useState<string>('habinsaran')
   const [editingDistrict, setEditingDistrict] = useState<District | null>(null)
   const [syncing, setSyncing] = useState<boolean>(false)
@@ -227,9 +238,34 @@ export default function AdminPage() {
   const isEditValid = editTotal === 100
 
   // Save budget changes
-  const handleSaveBudget = (e: React.FormEvent) => {
+  const handleSaveBudget = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!editingDistrict || !isEditValid) return
+
+    try {
+      const res = await fetch('/api/districts', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingDistrict.id,
+          budget_infra_pct: editBudget.infra,
+          budget_health_pct: editBudget.health,
+          budget_edu_pct: editBudget.edu,
+          budget_social_pct: editBudget.social,
+        }),
+      })
+
+      if (res.ok) {
+        const json = await res.json()
+        if (json.data) {
+          setDistricts((prev) => prev.map((d) => (d.id === json.data.id ? json.data : d)))
+          setEditingDistrict(null)
+          return
+        }
+      }
+    } catch (err) {
+      console.warn('Gagal update ke API districts:', err)
+    }
 
     setDistricts((prev) =>
       prev.map((d) => {
@@ -254,14 +290,24 @@ export default function AdminPage() {
     setEditingDistrict(null)
   }
 
-  // Trigger BPS Sync simulation
-  const handleSyncBPS = () => {
+  // Trigger BPS Sync
+  const handleSyncBPS = async () => {
     setSyncing(true)
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/districts/sync', { method: 'POST' })
+      if (res.ok) {
+        const json = await res.json()
+        if (json.data && Array.isArray(json.data)) {
+          setDistricts(json.data)
+        }
+      }
+    } catch (err) {
+      console.warn('Gagal memicu sinkronisasi BPS:', err)
+    } finally {
       setSyncing(false)
       setSyncedSuccess(true)
       setTimeout(() => setSyncedSuccess(false), 3500)
-    }, 1500)
+    }
   }
 
   return (

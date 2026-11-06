@@ -43,3 +43,13 @@ next-env.d.ts
 
 # documentation
 dokumentasi_teknis.md
+
+# sqlite database
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+data/*.db
+data/*.db-wal
+data/*.db-shm
+

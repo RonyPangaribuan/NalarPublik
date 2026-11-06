@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import {
@@ -38,8 +38,21 @@ const MapView = dynamic(() => import('@/components/map-view'), {
 })
 
 export default function MapPage() {
+  const [districts, setDistricts] = useState<District[]>(INITIAL_DISTRICTS)
   const [selectedDistrict, setSelectedDistrict] = useState<District>(INITIAL_DISTRICTS[3]) // Default Habinsaran (kritis)
   const [activeSector, setActiveSector] = useState<SectorKey | undefined>(undefined)
+
+  useEffect(() => {
+    fetch('/api/districts')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+          setDistricts(json.data)
+          setSelectedDistrict((prev) => json.data.find((d: District) => d.id === prev.id) || json.data[3])
+        }
+      })
+      .catch((err) => console.warn('Gagal memuat data kecamatan dari API:', err))
+  }, [])
 
   const gaps = calculateSectorGaps(selectedDistrict)
   const overallGap = calculateOverallGap(selectedDistrict)
@@ -122,7 +135,7 @@ export default function MapPage() {
           <div className="flex flex-col h-full bg-card border border-border rounded-2xl p-3 shadow-sm overflow-hidden">
             <div className="relative w-full h-full min-h-[560px] flex-1 rounded-xl overflow-hidden">
               <MapView
-                districts={INITIAL_DISTRICTS}
+                districts={districts}
                 selectedDistrict={selectedDistrict}
                 onSelectDistrict={(d) => setSelectedDistrict(d)}
                 activeSector={activeSector}
