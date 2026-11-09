@@ -1110,7 +1110,7 @@ export default function HomePage() {
                 )}
               >
                 <Users size={16} />
-                <span>Untuk Warga (Publik)</span>
+                <span>Untuk Warga</span>
               </button>
               <button
                 type="button"
@@ -1123,7 +1123,7 @@ export default function HomePage() {
                 )}
               >
                 <Building2 size={16} />
-                <span>Untuk Pengelola (Pemda)</span>
+                <span>Untuk Pengelola</span>
               </button>
             </div>
           </FadeIn>
@@ -1133,7 +1133,6 @@ export default function HomePage() {
             {activePerspective === 'warga' ? (
               <Link
                 href="/simulator"
-                onClick={() => setRole('public')}
                 className="group inline-flex items-center gap-2 text-sm sm:text-base font-bold text-primary dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-all cursor-pointer py-2 px-4 rounded-xl hover:bg-blue-600/10"
               >
                 <span>Mulai Simulasi Anggaran Warga</span>
@@ -1142,7 +1141,6 @@ export default function HomePage() {
             ) : (
               <Link
                 href="/admin"
-                onClick={() => setRole('admin')}
                 className="group inline-flex items-center gap-2 text-sm sm:text-base font-bold text-primary dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-all cursor-pointer py-2 px-4 rounded-xl hover:bg-blue-600/10"
               >
                 <span>Buka Dasbor Anggaran Daerah</span>

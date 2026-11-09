@@ -70,9 +70,16 @@ export default function ComparePage() {
                 WILAYAH A - SISI KIRI
               </span>
               {/* Swiss Monospace Status Tag */}
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted border border-border text-[11px] font-mono font-semibold text-foreground">
-                <span className={cn('size-1.5 rounded-full', colorA.dot)} />
-                {colorA.label} <span className="text-muted-foreground font-normal">| Selisih +{overallGapA}%</span>
+              <span className={cn(
+                'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold',
+                colorA.label === 'KRITIS' || colorA.label === 'CRITICAL'
+                  ? 'bg-rose-600 text-white'
+                  : colorA.label === 'WASPADA' || colorA.label === 'WARNING'
+                    ? 'bg-amber-500 text-white'
+                    : 'bg-emerald-600 text-white'
+              )}>
+                <span className="size-1.5 rounded-full bg-white/70" />
+                {colorA.label} <span className="opacity-80 font-normal">| +{overallGapA}%</span>
               </span>
             </div>
 
@@ -107,9 +114,16 @@ export default function ComparePage() {
                 WILAYAH B - SISI KANAN
               </span>
               {/* Swiss Monospace Status Tag */}
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted border border-border text-[11px] font-mono font-semibold text-foreground">
-                <span className={cn('size-1.5 rounded-full', colorB.dot)} />
-                {colorB.label} <span className="text-muted-foreground font-normal">| Selisih +{overallGapB}%</span>
+              <span className={cn(
+                'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold',
+                colorB.label === 'KRITIS' || colorB.label === 'CRITICAL'
+                  ? 'bg-rose-600 text-white'
+                  : colorB.label === 'WASPADA' || colorB.label === 'WARNING'
+                    ? 'bg-amber-500 text-white'
+                    : 'bg-emerald-600 text-white'
+              )}>
+                <span className="size-1.5 rounded-full bg-white/70" />
+                {colorB.label} <span className="opacity-80 font-normal">| +{overallGapB}%</span>
               </span>
             </div>
 

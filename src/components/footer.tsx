@@ -55,8 +55,8 @@ export function Footer() {
             <p className="text-xs font-semibold tracking-wide text-white">
               Kabupaten Toba, Sumatera Utara
             </p>
-            <p className="text-[10px] text-blue-200/70 font-normal">
-              © 2026 NalarPublik · Inisiatif independen warga untuk transparansi anggaran Kabupaten Toba.
+            <p className="text-[10.5px] text-blue-200/80 font-normal leading-relaxed max-w-xl">
+              © 2026 NalarPublik · Platform civic-tech independen pihak ketiga untuk edukasi &amp; transparansi anggaran.
             </p>
           </div>
 

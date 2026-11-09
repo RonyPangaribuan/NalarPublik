@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Menu, X, Moon, Sun } from 'lucide-react'
+import { Menu, X, Moon, Sun, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Logo } from '@/components/logo'
 import { NavbarSearch } from '@/components/navbar-search'
@@ -26,58 +26,11 @@ const ADMIN_LINKS = [
   { href: '/admin/report',label: 'Laporan' },
 ]
 
-// ── Mode Switch ──────────────────────────────────────────────────────────────
-function ModeSwitch({ className, fullWidth }: { className?: string; fullWidth?: boolean }) {
-  const { role, setRole } = useRoleStore()
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => { setMounted(true) }, [])
-  if (!mounted) return null
-
-  return (
-    <div
-      className={cn(
-        'flex items-center rounded-lg border border-border bg-muted p-0.5 text-xs font-semibold',
-        fullWidth && 'w-full',
-        className
-      )}
-      role="group"
-      aria-label="Pilih mode"
-    >
-      <button
-        onClick={() => setRole('public')}
-        className={cn(
-          'rounded-md px-3 py-1.5 transition-all duration-200',
-          fullWidth && 'flex-1 text-center',
-          role === 'public'
-            ? 'bg-card text-foreground shadow-sm font-bold'
-            : 'text-muted-foreground hover:text-foreground'
-        )}
-      >
-        Warga
-      </button>
-      <button
-        onClick={() => setRole('admin')}
-        className={cn(
-          'rounded-md px-3 py-1.5 transition-all duration-200',
-          fullWidth && 'flex-1 text-center',
-          role === 'admin'
-            ? 'bg-card text-foreground shadow-sm font-bold'
-            : 'text-muted-foreground hover:text-foreground'
-        )}
-      >
-        Admin
-      </button>
-    </div>
-  )
-}
-
 // ── Theme Toggle — sets .dark & [data-theme="dark"] on <html> globally ───────
 function ThemeToggle({ className, fullWidth }: { className?: string; fullWidth?: boolean }) {
   const [dark, setDark] = useState(false)
-  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
     const isDark =
       document.documentElement.classList.contains('dark') ||
       document.documentElement.getAttribute('data-theme') === 'dark'
@@ -90,34 +43,79 @@ function ThemeToggle({ className, fullWidth }: { className?: string; fullWidth?:
     if (next) {
       document.documentElement.classList.add('dark')
       document.documentElement.setAttribute('data-theme', 'dark')
-      try {
-        localStorage.setItem('nalarpublik-theme', 'dark')
-      } catch (_) {}
+      try { localStorage.setItem('nalarpublik-theme', 'dark') } catch (_) {}
     } else {
       document.documentElement.classList.remove('dark')
       document.documentElement.setAttribute('data-theme', 'light')
-      try {
-        localStorage.setItem('nalarpublik-theme', 'light')
-      } catch (_) {}
+      try { localStorage.setItem('nalarpublik-theme', 'light') } catch (_) {}
     }
   }
-
-  if (!mounted) return null
 
   return (
     <button
       onClick={toggle}
       aria-label={dark ? 'Ubah ke tema terang' : 'Ubah ke tema gelap'}
       className={cn(
-        'flex items-center justify-center gap-1.5 rounded-lg border border-border bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors',
+        'flex items-center justify-center gap-1.5 rounded-lg border border-border bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer shrink-0',
         fullWidth && 'w-full',
         className
       )}
+      suppressHydrationWarning
     >
       {dark ? <Sun size={15} /> : <Moon size={15} />}
-      <span>{dark ? 'Terang' : 'Gelap'}</span>
+      <span suppressHydrationWarning>{dark ? 'Terang' : 'Gelap'}</span>
     </button>
   )
+}
+
+// ── Admin Session Button (Tanpa teks 'Mode Admin', hanya tombol Keluar saat login) ──
+function AdminSessionButton({ className, fullWidth }: { className?: string; fullWidth?: boolean }) {
+  const router = useRouter()
+  const { role, setRole } = useRoleStore()
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        const auth = !!data?.authenticated
+        setIsAdmin(auth)
+        setRole(auth ? 'admin' : 'public')
+      })
+      .catch(() => {})
+  }, [setRole])
+
+  useEffect(() => {
+    setIsAdmin(role === 'admin')
+  }, [role])
+
+  async function handleLogout() {
+    try { await fetch('/api/auth/logout', { method: 'POST' }) } catch { /* ignore */ }
+    setIsAdmin(false)
+    setRole('public')
+    router.push('/')
+    router.refresh()
+  }
+
+  // Jika admin login, tampilkan hanya tombol Keluar (tanpa teks 'Mode Admin')
+  if (isAdmin) {
+    return (
+      <button
+        onClick={handleLogout}
+        title="Keluar dari akun admin"
+        className={cn(
+          'flex items-center gap-1.5 rounded-lg border border-border bg-muted/70 hover:bg-destructive/10 hover:border-destructive/30 hover:text-destructive px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors cursor-pointer shrink-0',
+          fullWidth && 'w-full justify-center py-2',
+          className
+        )}
+      >
+        <LogOut size={13} />
+        <span>Keluar</span>
+      </button>
+    )
+  }
+
+  return null
 }
 
 // ── Floating Rounded Navbar ──────────────────────────────────────────────────
@@ -148,55 +146,52 @@ export function Navbar() {
       {/* Floating inner nav */}
       <div
         className={cn(
-          'mx-auto mt-2.5 sm:mt-3.5 flex items-center justify-between px-3 sm:px-4 transition-all duration-300',
-          'rounded-[14px] border border-border',
+          'mx-auto mt-2 sm:mt-3 flex items-center justify-between px-4 sm:px-6 transition-all duration-300',
+          'rounded-[16px] border border-border',
           'bg-card/95 backdrop-blur-[16px]',
-          'w-[calc(100%-20px)] sm:w-[calc(100%-24px)] max-w-[1400px]',
-          'h-[54px] sm:h-[58px]',
+          'w-[calc(100%-16px)] sm:w-[calc(100%-32px)] max-w-[1536px]',
+          'h-[58px] sm:h-[62px]',
           scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.18)]' : 'shadow-[0_4px_24px_rgba(0,0,0,0.06)]'
         )}
       >
-        {/* Brand */}
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <Logo size="sm" />
-        </Link>
+        {/* Left: Brand + Navigation Links */}
+        <div className="flex items-center gap-4 lg:gap-8 min-w-0">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <Logo size="sm" />
+          </Link>
 
-        {/* Desktop Nav (Hidden on Mobile) */}
-        <nav className="hidden md:flex items-center gap-0.5" aria-label="Navigasi utama">
-          {links.map((link) => {
-            const active = isActive(link.href)
-            const isAdminLink = link.href.startsWith('/admin')
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  'rounded-lg px-3.5 py-2 text-sm font-medium transition-colors duration-150',
-                  active
-                    ? 'text-foreground font-semibold bg-muted/60 md:bg-transparent'
-                    : isAdminLink
-                      ? 'text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-500/10'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/70'
-                )}
-              >
-                {link.label}
-              </Link>
-            )
-          })}
-        </nav>
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-1 lg:gap-2" aria-label="Navigasi utama">
+            {links.map((link) => {
+              const active = isActive(link.href)
+              const isAdminLink = link.href.startsWith('/admin')
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    'rounded-lg px-3.5 py-2 text-sm font-medium transition-colors duration-150 whitespace-nowrap',
+                    active
+                      ? 'text-foreground font-semibold bg-muted/60 md:bg-transparent'
+                      : isAdminLink
+                        ? 'text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-500/10'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/70'
+                  )}
+                >
+                  {link.label}
+                </Link>
+              )
+            })}
+          </nav>
+        </div>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Search bar: desktop inline input, mobile icon trigger modal */}
+        {/* Right Actions: Search + (Tombol Keluar jika admin) + Theme Toggle */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0" suppressHydrationWarning>
           <NavbarSearch />
+          <AdminSessionButton />
+          <ThemeToggle />
 
-          {/* Desktop Only: Role Switch & Theme Toggle (HIDDEN on Mobile/Tablet to eliminate redundancy) */}
-          <div className="hidden md:flex items-center gap-2">
-            <ModeSwitch />
-            <ThemeToggle />
-          </div>
-
-          {/* Mobile Only: Hamburger Toggle Button */}
+          {/* Mobile Hamburger Button */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
             className="md:hidden flex items-center justify-center size-9 rounded-lg border border-border bg-muted/30 p-2 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0"
@@ -207,7 +202,7 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Backdrop Overlay (Tap to close) */}
+      {/* Mobile Backdrop Overlay */}
       {mobileOpen && (
         <div
           className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 md:hidden"
@@ -246,16 +241,10 @@ export function Navbar() {
             )
           })}
 
-          {/* Section Divider & Settings in Mobile Drawer */}
+          {/* Settings in Mobile Drawer */}
           <div className="pt-3 pb-1 border-t border-border mt-2 space-y-2">
-            <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-muted-foreground px-1">
-              <span>Peran Pengguna</span>
-              <span>Tampilan</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <ModeSwitch fullWidth />
-              <ThemeToggle fullWidth />
-            </div>
+            <AdminSessionButton fullWidth />
+            <ThemeToggle fullWidth />
           </div>
         </div>
       </div>

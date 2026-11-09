@@ -53,12 +53,11 @@ export default function SimulatorPage() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!isValid) return
 
-    // Simpan aspirasi warga ke shared store (localStorage)
-    addSubmission({
+    const aspirationData = {
       district_id: selectedDistrictId,
       district_name: district.name,
       author: 'Warga Partisipatif',
@@ -69,13 +68,35 @@ export default function SimulatorPage() {
       alloc_edu_pct: allocations.education,
       alloc_social_pct: allocations.social,
       notes: notes.trim() || 'Aspirasi mandiri warga untuk prioritas pembangunan.',
-    })
+    }
+
+    // 1. Simpan aspirasi warga ke shared client store
+    addSubmission(aspirationData)
+
+    // 2. Kirim aspirasi ke API backend secara persisten
+    try {
+      await fetch('/api/submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          district_id: selectedDistrictId,
+          district_name: district.name,
+          alloc_infra_pct: allocations.infra,
+          alloc_health_pct: allocations.health,
+          alloc_edu_pct: allocations.education,
+          alloc_social_pct: allocations.social,
+          notes: aspirationData.notes,
+        }),
+      })
+    } catch {
+      // Fallback graceful jika server sedang offline
+    }
 
     setSubmitted(true)
   }
 
   return (
-    <div className="relative min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen bg-background text-foreground pt-20 pb-20 px-4 sm:px-6 lg:px-8">
       <TobaTopoBackground variant="feature" />
       <div className="relative z-10 max-w-[1240px] mx-auto space-y-8">
 
@@ -217,7 +238,8 @@ export default function SimulatorPage() {
                     max="70"
                     value={allocations.infra}
                     onChange={(e) => handleSliderChange('infra', Number(e.target.value))}
-                    className="w-full accent-primary cursor-pointer h-1.5 bg-muted rounded-lg"
+                    className="w-full accent-primary cursor-pointer h-2 bg-muted rounded-lg touch-none"
+                    style={{ touchAction: 'none' }}
                   />
                   <div className="flex justify-between text-[11px] font-mono text-muted-foreground">
                     <span>Masalah Lapangan: {district.infra_problem_pct}%</span>
@@ -242,7 +264,8 @@ export default function SimulatorPage() {
                     max="70"
                     value={allocations.health}
                     onChange={(e) => handleSliderChange('health', Number(e.target.value))}
-                    className="w-full accent-emerald-500 cursor-pointer h-1.5 bg-muted rounded-lg"
+                    className="w-full accent-emerald-500 cursor-pointer h-2 bg-muted rounded-lg touch-none"
+                    style={{ touchAction: 'none' }}
                   />
                   <div className="flex justify-between text-[11px] font-mono text-muted-foreground">
                     <span>Masalah Lapangan: {district.health_problem_pct}%</span>
@@ -267,7 +290,8 @@ export default function SimulatorPage() {
                     max="70"
                     value={allocations.education}
                     onChange={(e) => handleSliderChange('education', Number(e.target.value))}
-                    className="w-full accent-amber-500 cursor-pointer h-1.5 bg-muted rounded-lg"
+                    className="w-full accent-amber-500 cursor-pointer h-2 bg-muted rounded-lg touch-none"
+                    style={{ touchAction: 'none' }}
                   />
                   <div className="flex justify-between text-[11px] font-mono text-muted-foreground">
                     <span>Masalah Lapangan: {district.edu_problem_pct}%</span>
@@ -292,7 +316,8 @@ export default function SimulatorPage() {
                     max="70"
                     value={allocations.social}
                     onChange={(e) => handleSliderChange('social', Number(e.target.value))}
-                    className="w-full accent-violet-500 cursor-pointer h-1.5 bg-muted rounded-lg"
+                    className="w-full accent-violet-500 cursor-pointer h-2 bg-muted rounded-lg touch-none"
+                    style={{ touchAction: 'none' }}
                   />
                   <div className="flex justify-between text-[11px] font-mono text-muted-foreground">
                     <span>Masalah Lapangan: {district.social_problem_pct}%</span>

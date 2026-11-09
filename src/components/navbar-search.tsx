@@ -528,7 +528,7 @@ export function NavbarSearch() {
           }}
           placeholder="Cari data, wilayah, sektor..."
           className={cn(
-            'h-8 w-44 lg:w-56 rounded-lg border border-border bg-muted/40 pl-8 pr-7 text-xs text-foreground',
+            'h-9 w-48 sm:w-56 lg:w-72 rounded-lg border border-border bg-muted/40 pl-8 pr-7 text-xs text-foreground',
             'placeholder:text-muted-foreground/70 focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary',
             'transition-all duration-200'
           )}
