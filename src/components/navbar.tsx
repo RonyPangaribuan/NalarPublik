@@ -12,7 +12,7 @@ import { useRoleStore } from '@/store/use-role-store'
 // ── Nav links per mode ───────────────────────────────────────────────────────
 const WARGA_LINKS = [
   { href: '/',            label: 'Beranda' },
-  { href: '/map',         label: 'Peta Kesenjangan' },
+  { href: '/map',         label: 'Peta Anggaran' },
   { href: '/simulator',   label: 'Simulasi Anggaran' },
   { href: '/compare',     label: 'Perbandingan' },
   { href: '/open-data',   label: 'Data Terbuka' },
@@ -20,7 +20,7 @@ const WARGA_LINKS = [
 
 const ADMIN_LINKS = [
   { href: '/admin',       label: 'Dasbor Anggaran' },
-  { href: '/map',         label: 'Peta Kesenjangan' },
+  { href: '/map',         label: 'Peta Anggaran' },
   { href: '/compare',     label: 'Perbandingan' },
   { href: '/open-data',   label: 'Data Terbuka' },
   { href: '/admin/report',label: 'Laporan' },
@@ -146,47 +146,44 @@ export function Navbar() {
       {/* Floating inner nav */}
       <div
         className={cn(
-          'mx-auto mt-2 sm:mt-3 flex items-center justify-between px-4 sm:px-6 transition-all duration-300',
+          'mx-auto mt-2 sm:mt-3 flex items-center justify-between px-4 sm:px-5 transition-all duration-300',
           'rounded-[16px] border border-border',
           'bg-card/95 backdrop-blur-[16px]',
-          'w-[calc(100%-16px)] sm:w-[calc(100%-32px)] max-w-[1536px]',
-          'h-[58px] sm:h-[62px]',
+          'w-[calc(100%-20px)] sm:w-[calc(100%-32px)] max-w-[1380px]',
+          'h-[56px] sm:h-[60px]',
           scrolled ? 'shadow-[0_8px_32px_rgba(0,0,0,0.18)]' : 'shadow-[0_4px_24px_rgba(0,0,0,0.06)]'
         )}
       >
-        {/* Left: Brand + Navigation Links */}
-        <div className="flex items-center gap-4 lg:gap-8 min-w-0">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
+        {/* Left: Brand Logo */}
+        <div className="flex items-center shrink-0">
+          <Link href="/" className="flex items-center gap-2">
             <Logo size="sm" />
           </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2" aria-label="Navigasi utama">
-            {links.map((link) => {
-              const active = isActive(link.href)
-              const isAdminLink = link.href.startsWith('/admin')
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    'rounded-lg px-3.5 py-2 text-sm font-medium transition-colors duration-150 whitespace-nowrap',
-                    active
-                      ? 'text-foreground font-semibold bg-muted/60 md:bg-transparent'
-                      : isAdminLink
-                        ? 'text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-500/10'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/70'
-                  )}
-                >
-                  {link.label}
-                </Link>
-              )
-            })}
-          </nav>
         </div>
 
-        {/* Right Actions: Search + (Tombol Keluar jika admin) + Theme Toggle */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0" suppressHydrationWarning>
+        {/* Center: Desktop Nav Links (Proporsional & Seimbang di Tengah) */}
+        <nav className="hidden md:flex items-center justify-center gap-1 lg:gap-1.5 flex-1 mx-4 min-w-0" aria-label="Navigasi utama">
+          {links.map((link) => {
+            const active = isActive(link.href)
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  'rounded-lg px-3 py-1.5 text-xs lg:text-[13.5px] font-medium transition-colors duration-150 whitespace-nowrap',
+                  active
+                    ? 'text-foreground font-semibold bg-muted/80 md:bg-transparent'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/70'
+                )}
+              >
+                {link.label}
+              </Link>
+            )
+          })}
+        </nav>
+
+        {/* Right Actions: Search + Keluar + Theme Toggle */}
+        <div className="flex items-center gap-2 shrink-0" suppressHydrationWarning>
           <NavbarSearch />
           <AdminSessionButton />
           <ThemeToggle />

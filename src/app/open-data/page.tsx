@@ -926,20 +926,23 @@ export default function OpenDataPage() {
     } catch (_) { }
   }
 
+  // Helper memformat benda fisik/solid yang tidak bisa didesimalkan (bulatkan atau buat range logis)
+  const formatSolidUnits = (val: number): string => {
+    if (val < 0.05) return '0'
+    const floor = Math.floor(val)
+    const ceil = Math.ceil(val)
+    if (floor === ceil) return floor.toLocaleString('id-ID')
+    return `${floor} - ${ceil}`
+  }
+
   // Perhitungan interaktif kalkulator mandiri
   const calcResults = {
     infra_km: (calcAmount / UNIT_COSTS.infra_per_km).toLocaleString('id-ID', {
-      minimumFractionDigits: 2,
+      minimumFractionDigits: 1,
       maximumFractionDigits: 2,
     }),
-    health_units: (calcAmount / UNIT_COSTS.health_per_unit).toLocaleString('id-ID', {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    }),
-    edu_rooms: (calcAmount / UNIT_COSTS.edu_per_room).toLocaleString('id-ID', {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    }),
+    health_units: formatSolidUnits(calcAmount / UNIT_COSTS.health_per_unit),
+    edu_rooms: formatSolidUnits(calcAmount / UNIT_COSTS.edu_per_room),
     social_farmers: Math.floor(calcAmount / UNIT_COSTS.social_per_farmer).toLocaleString('id-ID'),
   }
 
@@ -1089,8 +1092,8 @@ export default function OpenDataPage() {
                 </div>
               </div>
 
-              {/* 4 Kartu Standar Satuan Biaya Makro (Interactive Flip Card) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* 4 Kartu Standar Satuan Biaya Makro (Interactive Flip Card — Grid 2 Kolom di Mobile, 4 di Desktop) */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
                 {DEFAULT_CONVERSIONS.map((item, idx) => {
                   const Icon = item.icon
                   const isFlipped = !!flippedCards[idx]
@@ -1098,7 +1101,7 @@ export default function OpenDataPage() {
                   return (
                     <div
                       key={idx}
-                      className="relative h-[225px] w-full [perspective:1000px] cursor-pointer group select-none"
+                      className="relative h-[175px] xs:h-[185px] sm:h-[225px] w-full [perspective:1000px] cursor-pointer group select-none"
                       onClick={() => toggleCardFlip(idx)}
                     >
                       <div
@@ -1110,7 +1113,7 @@ export default function OpenDataPage() {
                       >
                         {/* ── Sisi Depan (Latar Belakang Foto Sektor Toba Tajam & Presisi Penuh) ── */}
                         <div
-                          className="absolute inset-0 w-full h-full bg-slate-900 border border-border/80 hover:border-primary/80 hover:shadow-xl transition-all rounded-2xl p-6 shadow-sm flex flex-col items-center justify-center text-center space-y-3 cursor-pointer overflow-hidden group"
+                          className="absolute inset-0 w-full h-full bg-slate-900 border border-border/80 hover:border-primary/80 hover:shadow-xl transition-all rounded-2xl p-2.5 sm:p-6 shadow-sm flex flex-col items-center justify-center text-center space-y-1.5 sm:space-y-3 cursor-pointer overflow-hidden group"
                           style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
                         >
                           {/* Latar Belakang Foto Tajam Sektor Toba - Presisi Penuh & Jernih */}
@@ -1123,19 +1126,19 @@ export default function OpenDataPage() {
                           <div className="absolute inset-0 w-full h-full bg-black/45 dark:bg-black/55 pointer-events-none" />
 
                           {/* Konten Utama Kartu */}
-                          <div className="relative z-10 flex flex-col items-center text-center space-y-3">
-                            <div className={cn('size-13 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg border border-white/25 bg-white/95 dark:bg-card/95', item.accent)}>
-                              <Icon className="size-6 stroke-[2.2]" />
+                          <div className="relative z-10 flex flex-col items-center text-center space-y-1.5 sm:space-y-3">
+                            <div className={cn('size-9 sm:size-13 rounded-xl sm:rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg border border-white/25 bg-white/95 dark:bg-card/95', item.accent)}>
+                              <Icon className="size-4.5 sm:size-6 stroke-[2.2]" />
                             </div>
 
-                            <div className="space-y-1.5">
+                            <div className="space-y-1 sm:space-y-1.5">
                               <h4
-                                className="text-base font-extrabold text-white tracking-tight drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
+                                className="text-xs sm:text-base font-extrabold text-white tracking-tight drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
                                 style={{ fontFamily: "'Manrope', sans-serif" }}
                               >
                                 {item.tag}
                               </h4>
-                              <span className="text-xs font-mono text-white/95 font-bold inline-block bg-black/60 px-3 py-1 rounded-full border border-white/25 shadow-xs">
+                              <span className="text-[9px] sm:text-xs font-mono text-white/95 font-bold inline-block bg-black/60 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full border border-white/25 shadow-xs whitespace-nowrap">
                                 {item.rupiah}
                               </span>
                             </div>
@@ -1144,47 +1147,47 @@ export default function OpenDataPage() {
 
                         {/* ── Sisi Belakang (Flipped: Pop-up Info Rincian) ── */}
                         <div
-                          className="absolute inset-0 w-full h-full bg-card border-2 border-primary/40 rounded-2xl p-5 shadow-lg flex flex-col justify-between text-left cursor-pointer"
+                          className="absolute inset-0 w-full h-full bg-card border-2 border-primary/40 rounded-2xl p-2.5 sm:p-5 shadow-lg flex flex-col justify-between text-left cursor-pointer overflow-hidden"
                           style={{
                             backfaceVisibility: 'hidden',
                             transform: 'rotateY(180deg)',
                           }}
                         >
-                          <div className="flex items-center justify-between pb-2 border-b border-border/80">
-                            <span className="text-[11px] font-mono uppercase tracking-wider text-primary font-bold">
+                          <div className="flex items-center justify-between pb-1.5 border-b border-border/80">
+                            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-primary font-bold truncate">
                               {item.tag}
                             </span>
-                            <span className="text-[10px] font-mono text-muted-foreground hover:text-foreground inline-flex items-center gap-1 font-semibold">
-                              Putar Balik ↺
+                            <span className="text-[9px] sm:text-[10px] font-mono text-muted-foreground hover:text-foreground inline-flex items-center gap-0.5 font-semibold shrink-0">
+                              Putar ↺
                             </span>
                           </div>
 
-                          <div className="space-y-2 py-1">
+                          <div className="space-y-1 sm:space-y-2 py-0.5 sm:py-1">
                             <p
-                              className="text-sm font-extrabold text-foreground leading-snug"
+                              className="text-xs sm:text-sm font-extrabold text-foreground leading-snug line-clamp-1 sm:line-clamp-none"
                               style={{ fontFamily: "'Manrope', sans-serif" }}
                             >
                               {item.unit}
                             </p>
-                            <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                            <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight sm:leading-relaxed line-clamp-2">
                               {item.desc}
                             </p>
-                            <div className="p-2 rounded-xl bg-muted/60 border border-border/80 text-[11px] font-mono text-foreground font-semibold">
+                            <div className="p-1 sm:p-2 rounded-lg sm:rounded-xl bg-muted/60 border border-border/80 text-[9px] sm:text-[11px] font-mono text-foreground font-semibold truncate">
                               {item.baseCost}
                             </div>
                           </div>
 
-                          <div className="pt-2 border-t border-border/80 flex items-center justify-between">
+                          <div className="pt-1.5 border-t border-border/80 flex items-center justify-between">
                             <button
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation()
                                 setActiveConversionPopup(item)
                               }}
-                              className="p-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary transition-colors cursor-pointer flex items-center justify-center shadow-2xs"
+                              className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-primary/10 hover:bg-primary/20 text-primary transition-colors cursor-pointer flex items-center justify-center shadow-2xs"
                               title="Buka Pop-up Lengkap"
                             >
-                              <ExternalLink className="size-4" />
+                              <ExternalLink className="size-3.5 sm:size-4" />
                             </button>
                             <button
                               type="button"
@@ -1192,10 +1195,10 @@ export default function OpenDataPage() {
                                 e.stopPropagation()
                                 toggleCardFlip(idx)
                               }}
-                              className="p-2 rounded-xl bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground transition-colors cursor-pointer flex items-center justify-center shadow-2xs"
+                              className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground transition-colors cursor-pointer flex items-center justify-center shadow-2xs"
                               title="Putar Balik Kartu"
                             >
-                              <RotateCcw className="size-4" />
+                              <RotateCcw className="size-3.5 sm:size-4" />
                             </button>
                           </div>
                         </div>

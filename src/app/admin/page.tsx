@@ -448,12 +448,12 @@ export default function AdminPage() {
                 Pusat Selisih Anggaran
               </h3>
               <span className={cn(
-                'text-[11px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-md',
+                'text-xs font-mono font-bold uppercase tracking-wider',
                 currentAdvisory.status === 'KRITIS'
-                  ? 'bg-rose-600 text-white'
+                  ? 'text-rose-600 dark:text-rose-400'
                   : currentAdvisory.status === 'WASPADA'
-                    ? 'bg-amber-500 text-white'
-                    : 'bg-emerald-600 text-white'
+                    ? 'text-amber-600 dark:text-amber-400'
+                    : 'text-emerald-600 dark:text-emerald-400'
               )}>
                 {currentAdvisory.status}
               </span>

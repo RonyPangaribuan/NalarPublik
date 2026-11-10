@@ -144,10 +144,6 @@ export function TobaKpiSlider() {
 
   return (
     <div className="relative w-full py-3">
-      {/* Subtle Edge Vignettes (Efek Tembus Halus di Sisi Kiri & Kanan) */}
-      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-slate-50/95 dark:from-slate-900/95 to-transparent z-20" />
-      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-slate-50/95 dark:from-slate-900/95 to-transparent z-20" />
-
       {/* Draggable & Auto-Sliding Viewport Container */}
       <div
         ref={containerRef}

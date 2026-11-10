@@ -11,6 +11,11 @@ export function middleware(request: NextRequest) {
   const session = request.cookies.get('nalarpublik_session')
   const { pathname } = request.nextUrl
 
+  // Redirect /admin/login langsung ke /login agar tidak loop / 404
+  if (pathname === '/admin/login') {
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
   // Proteksi semua route di bawah /admin
   if (pathname.startsWith('/admin')) {
     if (!session?.value) {

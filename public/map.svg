@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <!-- Pola Titik Rapat Abu-abu (Kecamatan Sekitar) - Jelas Lembut & Terdefinisi -->
+    <pattern id="dots-grey" width="5.2" height="4.2" patternUnits="userSpaceOnUse" patternTransform="rotate(-2) skewX(14)">
+      <ellipse cx="2.6" cy="2.1" rx="1.5" ry="1.2" fill="#64748b" fill-opacity="0.65" />
+    </pattern>
+
+    <!-- Pola Titik Hijau / Selaras (Balige) -->
+    <pattern id="dots-emerald" width="5.2" height="4.2" patternUnits="userSpaceOnUse" patternTransform="rotate(-2) skewX(14)">
+      <ellipse cx="2.6" cy="2.1" rx="1.6" ry="1.3" fill="#10b981" />
+    </pattern>
+
+    <!-- Pola Titik Amber / Waspada (Porsea & Laguboti) -->
+    <pattern id="dots-amber" width="5.2" height="4.2" patternUnits="userSpaceOnUse" patternTransform="rotate(-2) skewX(14)">
+      <ellipse cx="2.6" cy="2.1" rx="1.6" ry="1.3" fill="#f59e0b" />
+    </pattern>
+
+    <!-- Pola Titik Rose / Kritis (Habinsaran) -->
+    <pattern id="dots-rose" width="5.2" height="4.2" patternUnits="userSpaceOnUse" patternTransform="rotate(-2) skewX(14)">
+      <ellipse cx="2.6" cy="2.1" rx="1.6" ry="1.3" fill="#f43f5e" />
+    </pattern>
+
+    <style>
+      .region {
+        fill: url(#dots-grey);
+        stroke: #64748b;
+        stroke-width: 0.75;
+        stroke-opacity: 0.42;
+      }
+      .region-selaras {
+        fill: url(#dots-emerald);
+        stroke: #10b981;
+        stroke-width: 0.8;
+      }
+      .region-waspada {
+        fill: url(#dots-amber);
+        stroke: #f59e0b;
+        stroke-width: 0.8;
+      }
+      .region-kritis {
+        fill: url(#dots-rose);
+        stroke: #f43f5e;
+        stroke-width: 0.8;
+      }
+    </style>
+  </defs>
+
+  <!-- ==================== WILAYAH KECAMATAN (TITIK RAPAT ABU-ABU) ==================== -->
+  <g id="kecamatan-dotted">
+    <!-- Ajibata -->
+    <path id="ajibata" class="region" d="M 178,28 L 184,38 L 205,55 L 206,72 L 224,92 L 234,92 L 228,118 L 218,136 L 215,134 L 192,124 L 176,108 L 178,86 L 165,68 L 168,48 L 184,32 Z" />
+
+    <!-- Lumban Julu -->
+    <path id="lumban-julu" class="region" d="M 234,92 L 255,86 L 288,65 L 305,88 L 318,92 L 315,118 L 308,148 L 298,172 L 288,192 L 265,178 L 248,154 L 232,152 L 218,136 L 228,118 Z" />
+
+    <!-- Bonatua Lunasi -->
+    <path id="bonatua-lunasi" class="region" d="M 315,118 L 348,128 L 362,134 L 396,134 L 406,160 L 418,164 L 402,175 L 375,182 L 372,198 L 358,205 L 325,192 L 298,172 L 308,148 Z" />
+
+    <!-- Uluan -->
+    <path id="uluan" class="region" d="M 298,172 L 308,198 L 332,218 L 352,248 L 325,268 L 305,282 L 280,286 L 288,275 L 285,255 L 296,228 L 288,212 L 288,192 Z" />
+
+    <!-- Parmaksian -->
+    <path id="parmaksian" class="region" d="M 372,198 L 375,182 L 402,175 L 418,164 L 442,175 L 445,192 L 425,212 L 392,225 L 385,205 Z" />
+
+    <!-- Siantar Narumonda -->
+    <path id="siantar-narumonda" class="region" d="M 445,192 L 465,192 L 488,212 L 458,232 L 435,245 L 415,245 L 392,238 L 392,225 L 425,212 Z" />
+
+    <!-- Pintu Pohan Meranti -->
+    <path id="pintu-pohan-meranti" class="region" d="M 418,164 L 436,164 L 442,175 L 458,152 L 490,150 L 512,138 L 546,146 L 576,145 L 596,124 L 618,108 L 624,122 L 638,118 L 648,102 L 656,106 L 654,125 L 642,140 L 658,150 L 646,185 L 632,212 L 605,202 L 575,202 L 548,205 L 522,182 L 515,202 L 488,212 L 465,192 L 445,192 L 442,175 Z" />
+
+    <!-- Silaen -->
+    <path id="silaen" class="region" d="M 488,212 L 515,202 L 522,182 L 548,205 L 575,202 L 552,252 L 538,272 L 485,268 L 458,288 L 455,332 L 432,345 L 432,332 L 412,305 L 425,288 L 418,265 L 435,245 L 458,232 Z" />
+
+    <!-- Sigumpar -->
+    <path id="sigumpar" class="region" d="M 378,248 L 392,238 L 415,245 L 435,245 L 418,265 L 425,288 L 412,305 L 375,285 L 382,265 Z" />
+
+    <!-- Tampahan -->
+    <path id="tampahan" class="region" d="M 234,345 L 245,342 L 258,328 L 272,352 L 262,382 L 258,408 L 246,408 L 242,375 Z" />
+
+    <!-- Nassau -->
+    <path id="nassau" class="region" d="M 658,255 L 668,255 L 696,282 L 706,258 L 702,235 L 708,224 L 716,230 L 714,275 L 722,315 L 745,338 L 768,342 L 770,355 L 750,362 L 735,360 L 742,392 L 724,418 L 685,425 L 652,438 L 618,446 L 595,432 L 578,385 L 592,355 L 615,332 L 598,302 L 622,288 Z" />
+
+    <!-- Borbor -->
+    <path id="borbor" class="region" d="M 432,360 L 478,375 L 528,395 L 562,408 L 568,432 L 595,432 L 618,446 L 622,458 L 606,478 L 582,492 L 552,515 L 512,532 L 485,522 L 462,502 L 438,492 L 435,455 L 412,432 L 395,418 L 372,405 L 395,392 Z" />
+  </g>
+
+  <!-- ==================== 4 WILAYAH SOROTAN (KONDISI WARNA RIIL) ==================== -->
+  <g id="kecamatan-highlight">
+    <!-- 1. Balige (Selaras / Surplus - Hijau Emerald) -->
+    <path id="balige" class="region-selaras" d="M 258,328 L 272,315 L 288,325 L 298,338 L 318,328 L 336,306 L 352,345 L 368,368 L 372,405 L 355,408 L 330,395 L 302,406 L 285,395 L 265,408 L 258,408 L 262,382 L 272,352 Z" />
+
+    <!-- 2. Porsea (Waspada - Amber / Oranye) -->
+    <path id="porsea" class="region-waspada" d="M 298,172 L 325,192 L 358,205 L 372,198 L 385,205 L 392,225 L 392,238 L 378,248 L 352,248 L 332,218 L 308,198 Z" />
+
+    <!-- 3. Laguboti (Waspada - Amber / Oranye) -->
+    <path id="laguboti" class="region-waspada" d="M 375,285 L 412,305 L 432,332 L 432,360 L 395,392 L 372,405 L 368,368 L 352,345 L 336,306 L 362,298 Z" />
+
+    <!-- 4. Habinsaran (Kritis / Defisit Tinggi - Merah Rose) -->
+    <path id="habinsaran" class="region-kritis" d="M 575,202 L 605,202 L 632,212 L 648,232 L 658,255 L 622,288 L 598,302 L 615,332 L 592,355 L 578,385 L 595,432 L 568,432 L 562,408 L 528,395 L 478,375 L 432,360 L 432,345 L 455,332 L 458,288 L 485,268 L 538,272 L 552,252 Z" />
+  </g>
+</svg>

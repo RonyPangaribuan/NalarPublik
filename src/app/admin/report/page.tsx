@@ -871,12 +871,12 @@ export default function AdminReportPage() {
                           <td className="px-4 py-3">
                             <span
                               className={cn(
-                                'font-bold text-[10px] px-2 py-0.5 rounded font-mono',
+                                'font-bold text-[11px] font-mono uppercase tracking-wide',
                                 d.gap_status === 'CRITICAL'
-                                  ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400'
+                                  ? 'text-rose-600 dark:text-rose-400'
                                   : d.gap_status === 'WARNING'
-                                  ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
-                                  : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                  ? 'text-amber-600 dark:text-amber-400'
+                                  : 'text-emerald-600 dark:text-emerald-400'
                               )}
                             >
                               {d.gap_status === 'CRITICAL'

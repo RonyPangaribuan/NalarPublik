@@ -62,7 +62,7 @@ export default function MapPage() {
               className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground sm:whitespace-nowrap animate-fade-in"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
-              Peta Kesenjangan Anggaran Kabupaten Toba
+              Peta Anggaran Kabupaten Toba
             </h1>
             <p className="text-sm text-muted-foreground max-w-2xl mt-1 animate-fade-in">
               Pilih kecamatan pada peta untuk melihat perbedaan antara kebutuhan masyarakat dan pembagian anggaran daerah.
@@ -160,17 +160,16 @@ export default function MapPage() {
                 {/* Swiss Status Tag */}
                 <div className="text-right shrink-0">
                   <span className={cn(
-                    'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold',
+                    'text-xs font-mono font-bold uppercase tracking-wider',
                     statusColors.label === 'CRITICAL' || statusColors.label === 'KRITIS'
-                      ? 'bg-rose-600 text-white'
+                      ? 'text-rose-600 dark:text-rose-400'
                       : statusColors.label === 'WARNING' || statusColors.label === 'WASPADA'
-                        ? 'bg-amber-500 text-white'
-                        : 'bg-emerald-600 text-white'
+                        ? 'text-amber-600 dark:text-amber-400'
+                        : 'text-emerald-600 dark:text-emerald-400'
                   )}>
-                    <span className="size-1.5 rounded-full bg-white/70" />
                     {statusColors.label}
                   </span>
-                  <div className="text-[11px] text-muted-foreground mt-1 font-mono">
+                  <div className="text-[11px] text-muted-foreground mt-0.5 font-mono">
                     Gap: <strong className="text-foreground">+{overallGap} poin</strong>
                   </div>
                 </div>
@@ -203,11 +202,6 @@ export default function MapPage() {
                     : isGapWarning
                       ? 'text-amber-600 dark:text-amber-400'
                       : 'text-emerald-600 dark:text-emerald-400'
-                  const gapBg = isGapCritical
-                    ? 'bg-rose-500/10 border-rose-200 dark:border-rose-500/30'
-                    : isGapWarning
-                      ? 'bg-amber-500/10 border-amber-200 dark:border-amber-500/30'
-                      : 'bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30'
 
                   return (
                     <div
@@ -223,10 +217,7 @@ export default function MapPage() {
                         <span className="font-semibold text-foreground">
                           {item.label}
                         </span>
-                        <span className={cn(
-                          'inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono font-bold border',
-                          gapBg, gapColor
-                        )}>
+                        <span className={cn('text-[11.5px] font-mono font-bold tracking-tight', gapColor)}>
                           {item.gap > 0 ? `+${item.gap}` : item.gap} poin
                         </span>
                       </div>

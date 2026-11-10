@@ -41,10 +41,10 @@ export default function ComparePage() {
   return (
     <div className="relative min-h-screen bg-background text-foreground pt-24 pb-20 px-4 sm:px-6 lg:px-8">
       <TobaTopoBackground variant="feature" />
-      <div className="relative z-10 max-w-[1240px] mx-auto space-y-8">
+      <div className="relative z-10 max-w-[1240px] mx-auto flex flex-col space-y-8">
 
         {/* ── Page Header (Editorial Swiss Style) ── */}
-        <div className="text-center max-w-4xl mx-auto space-y-2 animate-fade-in">
+        <div className="text-center max-w-4xl mx-auto space-y-2 animate-fade-in order-1">
           <div className="flex items-center justify-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-muted-foreground animate-fade-in">
             <span className="size-1.5 bg-primary" />
             PERBANDINGAN WILAYAH KABUPATEN TOBA
@@ -60,8 +60,8 @@ export default function ComparePage() {
           </p>
         </div>
 
-        {/* ── Selectors & Header Cards ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch animate-fade-in" style={{ animationDelay: '180ms' }}>
+        {/* ── Selectors & Header Cards (order-3 di mobile, order-2 di desktop) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch animate-fade-in order-3 lg:order-2" style={{ animationDelay: '180ms' }}>
 
           {/* Kecamatan A Selector Card */}
           <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
@@ -69,17 +69,16 @@ export default function ComparePage() {
               <span className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
                 WILAYAH A - SISI KIRI
               </span>
-              {/* Swiss Monospace Status Tag */}
+              {/* Status Tag */}
               <span className={cn(
-                'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold',
+                'text-xs font-mono font-bold uppercase tracking-wider',
                 colorA.label === 'KRITIS' || colorA.label === 'CRITICAL'
-                  ? 'bg-rose-600 text-white'
+                  ? 'text-rose-600 dark:text-rose-400'
                   : colorA.label === 'WASPADA' || colorA.label === 'WARNING'
-                    ? 'bg-amber-500 text-white'
-                    : 'bg-emerald-600 text-white'
+                    ? 'text-amber-600 dark:text-amber-400'
+                    : 'text-emerald-600 dark:text-emerald-400'
               )}>
-                <span className="size-1.5 rounded-full bg-white/70" />
-                {colorA.label} <span className="opacity-80 font-normal">| +{overallGapA}%</span>
+                {colorA.label} <span className="text-muted-foreground font-normal">| +{overallGapA}%</span>
               </span>
             </div>
 
@@ -113,17 +112,16 @@ export default function ComparePage() {
               <span className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
                 WILAYAH B - SISI KANAN
               </span>
-              {/* Swiss Monospace Status Tag */}
+              {/* Status Tag */}
               <span className={cn(
-                'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold',
+                'text-xs font-mono font-bold uppercase tracking-wider',
                 colorB.label === 'KRITIS' || colorB.label === 'CRITICAL'
-                  ? 'bg-rose-600 text-white'
+                  ? 'text-rose-600 dark:text-rose-400'
                   : colorB.label === 'WASPADA' || colorB.label === 'WARNING'
-                    ? 'bg-amber-500 text-white'
-                    : 'bg-emerald-600 text-white'
+                    ? 'text-amber-600 dark:text-amber-400'
+                    : 'text-emerald-600 dark:text-emerald-400'
               )}>
-                <span className="size-1.5 rounded-full bg-white/70" />
-                {colorB.label} <span className="opacity-80 font-normal">| +{overallGapB}%</span>
+                {colorB.label} <span className="text-muted-foreground font-normal">| +{overallGapB}%</span>
               </span>
             </div>
 
@@ -153,8 +151,8 @@ export default function ComparePage() {
 
         </div>
 
-        {/* ── Visual Bar & Radar Comparison per Sector (Ukuran Sama: 50% - 50% & Tinggi Sejajar) ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch animate-fade-in" style={{ animationDelay: '320ms' }}>
+        {/* ── Visual Bar & Radar Comparison per Sector (order-2 di mobile tampil di atas, order-3 di desktop) ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch animate-fade-in order-2 lg:order-3" style={{ animationDelay: '320ms' }}>
 
           {/* Left: Interactive Radar Polygon Chart (Equal 50% & Full Height) */}
           <div className="flex flex-col h-full bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm">
@@ -368,7 +366,7 @@ export default function ComparePage() {
         </div>
 
         {/* ── Direct Comparison Table ── */}
-        <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden order-4">
           <div className="px-6 py-5 border-b border-border flex items-center justify-between">
             <div>
               <h3

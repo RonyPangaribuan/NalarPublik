@@ -11,7 +11,21 @@ type AuthMode = 'login' | 'forgot_email' | 'forgot_otp' | 'forgot_new_password' 
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') ?? '/admin'
+  const rawCallback = searchParams.get('callbackUrl') ?? '/admin'
+  let callbackUrl = '/admin'
+  try {
+    const decoded = decodeURIComponent(rawCallback)
+    if (
+      decoded.startsWith('/') &&
+      !decoded.startsWith('/login') &&
+      decoded !== '/admin/login' &&
+      !decoded.includes('%2F')
+    ) {
+      callbackUrl = decoded
+    }
+  } catch (_) {
+    callbackUrl = '/admin'
+  }
   const initialMode = searchParams.get('mode') === 'forgot' ? 'forgot_email' : 'login'
 
   const { setRole } = useRoleStore()
@@ -24,7 +38,18 @@ function LoginForm() {
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const errorParam = searchParams.get('error')
+  const [error, setError] = useState(
+    errorParam === 'google_denied'
+      ? 'Login Google dibatalkan.'
+      : errorParam === 'not_authorized'
+      ? 'Akun Google ini tidak memiliki izin.'
+      : errorParam === 'not_configured'
+      ? 'Google OAuth belum dikonfigurasi.'
+      : errorParam
+      ? 'Gagal masuk dengan akun Google.'
+      : ''
+  )
 
   // Forgot password inputs
   const [forgotEmail, setForgotEmail] = useState('')
@@ -67,12 +92,16 @@ function LoginForm() {
     handleLoginRequest({ email, password })
   }
 
-  function handleSocialLogin(_provider: string) {
-    handleLoginRequest({ isDemo: true })
+  function handleSocialLogin(provider: string) {
+    if (provider === 'Google') {
+      window.location.href = `/api/auth/google/redirect?callbackUrl=${encodeURIComponent(callbackUrl)}`
+    } else {
+      handleLoginRequest({ isDemo: true })
+    }
   }
 
   // Tahap 1: Kirim OTP
-  function handleSendOtp(e: React.FormEvent) {
+  async function handleSendOtp(e: React.FormEvent) {
     e.preventDefault()
     if (!forgotEmail) {
       setError('Masukkan alamat email Anda terlebih dahulu.')
@@ -81,15 +110,29 @@ function LoginForm() {
     setError('')
     setLoading(true)
 
-    setTimeout(() => {
-      setLoading(false)
+    try {
+      const res = await fetch('/api/auth/otp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotEmail }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.success) {
+        setError(data.error ?? 'Gagal mengirim kode OTP. Periksa konfigurasi email.')
+        return
+      }
+
       setOtpCode(['', '', '', '', '', ''])
       setMode('forgot_otp')
-    }, 500)
+    } catch {
+      setError('Gagal terhubung ke server untuk mengirim OTP.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   // Tahap 2: Verifikasi Kode OTP saja
-  function handleVerifyOtp(e: React.FormEvent) {
+  async function handleVerifyOtp(e: React.FormEvent) {
     e.preventDefault()
     const fullOtp = otpCode.join('')
     if (fullOtp.length < 6) {
@@ -100,14 +143,28 @@ function LoginForm() {
     setError('')
     setLoading(true)
 
-    setTimeout(() => {
-      setLoading(false)
+    try {
+      const res = await fetch('/api/auth/otp/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotEmail, code: fullOtp }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.success) {
+        setError(data.error ?? 'Kode OTP salah atau telah kadaluwarsa.')
+        return
+      }
+
       setMode('forgot_new_password')
-    }, 500)
+    } catch {
+      setError('Gagal memverifikasi kode OTP.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   // Tahap 3: Simpan Kata Sandi Baru
-  function handleSaveNewPassword(e: React.FormEvent) {
+  async function handleSaveNewPassword(e: React.FormEvent) {
     e.preventDefault()
     if (!newPassword || newPassword.length < 6) {
       setError('Kata sandi baru minimal 6 karakter.')
@@ -121,10 +178,29 @@ function LoginForm() {
     setError('')
     setLoading(true)
 
-    setTimeout(() => {
-      setLoading(false)
+    try {
+      const fullOtp = otpCode.join('')
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: forgotEmail,
+          code: fullOtp,
+          newPassword,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.success) {
+        setError(data.error ?? 'Gagal menyimpan kata sandi baru.')
+        return
+      }
+
       setMode('forgot_success')
-    }, 600)
+    } catch {
+      setError('Gagal menyimpan kata sandi baru.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   // Handle input digit OTP
@@ -149,40 +225,32 @@ function LoginForm() {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center px-4 overflow-hidden select-none">
-      {/* ── Background: Sky gradient + concentric radar circles ── */}
-      <div
-        className="absolute inset-0 -z-10"
-        style={{
-          background: 'linear-gradient(165deg, #cbe3fb 0%, #d8ebfd 25%, #e8f3fe 50%, #f4f9ff 75%, #ffffff 100%)',
-        }}
-      >
-        {/* Soft Ambient Cloud Glows */}
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-white/60 blur-3xl rounded-full" />
-        <div className="absolute bottom-0 -left-20 w-[450px] h-[320px] bg-white/70 blur-3xl rounded-full" />
-        <div className="absolute bottom-0 -right-20 w-[450px] h-[320px] bg-white/70 blur-3xl rounded-full" />
+      {/* ── Background: Light mode ── */}
+      <div className="absolute inset-0 -z-10 dark:hidden" style={{ background: 'linear-gradient(180deg, #aecfed 0%, #c8e0f4 20%, #ddedfb 45%, #eef6ff 70%, #f8fbff 100%)' }}>
+        {/* Cloud silhouette — SVG at bottom */}
+        <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,224 C60,224 80,200 120,196 C140,193 155,200 170,196 C190,190 200,180 230,178 C260,176 275,185 300,180 C340,172 360,155 400,150 C440,145 460,158 500,155 C540,152 560,138 600,135 C650,131 670,148 710,145 C750,142 770,128 820,122 C870,116 895,130 940,128 C985,126 1005,112 1050,108 C1100,103 1125,118 1170,115 C1210,112 1230,98 1270,96 C1310,94 1330,105 1370,104 C1400,103 1420,96 1440,95 L1440,320 L0,320 Z" fill="white" fillOpacity="0.65" />
+          <path d="M0,260 C80,255 120,240 180,238 C220,236 245,245 280,242 C320,239 345,228 390,224 C430,220 455,232 500,229 C545,226 570,215 620,210 C670,205 700,218 750,215 C800,212 825,200 880,196 C930,192 960,204 1010,201 C1060,198 1085,187 1140,183 C1195,179 1220,191 1270,189 C1315,187 1335,178 1380,176 C1405,175 1425,180 1440,179 L1440,320 L0,320 Z" fill="white" fillOpacity="0.85" />
+          <path d="M0,290 C60,286 100,278 150,276 C200,274 230,282 280,279 C330,276 360,267 420,264 C475,261 505,270 560,268 C615,266 645,257 710,254 C770,251 800,260 860,258 C920,256 950,247 1020,244 C1085,241 1115,250 1180,248 C1240,246 1270,238 1340,236 C1385,234 1415,241 1440,240 L1440,320 L0,320 Z" fill="white" fillOpacity="1" />
+        </svg>
+      </div>
 
-        {/* Concentric Thin Radiating Rings */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <svg
-            className="w-[820px] h-[820px] text-white/50 dark:text-blue-200/30"
-            viewBox="0 0 800 800"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="400" cy="400" r="140" stroke="currentColor" strokeWidth="1" strokeDasharray="3 4" opacity="0.6" />
-            <circle cx="400" cy="400" r="230" stroke="currentColor" strokeWidth="1" opacity="0.7" />
-            <circle cx="400" cy="400" r="320" stroke="currentColor" strokeWidth="1" strokeDasharray="5 6" opacity="0.5" />
-            <circle cx="400" cy="400" r="390" stroke="currentColor" strokeWidth="0.75" opacity="0.4" />
-          </svg>
-        </div>
+      {/* ── Background: Dark mode ── */}
+      <div className="absolute inset-0 -z-10 hidden dark:block" style={{ background: 'linear-gradient(180deg, #020617 0%, #050e20 20%, #08152c 45%, #0c1c3a 70%, #0f2348 100%)' }}>
+        {/* Cloud silhouette — dark */}
+        <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,224 C60,224 80,200 120,196 C140,193 155,200 170,196 C190,190 200,180 230,178 C260,176 275,185 300,180 C340,172 360,155 400,150 C440,145 460,158 500,155 C540,152 560,138 600,135 C650,131 670,148 710,145 C750,142 770,128 820,122 C870,116 895,130 940,128 C985,126 1005,112 1050,108 C1100,103 1125,118 1170,115 C1210,112 1230,98 1270,96 C1310,94 1330,105 1370,104 C1400,103 1420,96 1440,95 L1440,320 L0,320 Z" fill="#14213d" fillOpacity="0.75" />
+          <path d="M0,260 C80,255 120,240 180,238 C220,236 245,245 280,242 C320,239 345,228 390,224 C430,220 455,232 500,229 C545,226 570,215 620,210 C670,205 700,218 750,215 C800,212 825,200 880,196 C930,192 960,204 1010,201 C1060,198 1085,187 1140,183 C1195,179 1220,191 1270,189 C1315,187 1335,178 1380,176 C1405,175 1425,180 1440,179 L1440,320 L0,320 Z" fill="#192a4c" fillOpacity="0.85" />
+          <path d="M0,290 C60,286 100,278 150,276 C200,274 230,282 280,279 C330,276 360,267 420,264 C475,261 505,270 560,268 C615,266 645,257 710,254 C770,251 800,260 860,258 C920,256 950,247 1020,244 C1085,241 1115,250 1180,248 C1240,246 1270,238 1340,236 C1385,234 1415,241 1440,240 L1440,320 L0,320 Z" fill="#0d1b34" fillOpacity="1" />
+        </svg>
       </div>
 
       {/* ── Main Auth Card ── */}
-      <div className="relative w-full max-w-[340px] sm:max-w-[350px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-[26px] shadow-[0_20px_50px_rgba(30,64,175,0.08)] border border-white/80 dark:border-slate-800 p-6 sm:p-7 transition-all duration-300">
+      <div className="relative w-full max-w-[340px] sm:max-w-[350px] bg-white/72 dark:bg-[#1c263d]/95 backdrop-blur-2xl rounded-[26px] shadow-[0_8px_32px_rgba(80,130,255,0.10)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_0_1px_rgba(255,255,255,0.08)] border border-blue-100/60 dark:border-slate-600/70 p-6 sm:p-7 transition-all duration-300">
         
         {/* Top Logo Container */}
         <div className="flex justify-center mb-4">
-          <div className="size-11 rounded-xl bg-white dark:bg-slate-800 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-slate-100 dark:border-slate-700/60 flex items-center justify-center">
+          <div className="size-11 rounded-full bg-white dark:bg-slate-700/80 shadow-[0_2px_10px_rgba(0,0,0,0.08)] border border-slate-100/80 dark:border-slate-600/70 flex items-center justify-center">
             {mode === 'forgot_email' || mode === 'forgot_otp' ? (
               <KeyRound size={20} className="text-[#3B66E4]" />
             ) : mode === 'forgot_new_password' ? (
@@ -211,7 +279,7 @@ function LoginForm() {
 
             <form onSubmit={handleLoginSubmit} className="space-y-2.5">
               {/* Email field */}
-              <div className="flex items-center gap-2.5 rounded-xl bg-[#f2f4f7] dark:bg-slate-800/80 px-3 py-2.5 border border-transparent focus-within:border-blue-400/80 focus-within:bg-white dark:focus-within:bg-slate-800 transition-all">
+              <div className="flex items-center gap-2.5 rounded-xl bg-[#f2f4f7] dark:bg-slate-900/80 px-3 py-2.5 border border-transparent dark:border-slate-700/50 focus-within:border-blue-400/80 focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
                 <Mail size={14} className="text-slate-400 shrink-0" />
                 <input
                   id="email"
@@ -227,7 +295,7 @@ function LoginForm() {
 
               {/* Password field */}
               <div>
-                <div className="flex items-center gap-2.5 rounded-xl bg-[#f2f4f7] dark:bg-slate-800/80 px-3 py-2.5 border border-transparent focus-within:border-blue-400/80 focus-within:bg-white dark:focus-within:bg-slate-800 transition-all">
+                <div className="flex items-center gap-2.5 rounded-xl bg-[#f2f4f7] dark:bg-slate-900/80 px-3 py-2.5 border border-transparent dark:border-slate-700/50 focus-within:border-blue-400/80 focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
                   <Lock size={14} className="text-slate-400 shrink-0" />
                   <input
                     id="password"
@@ -292,7 +360,7 @@ function LoginForm() {
               type="button"
               onClick={() => handleSocialLogin('Google')}
               title="Masuk dengan Google"
-              className="w-full flex items-center justify-center gap-2.5 py-2.5 rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/60 active:scale-95 transition-all shadow-2xs cursor-pointer text-xs font-semibold text-slate-700 dark:text-slate-200"
+              className="w-full flex items-center justify-center gap-2.5 py-2.5 rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-900/70 hover:bg-slate-50 dark:hover:bg-slate-900 active:scale-95 transition-all shadow-2xs cursor-pointer text-xs font-semibold text-slate-700 dark:text-slate-200"
             >
               <svg viewBox="0 0 24 24" className="size-4 shrink-0" aria-hidden="true">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -320,7 +388,7 @@ function LoginForm() {
             </div>
 
             <form onSubmit={handleSendOtp} className="space-y-3">
-              <div className="flex items-center gap-2.5 rounded-xl bg-[#f2f4f7] dark:bg-slate-800/80 px-3 py-2.5 border border-transparent focus-within:border-blue-400/80 focus-within:bg-white dark:focus-within:bg-slate-800 transition-all">
+              <div className="flex items-center gap-2.5 rounded-xl bg-[#f2f4f7] dark:bg-slate-900/80 px-3 py-2.5 border border-transparent dark:border-slate-700/50 focus-within:border-blue-400/80 focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
                 <Mail size={14} className="text-slate-400 shrink-0" />
                 <input
                   id="forgot-email"
@@ -393,7 +461,7 @@ function LoginForm() {
                     value={digit}
                     onChange={(e) => handleOtpChange(idx, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                    className="size-10 sm:size-10.5 text-center text-sm font-bold font-mono rounded-xl bg-[#f2f4f7] dark:bg-slate-800/80 border border-transparent focus:border-blue-400 focus:bg-white dark:focus:bg-slate-800 text-slate-900 dark:text-white focus:outline-none transition-all shadow-2xs"
+                    className="size-10 sm:size-10.5 text-center text-sm font-bold font-mono rounded-xl bg-[#f2f4f7] dark:bg-slate-900/80 border border-transparent dark:border-slate-700/50 focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white focus:outline-none transition-all shadow-2xs"
                   />
                 ))}
               </div>
@@ -416,11 +484,28 @@ function LoginForm() {
               <div className="flex items-center justify-between text-[11px] pt-1">
                 <button
                   type="button"
-                  onClick={() => {
+                  disabled={loading}
+                  onClick={async () => {
                     setError('')
                     setOtpCode(['', '', '', '', '', ''])
+                    setLoading(true)
+                    try {
+                      const res = await fetch('/api/auth/otp/send', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: forgotEmail }),
+                      })
+                      const data = await res.json()
+                      if (!res.ok || !data.success) {
+                        setError(data.error ?? 'Gagal mengirim ulang kode.')
+                      }
+                    } catch {
+                      setError('Gagal terhubung ke server.')
+                    } finally {
+                      setLoading(false)
+                    }
                   }}
-                  className="text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+                  className="text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer disabled:opacity-50"
                 >
                   Kirim ulang kode
                 </button>
@@ -456,7 +541,7 @@ function LoginForm() {
 
             <form onSubmit={handleSaveNewPassword} className="space-y-3">
               {/* Input Kata Sandi Baru */}
-              <div className="flex items-center gap-2.5 rounded-xl bg-[#f2f4f7] dark:bg-slate-800/80 px-3 py-2.5 border border-transparent focus-within:border-blue-400/80 focus-within:bg-white dark:focus-within:bg-slate-800 transition-all">
+              <div className="flex items-center gap-2.5 rounded-xl bg-[#f2f4f7] dark:bg-slate-900/80 px-3 py-2.5 border border-transparent dark:border-slate-700/50 focus-within:border-blue-400/80 focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
                 <Lock size={14} className="text-slate-400 shrink-0" />
                 <input
                   id="new-password"
@@ -479,7 +564,7 @@ function LoginForm() {
               </div>
 
               {/* Input Konfirmasi Kata Sandi */}
-              <div className="flex items-center gap-2.5 rounded-xl bg-[#f2f4f7] dark:bg-slate-800/80 px-3 py-2.5 border border-transparent focus-within:border-blue-400/80 focus-within:bg-white dark:focus-within:bg-slate-800 transition-all">
+              <div className="flex items-center gap-2.5 rounded-xl bg-[#f2f4f7] dark:bg-slate-900/80 px-3 py-2.5 border border-transparent dark:border-slate-700/50 focus-within:border-blue-400/80 focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
                 <Lock size={14} className="text-slate-400 shrink-0" />
                 <input
                   id="confirm-password"
@@ -546,7 +631,7 @@ function LoginForm() {
               onClick={() => handleLoginRequest({ isDemo: true })}
               className="w-full mt-5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-[13px] font-semibold py-2.5 transition-all shadow-xs cursor-pointer"
             >
-              Masuk ke Dasbor
+              Masuk
             </button>
 
             <button

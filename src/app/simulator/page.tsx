@@ -189,8 +189,8 @@ export default function SimulatorPage() {
           /* ── Interactive Simulator Form ── */
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fade-in" style={{ animationDelay: '200ms' }}>
 
-            {/* Left: Interactive Sliders (Span 7) */}
-            <form onSubmit={handleSubmit} className="lg:col-span-7 bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+            {/* Left: Interactive Sliders (Span 7) — order-2 di mobile agar visual chart di atas */}
+            <form onSubmit={handleSubmit} className="lg:col-span-7 order-2 lg:order-1 bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
 
               {/* District Selector Dropdown */}
               <div>
@@ -362,8 +362,8 @@ export default function SimulatorPage() {
               </button>
             </form>
 
-            {/* Right: Balance Gauge & Live Preview Panel (Span 5) */}
-            <div className="lg:col-span-5 space-y-6">
+            {/* Right: Balance Gauge & Live Preview Panel (Span 5) — order-1 di mobile tampil pertama */}
+            <div className="lg:col-span-5 order-1 lg:order-2 space-y-6">
 
               {/* Dynamic Recharts Donut */}
               <div className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-3">
