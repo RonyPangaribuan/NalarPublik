@@ -14,7 +14,7 @@ NalarPublik adalah platform *Civic-Tech* independen untuk kompetisi **Web In Act
 
 ---
 
-## 🏛️ Informasi Karya & Tim
+## Informasi Karya & Tim
 
 * **Nama Tim:** Kopi Hitam Pekat
 * **Judul Karya:** NalarPublik
@@ -26,7 +26,7 @@ NalarPublik adalah platform *Civic-Tech* independen untuk kompetisi **Web In Act
 
 ---
 
-## 💡 Latar Belakang & Problem Statement
+## Latar Belakang & Problem Statement
 
 1. **Tantangan Transparansi Dokumen:** Dokumen APBD daerah umumnya dirilis dalam format buku tebal atau file PDF ratusan halaman (Perda Penjabaran APBD & DPA SKPD) tanpa public live API, sehingga warga awam kesulitan memahaminya.
 2. **Kesenjangan Data Lapangan vs Anggaran:** Data kemiskinan dan infrastruktur dari BPS berada di portal terpisah dari anggaran daerah. Akibatnya, alokasi anggaran sering kali tidak sinkron dengan tingkat keparahan masalah nyata di lapangan (misal: jalan rusak berat di Habinsaran mencapai 46%, namun pagu infrastruktur daerah hanya 16%).
@@ -36,16 +36,16 @@ NalarPublik hadir sebagai **pihak ketiga independen** yang mengolah dokumen data
 
 ---
 
-## 🚀 Fitur Utama
+## Fitur Utama
 
-### 👥 1. Mode Warga (Open Access — Tanpa Hambatan Login)
+### 1. Mode Warga (Open Access — Tanpa Hambatan Login)
 * **Landing Page Transparansi (`/`):** Ringkasan APBD Kabupaten Toba, KPI indikator 4 kecamatan, typewriter interaktif, dan navigasi fitur.
 * **Peta Kesenjangan Anggaran (`/map`):** Peta interaktif Leaflet dengan 4 marker kecamatan, filter sektor, inspeksi rincian masalah BPS vs pagu APBD, dan kalkulator *Gap Score*.
 * **Simulator Anggaran Partisipatif (`/simulator`):** Slider interaktif bagi warga untuk membagi kuota 100% anggaran pada 4 sektor prioritas (Infrastruktur, Kesehatan, Pendidikan, Sosial) beserta catatan aspirasi lapangan.
 * **Perbandingan Antarwilayah (`/compare`):** Komparasi *head-to-head* dua kecamatan menggunakan polygon *Radar Chart* dan progres bar indikator.
 * **Portal Data Terbuka & Penerjemah DPA (`/open-data`):** Katalog dokumen anggaran mandiri, konversi angka APBD ke bentuk fisik (km aspal, unit posyandu, ruang kelas), dan fitur unduh dataset CSV per dokumen.
 
-### 🛡️ 2. Mode Admin Pengelola Platform (Autentikasi Terproteksi)
+### 2. Mode Admin Pengelola Platform (Autentikasi Terproteksi)
 * **Autentikasi Riil (`/login`):** Halaman masuk resmi dengan proteksi session cookie HTTP-Only dan Next.js Middleware (`src/middleware.ts`). Route `/admin/**` terkunci bagi pengguna non-admin.
 * **Dasbor Pengambilan Keputusan (`/admin`):** Grafik perbandingan 3 batang per sektor (*Masalah Lapangan BPS vs Alokasi APBD vs Rata-rata Usulan Warga*), deteksi anomali selisih anggaran, dan dialog aspirasi warga.
 * **Pusat Selisih Anggaran & Realokasi:** Form simulasi perubahan pagu anggaran APBD yang otomatis menghitung ulang *Overall Gap Score* dan status wilayah (`KRITIS`, `WASPADA`, `SELARAS`).
@@ -53,7 +53,7 @@ NalarPublik hadir sebagai **pihak ketiga independen** yang mengolah dokumen data
 
 ---
 
-## 📐 Alur Keputusan Berbasis Data (Architecture Flow)
+## Alur Keputusan Berbasis Data (Architecture Flow)
 
 ```mermaid
 flowchart TD
@@ -92,7 +92,7 @@ flowchart TD
 
 ---
 
-## 💻 Tech Stack
+## Tech Stack
 
 | Komponen | Teknologi | Keterangan |
 |---|---|---|
@@ -105,7 +105,7 @@ flowchart TD
 
 ---
 
-## ⚙️ Panduan Menjalankan Proyek Secara Lokal
+## Panduan Menjalankan Proyek Secara Lokal
 
 Pastikan Anda telah menginstal **Node.js (>= 20.9.0)** dan **npm**.
 
@@ -144,7 +144,7 @@ npm run typecheck
 
 ---
 
-## 🔑 Kredensial Demo Admin
+## Kredensial Demo Admin
 
 Untuk menguji akses ke Dasbor Pengambilan Keputusan (`/admin`):
 * **URL Login:** [http://localhost:3000/login](http://localhost:3000/login)
@@ -155,7 +155,7 @@ Untuk menguji akses ke Dasbor Pengambilan Keputusan (`/admin`):
 
 ---
 
-## 📊 Status Implementasi Fitur
+## Status Implementasi Fitur
 
 | Fitur / Halaman | Rute | Status | Catatan Teknis |
 |---|---|---|---|
@@ -172,7 +172,7 @@ Untuk menguji akses ke Dasbor Pengambilan Keputusan (`/admin`):
 
 ---
 
-## 👥 Profil Tim (Kopi Hitam Pekat)
+## Profil Tim (Kopi Hitam Pekat)
 
 * **Rony Pangaribuan** — *Product Lead, Frontend Architecture & Documentation*  
   Bertanggung jawab atas arsitektur antarmuka, routing, visualisasi data, integrasi middleware autentikasi, serta dokumentasi teknis.
@@ -181,5 +181,5 @@ Untuk menguji akses ke Dasbor Pengambilan Keputusan (`/admin`):
 
 ---
 
-## 📄 Lisensi
+## Lisensi
 Hak Cipta © 2026 Tim Kopi Hitam Pekat. Dikembangkan khusus untuk kompetisi **Web In Action (WIA) 2026**.
