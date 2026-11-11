@@ -47,6 +47,7 @@ export async function POST(request: Request) {
     })
 
     return NextResponse.json({ success: true, data: newSub }, { status: 201 })
+<<<<<<< HEAD
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Gagal mencatat aspirasi'
     const isValidationError =
@@ -57,5 +58,9 @@ export async function POST(request: Request) {
       message.includes('tidak valid')
 
     return NextResponse.json({ error: message }, { status: isValidationError ? 400 : 500 })
+=======
+  } catch {
+    return NextResponse.json({ error: 'Gagal mencatat aspirasi' }, { status: 500 })
+>>>>>>> main
   }
 }

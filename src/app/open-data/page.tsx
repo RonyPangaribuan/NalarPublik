@@ -500,7 +500,9 @@ export default function OpenDataPage() {
       if (stored) {
         const parsed = JSON.parse(stored)
         if (Array.isArray(parsed) && parsed.length > 0) {
-          const hydrated = parsed.map((doc: Omit<SpecificDoc, 'breakdown'> & { breakdown: Array<Omit<SpecificDoc['breakdown'][number], 'icon'>> }) => ({
+          const hydrated = (parsed as (Omit<SpecificDoc, 'breakdown'> & {
+            breakdown: Omit<SpecificDoc['breakdown'][number], 'icon'>[]
+          })[]).map((doc) => ({
             ...doc,
             breakdown: doc.breakdown.map((b) => ({
               ...b,
@@ -517,7 +519,7 @@ export default function OpenDataPage() {
           setDocsList([...SPECIFIC_DOCS, ...hydrated])
         }
       }
-    } catch (_) { }
+    } catch { }
   }, [])
 
   // State Modal Unggah DPA & AI Document Parsing Engine
@@ -923,7 +925,7 @@ export default function OpenDataPage() {
       const existing = stored ? JSON.parse(stored) : []
       const toStore = [{ ...customDoc, pdfUrl: fileUrl }, ...existing]
       localStorage.setItem('nalarpublik-uploaded-docs', JSON.stringify(toStore))
-    } catch (_) { }
+    } catch { }
   }
 
   // Helper memformat benda fisik/solid yang tidak bisa didesimalkan (bulatkan atau buat range logis)
