@@ -162,7 +162,7 @@ export default function SimulatorPage() {
               </div>
               {notes && (
                 <div className="pt-2 border-t border-border text-muted-foreground italic font-sans text-xs">
-                  "{notes}"
+                  &ldquo;{notes}&rdquo;
                 </div>
               )}
             </div>

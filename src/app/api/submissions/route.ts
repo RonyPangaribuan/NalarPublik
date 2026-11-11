@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { INITIAL_SUBMISSIONS } from '@/lib/data'
 import { CitizenSubmission } from '@/types'
 
-let memorySubmissions: CitizenSubmission[] = [...INITIAL_SUBMISSIONS]
+const memorySubmissions: CitizenSubmission[] = [...INITIAL_SUBMISSIONS]
 
 export async function GET() {
   return NextResponse.json({
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     memorySubmissions.unshift(newSub)
 
     return NextResponse.json({ success: true, data: newSub }, { status: 201 })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Gagal mencatat aspirasi' }, { status: 500 })
   }
 }

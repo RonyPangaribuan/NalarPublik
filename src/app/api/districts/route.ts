@@ -3,7 +3,7 @@ import { INITIAL_DISTRICTS } from '@/lib/data'
 import { calculateOverallGap, calculateGapStatus } from '@/lib/gap-calculator'
 import { District } from '@/types'
 
-let memoryDistricts: District[] = [...INITIAL_DISTRICTS]
+const memoryDistricts: District[] = [...INITIAL_DISTRICTS]
 
 export async function GET() {
   return NextResponse.json({
@@ -48,7 +48,7 @@ export async function PUT(request: Request) {
     memoryDistricts[index] = updated
 
     return NextResponse.json({ success: true, data: updated })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Gagal memperbarui anggaran' }, { status: 500 })
   }
 }

@@ -9,11 +9,7 @@ import {
   Sliders,
   Database,
   MapPin,
-  TrendingDown,
   Check,
-  CheckCircle2,
-  AlertCircle,
-  Activity,
   Users,
   Building2,
   Scale,
@@ -706,15 +702,12 @@ export default function HomePage() {
 
         <div className="max-w-7xl mx-auto">
           
-          {/* Section Header with Editorial Authority */}
+          {/* Section Header */}
           <FadeIn className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-5 sm:mb-6">
             <div className="max-w-2xl">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="size-2 rounded-full bg-rose-500 animate-pulse" />
-                <p className="text-[11px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
-                  AUDIT DISPARITAS KEBIJAKAN // APBD KAB. TOBA 2026
-                </p>
-              </div>
+              <p className="text-[11px] font-mono font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                AUDIT DISPARITAS KEBIJAKAN // APBD KAB. TOBA 2026
+              </p>
               <h2
                 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground"
                 style={{ fontFamily: "'Manrope', sans-serif" }}
@@ -724,19 +717,6 @@ export default function HomePage() {
               <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 leading-relaxed">
                 Menyandingkan survei BPS dan proporsi belanja APBD untuk identifikasi defisit dan surplus wilayah.
               </p>
-            </div>
-
-            {/* Micro Global Legend */}
-            <div className="flex items-center gap-3 text-xs font-mono shrink-0 bg-card/60 backdrop-blur-xs border border-border px-3.5 py-1.5 rounded-lg">
-              <span className="flex items-center gap-1.5 text-muted-foreground">
-                <span className="size-2 rounded-full bg-primary" />
-                Kebutuhan BPS
-              </span>
-              <span className="text-border">|</span>
-              <span className="flex items-center gap-1.5 text-muted-foreground">
-                <span className="size-2 rounded-full bg-emerald-600 dark:bg-emerald-400" />
-                Alokasi APBD
-              </span>
             </div>
           </FadeIn>
 
@@ -753,26 +733,19 @@ export default function HomePage() {
                   className={cn(
                     'group relative text-left p-3.5 sm:p-4 rounded-xl border transition-all cursor-pointer overflow-hidden',
                     isSelected
-                      ? 'bg-card border-primary shadow-md ring-1 ring-primary/30 -translate-y-0.5'
+                      ? 'bg-card border-foreground/30 shadow-xs ring-1 ring-foreground/10 -translate-y-0.5'
                       : 'bg-card/50 hover:bg-card border-border/80 hover:border-border text-muted-foreground hover:text-foreground'
                   )}
                 >
                   {/* Top indicator bar for selected */}
                   {isSelected && (
-                    <div className="absolute top-0 inset-x-0 h-1 bg-primary" />
+                    <div className="absolute top-0 inset-x-0 h-0.5 bg-foreground/60" />
                   )}
 
-                  <div className="flex items-center justify-between gap-1.5 mb-1">
+                  <div className="mb-1">
                     <span className="text-[10.5px] font-mono font-medium tracking-wide text-muted-foreground">
                       {d.type}
                     </span>
-                    <span
-                      className={cn(
-                        'size-2 rounded-full shrink-0',
-                        d.status === 'CRITICAL' ? 'bg-rose-500 animate-pulse' :
-                        d.status === 'WASPADA' ? 'bg-amber-500' : 'bg-emerald-500'
-                      )}
-                    />
                   </div>
 
                   <div className="font-bold text-sm sm:text-base text-foreground group-hover:text-primary transition-colors">
@@ -780,16 +753,7 @@ export default function HomePage() {
                   </div>
 
                   <div className="flex items-center gap-1.5 mt-2">
-                    <span
-                      className={cn(
-                        'text-[11px] sm:text-xs font-mono font-bold tracking-tight',
-                        d.status === 'CRITICAL'
-                          ? 'text-rose-600 dark:text-rose-400'
-                          : d.status === 'WASPADA'
-                            ? 'text-amber-600 dark:text-amber-400'
-                            : 'text-emerald-600 dark:text-emerald-400'
-                      )}
-                    >
+                    <span className="text-[11px] sm:text-xs font-mono font-semibold tracking-tight text-foreground">
                       {isDeficit ? `+${d.gapScore.replace('+', '')}%` : `${d.gapScore}%`}
                     </span>
                     <span className="text-[10px] font-mono text-muted-foreground uppercase">
@@ -801,241 +765,95 @@ export default function HomePage() {
             })}
           </FadeIn>
 
-          {/* ── 2. The Visual Tension Chamber (Harmonious Civic Aesthetic) ── */}
-          <FadeIn delay={150} className="rounded-2xl border border-border/80 bg-card text-foreground shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+          {/* ── 2. Ringkasan Disparitas Wilayah (Minimalist & Calm) ── */}
+          <FadeIn delay={150} className="rounded-2xl border border-border/80 bg-card text-foreground shadow-xs p-5 sm:p-7">
             
-            {/* ── BAGIAN ATAS: Visual Tension & Continuum Scale ── */}
-            <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
-              
-              {/* Row 1: Dual Opposing Force Columns with Center Tension Delta */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5 sm:gap-5 items-center">
-                
-                {/* Left Force: Kebutuhan Warga (BPS) Card */}
-                <div className="md:col-span-5 rounded-xl bg-slate-50/70 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800/80 p-4 sm:p-5 relative overflow-hidden transition-all hover:border-primary/40 shadow-2xs">
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="flex items-center gap-1.5 text-xs font-mono font-bold text-primary dark:text-sky-400">
-                      <Users size={14} className="text-primary dark:text-sky-400" />
-                      KEBUTUHAN RIIL WARGA
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-semibold">
-                      SURVEI BPS
-                    </span>
-                  </div>
-
-                  <div className="flex items-baseline justify-between mb-2">
-                    <span className="text-2xl sm:text-3xl font-extrabold font-mono tracking-tight text-foreground">
-                      {current.bpsIssue}%
-                    </span>
-                    <span className="text-xs text-muted-foreground font-mono">
-                      Masalah {current.topSector.split(' ')[0]}
-                    </span>
-                  </div>
-
-                  <div className="h-2 w-full bg-slate-200/80 dark:bg-slate-800 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full transition-all duration-700 shadow-2xs"
-                      style={{ width: `${Math.min(100, (current.bpsIssue / 50) * 100)}%` }}
-                    />
-                  </div>
-                  <p className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
-                    Tingkat urgensi penanganan berdasarkan data sensus dan survei kebutuhan dasar masyarakat.
-                  </p>
-                </div>
-
-                {/* Center Tension Epicenter: Jurang Kesenjangan */}
-                <div className="md:col-span-2 flex flex-col items-center justify-center text-center py-2 px-1">
-                  <span className="text-[9.5px] font-mono uppercase tracking-wider text-muted-foreground font-bold mb-1">
-                    JURANG KESENJANGAN
+            {/* Header: Nama Wilayah, Tipe, & Status Selisih */}
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-5 border-b border-border/60">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                    Kecamatan {current.name}
+                  </h3>
+                  <span className="text-xs text-muted-foreground font-mono">
+                    ({current.type})
                   </span>
-
-                  <div className={cn(
-                    'text-2xl sm:text-3xl font-extrabold font-mono tracking-tight my-0.5',
-                    current.status === 'CRITICAL' ? 'text-rose-600 dark:text-rose-400' :
-                    current.status === 'WASPADA' ? 'text-amber-600 dark:text-amber-400' :
-                    'text-emerald-600 dark:text-emerald-400'
-                  )}>
-                    {current.gapScore}%
-                  </div>
-
-                  <div className={cn(
-                    'inline-flex items-center gap-1 text-[10.5px] font-mono px-2.5 py-0.5 rounded-md font-semibold mt-1 border',
-                    parseFloat(current.gapScore) > 0
-                      ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border-rose-200 dark:border-rose-900/40'
-                      : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900/40'
-                  )}>
-                    <span>{parseFloat(current.gapScore) > 0 ? 'Defisit Pagu' : 'Surplus Fiskal'}</span>
-                  </div>
-
-                  <div className="w-full flex items-center justify-center gap-2 mt-2 text-muted-foreground/30 text-xs font-mono">
-                    <span>◄</span>
-                    <span className="h-px w-8 sm:w-12 bg-border" />
-                    <span>►</span>
-                  </div>
                 </div>
-
-                {/* Right Force: Alokasi Belanja APBD Card */}
-                <div className="md:col-span-5 rounded-xl bg-slate-50/70 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800/80 p-4 sm:p-5 relative overflow-hidden transition-all hover:border-emerald-500/40 shadow-2xs">
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400">
-                      <Building2 size={14} className="text-emerald-700 dark:text-emerald-400" />
-                      ALOKASI APBD TOBA
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 font-semibold">
-                      BELANJA 2026
-                    </span>
-                  </div>
-
-                  <div className="flex items-baseline justify-between mb-2">
-                    <span className="text-2xl sm:text-3xl font-extrabold font-mono tracking-tight text-foreground">
-                      {current.apbdBudget}%
-                    </span>
-                    <span className="text-xs text-muted-foreground font-mono">
-                      Porsi Pagu Sektor
-                    </span>
-                  </div>
-
-                  <div className="h-2 w-full bg-slate-200/80 dark:bg-slate-800 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-emerald-600 dark:bg-emerald-500 rounded-full transition-all duration-700 shadow-2xs"
-                      style={{ width: `${Math.min(100, (current.apbdBudget / 50) * 100)}%` }}
-                    />
-                  </div>
-                  <p className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
-                    Porsi realisasi belanja modal daerah yang disalurkan dari total belanja bidang terkait.
-                  </p>
-                </div>
-
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-2xl">
+                  {current.physicalImpact}
+                </p>
               </div>
 
-              {/* Row 2: Unified Fiscal Continuum Track */}
-              <div className="rounded-xl bg-slate-50/70 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800/80 p-4 sm:p-5 space-y-3 shadow-2xs">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-                  <div>
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block font-bold">
-                      SUMBU KONTINUUM FISKAL // SKALA 0% — 50%
-                    </span>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Visualisasi jurang disparitas antara posisi kebutuhan masyarakat dengan posisi realisasi pagu belanja.
-                    </p>
-                  </div>
-                  <span className="text-xs font-mono font-bold text-foreground bg-card border border-border px-2.5 py-1 rounded-md shadow-2xs self-start sm:self-auto">
-                    Rentang Jurang: {Math.abs(current.bpsIssue - current.apbdBudget).toFixed(1)} Poin Persentase
+              {/* Status Selisih - Bersih Tanpa Background Merah & Tanpa Titik Merah */}
+              <div className="shrink-0 self-start sm:self-auto">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-semibold bg-muted/60 text-foreground border border-border/70">
+                  {parseFloat(current.gapScore) > 0 ? `Defisit Pagu ${current.gapScore}%` : `Surplus Pagu ${current.gapScore}%`}
+                </span>
+              </div>
+            </div>
+
+            {/* Visualisasi 2 Bar Bersih Tanpa Box Berlebih */}
+            <div className="py-6 space-y-5">
+              
+              {/* Bar 1: Kebutuhan Warga */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-baseline text-xs sm:text-sm">
+                  <span className="font-medium text-foreground">
+                    Kebutuhan Warga <span className="text-xs text-muted-foreground font-normal font-mono">(Survei BPS — Masalah {current.topSector})</span>
+                  </span>
+                  <span className="font-mono font-bold text-foreground text-sm sm:text-base">
+                    {current.bpsIssue}%
                   </span>
                 </div>
-
-                {/* The Continuous Scale Track */}
-                <div className="pt-7 pb-2 px-2 sm:px-3">
-                  <div className="relative h-3 w-full bg-slate-200/80 dark:bg-slate-800 rounded-full border border-border/60">
-                    
-                    {/* The Chasm Span Band */}
-                    {(() => {
-                      const minVal = Math.min(current.bpsIssue, current.apbdBudget)
-                      const maxVal = Math.max(current.bpsIssue, current.apbdBudget)
-                      const leftPct = (minVal / 50) * 100
-                      const widthPct = ((maxVal - minVal) / 50) * 100
-                      const isDeficit = parseFloat(current.gapScore) > 0
-                      return (
-                        <div
-                          className={cn(
-                            'absolute top-0 bottom-0 rounded-full transition-all duration-700 flex items-center justify-center overflow-hidden border',
-                            isDeficit
-                              ? 'bg-rose-500/15 border-rose-400/50 text-rose-600 dark:text-rose-300'
-                              : 'bg-emerald-500/15 border-emerald-400/50 text-emerald-600 dark:text-emerald-300'
-                          )}
-                          style={{
-                            left: `${leftPct}%`,
-                            width: `${Math.max(4, widthPct)}%`,
-                          }}
-                        >
-                          {/* Subtle hatched overlay */}
-                          <div
-                            aria-hidden="true"
-                            className="absolute inset-0 opacity-20"
-                            style={{
-                              backgroundImage:
-                                'repeating-linear-gradient(45deg, transparent, transparent 5px, currentColor 5px, currentColor 7px)',
-                            }}
-                          />
-                        </div>
-                      )
-                    })()}
-
-                    {/* Marker: Kebutuhan Warga BPS */}
-                    {(() => {
-                      const posPct = Math.min(100, Math.max(0, (current.bpsIssue / 50) * 100))
-                      return (
-                        <div
-                          className="absolute -top-7 -translate-x-1/2 flex flex-col items-center pointer-events-none transition-all duration-700 z-10"
-                          style={{ left: `${posPct}%` }}
-                        >
-                          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-primary text-primary-foreground shadow-xs whitespace-nowrap">
-                            Kebutuhan {current.bpsIssue}%
-                          </span>
-                          <span className="size-2 rounded-full bg-primary ring-2 ring-background mt-1 shadow-xs" />
-                        </div>
-                      )
-                    })()}
-
-                    {/* Marker: Alokasi APBD */}
-                    {(() => {
-                      const posPct = Math.min(100, Math.max(0, (current.apbdBudget / 50) * 100))
-                      return (
-                        <div
-                          className="absolute -bottom-7 -translate-x-1/2 flex flex-col-reverse items-center pointer-events-none transition-all duration-700 z-10"
-                          style={{ left: `${posPct}%` }}
-                        >
-                          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-emerald-600 text-white shadow-xs whitespace-nowrap">
-                            APBD {current.apbdBudget}%
-                          </span>
-                          <span className="size-2 rounded-full bg-emerald-600 ring-2 ring-background mb-1 shadow-xs" />
-                        </div>
-                      )
-                    })()}
-                  </div>
-
-                  {/* Ticks and percentage labels below */}
-                  <div className="relative mt-7 pt-1.5 flex justify-between text-[10px] font-mono text-muted-foreground border-t border-border/60">
-                    <span>0% (Awal)</span>
-                    <span>10%</span>
-                    <span>20%</span>
-                    <span>30%</span>
-                    <span>40%</span>
-                    <span>50% (Batas Skala)</span>
-                  </div>
+                <div className="h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-slate-700 dark:bg-slate-300 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(100, current.bpsIssue)}%` }}
+                  />
                 </div>
+              </div>
 
+              {/* Bar 2: Alokasi APBD */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-baseline text-xs sm:text-sm">
+                  <span className="font-medium text-foreground">
+                    Alokasi Belanja <span className="text-xs text-muted-foreground font-normal font-mono">(APBD 2026 — Pagu Sektor {current.paguAPBD})</span>
+                  </span>
+                  <span className="font-mono font-bold text-foreground text-sm sm:text-base">
+                    {current.apbdBudget}%
+                  </span>
+                </div>
+                <div className="h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-slate-400 dark:bg-slate-600 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(100, current.apbdBudget)}%` }}
+                  />
+                </div>
               </div>
 
             </div>
 
-            {/* ── BAGIAN BAWAH: Harmonized Footer Strip (Info Wilayah & Tombol Navigasi) ── */}
-            <div className="bg-slate-50/90 dark:bg-slate-900/90 border-t border-border px-4 py-3 sm:px-6 sm:py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-foreground">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
-                <span className="font-bold text-foreground font-mono">Kecamatan {current.name}</span>
+            {/* Footer Ringkas: Info Demografis & Aksi */}
+            <div className="pt-4 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span>Populasi: <strong className="text-foreground font-medium">{current.populasi}</strong></span>
                 <span className="text-muted-foreground/40">·</span>
-                <span className="text-foreground/90 font-medium font-mono">{current.topSector}</span>
-                <span className="text-muted-foreground/40">·</span>
-                <span className="font-mono text-[10.5px] text-muted-foreground">Pagu {current.paguAPBD}</span>
-                <span className="text-muted-foreground/40">·</span>
-                <span className="font-mono text-[10.5px] text-muted-foreground">{current.populasi}</span>
+                <span>Pagu per jiwa: <strong className="text-foreground font-medium">{current.perCapita}</strong></span>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
+              <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
                 <Link
                   href={`/compare?districtA=${current.id}&districtB=balige`}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-card hover:bg-accent text-foreground border border-border px-3.5 py-2 text-xs font-semibold transition-colors shadow-2xs"
+                  className="font-medium text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <Scale size={13} className="text-primary" />
-                  <span>Bandingkan vs Balige (Ibu Kota)</span>
-                  <ArrowUpRight size={13} className="text-muted-foreground" />
+                  Bandingkan vs Balige →
                 </Link>
-
                 <Link
                   href={current.href}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 text-xs font-bold transition-all shadow-xs"
+                  className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
                 >
-                  <span>Buka Pada Peta Anggaran</span>
-                  <ArrowRight size={14} />
+                  <span>Buka Peta Wilayah</span>
+                  <ArrowRight size={13} />
                 </Link>
               </div>
             </div>

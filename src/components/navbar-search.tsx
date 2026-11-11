@@ -354,7 +354,7 @@ export function NavbarSearch() {
               Data Tidak Ditemukan
             </h4>
             <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
-              Tidak ditemukan hasil untuk <strong className="text-rose-500 font-mono">"{query}"</strong>.
+              Tidak ditemukan hasil untuk <strong className="text-rose-500 font-mono">&ldquo;{query}&rdquo;</strong>.
             </p>
           </div>
           <div className="pt-2 border-t border-border text-[10px] font-mono text-muted-foreground flex items-center justify-center gap-1.5 flex-wrap">
