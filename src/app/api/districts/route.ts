@@ -46,7 +46,6 @@ export async function PUT(request: Request) {
     })
 
     return NextResponse.json({ success: true, data: updated })
-<<<<<<< HEAD
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Gagal memperbarui anggaran'
     const isValidationError =
@@ -54,9 +53,5 @@ export async function PUT(request: Request) {
       message.includes('tidak ditemukan') ||
       message.includes('0% hingga 100%')
     return NextResponse.json({ error: message }, { status: isValidationError ? 400 : 500 })
-=======
-  } catch {
-    return NextResponse.json({ error: 'Gagal memperbarui anggaran' }, { status: 500 })
->>>>>>> main
   }
 }
