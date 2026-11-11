@@ -11,6 +11,8 @@ import {
   getAllSubmissions,
   getAggregatedAspirations,
   generatePolicyRecommendations,
+  verifyAdminCredentials,
+  updateAdminPassword,
 } from './db.ts'
 
 test('SQLite Database Operations & Business Logic', async (t) => {
@@ -151,6 +153,53 @@ test('SQLite Database Operations & Business Logic', async (t) => {
     // Habinsaran or Porsea should have critical/warning recommendations
     const hasCritical = recommendations.some((r) => r.severity === 'CRITICAL' || r.severity === 'WARNING')
     assert.ok(hasCritical)
+  })
+
+  await t.test('8. should seed 9 rich citizen submissions with UI attributes', () => {
+    const allSubs = getAllSubmissions(db)
+    assert.ok(allSubs.length >= 9)
+
+    const firstSub = allSubs[0]
+    assert.ok(firstSub.district_name)
+    assert.ok(firstSub.author)
+    assert.ok(firstSub.avatar)
+    assert.ok(firstSub.avatarBg)
+    assert.ok(firstSub.timeAgo)
+  })
+
+  await t.test('9. should seed and verify admin credentials, and update password', () => {
+    const valid = verifyAdminCredentials('admin@nalarpublik.id', 'AdminNalar2026!', db)
+    assert.strictEqual(valid.valid, true)
+    assert.strictEqual(valid.user?.email, 'admin@nalarpublik.id')
+    assert.strictEqual(valid.user?.role, 'admin')
+
+    const invalid = verifyAdminCredentials('admin@nalarpublik.id', 'WrongPass!', db)
+    assert.strictEqual(invalid.valid, false)
+
+    const updated = updateAdminPassword('admin@nalarpublik.id', 'NewSecret2026!', db)
+    assert.strictEqual(updated, true)
+
+    const checkNew = verifyAdminCredentials('admin@nalarpublik.id', 'NewSecret2026!', db)
+    assert.strictEqual(checkNew.valid, true)
+  })
+
+  await t.test('10. should create citizen submission with custom author and district_name', () => {
+    const sub = createCitizenSubmission(
+      {
+        district_id: 'habinsaran',
+        district_name: 'Kecamatan Habinsaran',
+        author: 'Warga Lumban Rau Julu',
+        alloc_infra_pct: 40,
+        alloc_health_pct: 20,
+        alloc_edu_pct: 20,
+        alloc_social_pct: 20,
+        notes: 'Perbaikan jembatan utama antar desa.',
+      },
+      db
+    )
+
+    assert.strictEqual(sub.author, 'Warga Lumban Rau Julu')
+    assert.strictEqual(sub.district_name, 'Kecamatan Habinsaran')
   })
 
   db.close()

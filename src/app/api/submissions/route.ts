@@ -22,7 +22,16 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { district_id, alloc_infra_pct, alloc_health_pct, alloc_edu_pct, alloc_social_pct, notes } = body
+    const {
+      district_id,
+      district_name,
+      author,
+      alloc_infra_pct,
+      alloc_health_pct,
+      alloc_edu_pct,
+      alloc_social_pct,
+      notes,
+    } = body
 
     if (!district_id) {
       return NextResponse.json({ error: 'Kecamatan wajib dipilih' }, { status: 400 })
@@ -39,6 +48,8 @@ export async function POST(request: Request) {
 
     const newSub = createCitizenSubmission({
       district_id,
+      district_name: typeof district_name === 'string' ? district_name.trim() : undefined,
+      author: typeof author === 'string' ? author.trim() : undefined,
       alloc_infra_pct,
       alloc_health_pct,
       alloc_edu_pct,

@@ -42,11 +42,25 @@ export interface District {
 export interface CitizenSubmission {
   id?: string
   district_id: string       // Relasi ke District.id
+  district_name?: string
+  author?: string
+  avatar?: string
+  avatarBg?: string
   alloc_infra_pct: number   // Pilihan slider warga (0–100)
   alloc_health_pct: number
   alloc_edu_pct: number
   alloc_social_pct: number
   notes?: string            // Catatan/keluhan opsional (maks. 200 karakter)
+  timeAgo?: string
+  created_at?: string
+}
+
+// ── Akun Administrator ────────────────────────────────────────────────────────
+export interface AdminUser {
+  id: string
+  email: string
+  name: string
+  role: string
   created_at?: string
 }
 

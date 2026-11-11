@@ -1,12 +1,10 @@
 import { NextResponse } from 'next/server'
+import { verifyAdminCredentials } from '@/lib/db'
 
 /**
  * POST /api/auth/login
- * Memverifikasi kredensial admin.
+ * Memverifikasi kredensial admin melalui SQLite (better-sqlite3).
  * Jika cocok, set cookie HTTP-Only `nalarpublik_session`.
- *
- * NOTE: Implementasi DB real (better-sqlite3) dikerjakan oleh backend engineer (Boy).
- * Untuk sementara, fallback ke env atau kredensial default agar FE bisa diuji.
  */
 export async function POST(request: Request) {
   try {
@@ -17,13 +15,10 @@ export async function POST(request: Request) {
       isDemo?: boolean
     }
 
-    // Kredensial admin dari env atau default
-    const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@nalarpublik.id'
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'AdminNalar2026!'
-    const allowedEmails = ADMIN_EMAIL.split(',').map((e) => e.trim().toLowerCase())
-
     let isValid = false
     let userEmail = 'admin@nalarpublik.id'
+    let userName = 'Admin NalarPublik'
+    let userRole = 'admin'
 
     if (isDemo) {
       isValid = true
@@ -34,10 +29,29 @@ export async function POST(request: Request) {
           { status: 400 },
         )
       }
-      userEmail = email
-      isValid =
-        (allowedEmails.includes(email.toLowerCase()) && password === ADMIN_PASSWORD) ||
-        (email.toLowerCase() === 'admin@nalarpublik.id' && password === 'AdminNalar2026!')
+
+      userEmail = email.trim()
+
+      // 1. Verifikasi kredensial via SQLite
+      const dbCheck = verifyAdminCredentials(userEmail, password)
+      if (dbCheck.valid && dbCheck.user) {
+        isValid = true
+        userEmail = dbCheck.user.email
+        userName = dbCheck.user.name
+        userRole = dbCheck.user.role
+      } else {
+        // 2. Fallback ke kredensial env/default
+        const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@nalarpublik.id'
+        const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'AdminNalar2026!'
+        const allowedEmails = ADMIN_EMAIL.split(',').map((e) => e.trim().toLowerCase())
+
+        if (
+          (allowedEmails.includes(userEmail.toLowerCase()) && password === ADMIN_PASSWORD) ||
+          (userEmail.toLowerCase() === 'admin@nalarpublik.id' && password === 'AdminNalar2026!')
+        ) {
+          isValid = true
+        }
+      }
     }
 
     if (!isValid) {
@@ -51,8 +65,8 @@ export async function POST(request: Request) {
       success: true,
       user: {
         email: userEmail,
-        name: 'Admin NalarPublik',
-        role: 'admin',
+        name: userName,
+        role: userRole,
       },
     })
 

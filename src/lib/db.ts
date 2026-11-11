@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3'
 import path from 'path'
 import fs from 'fs'
-import { District, CitizenSubmission, AggregatedAspiration, PolicyRecommendation, SectorKey } from '@/types'
+import { District, CitizenSubmission, AggregatedAspiration, PolicyRecommendation, SectorKey, AdminUser } from '@/types'
 import { calculateOverallGap, calculateGapStatus, calculateSectorGaps } from './gap-calculator'
 import { INITIAL_DISTRICTS } from './data'
 
@@ -53,6 +53,8 @@ export function initDbSchema(db: Database.Database): void {
     CREATE TABLE IF NOT EXISTS citizen_submissions (
       id TEXT PRIMARY KEY,
       district_id TEXT NOT NULL REFERENCES districts(id) ON DELETE CASCADE,
+      district_name TEXT,
+      author TEXT DEFAULT 'Warga Toba',
       alloc_infra_pct REAL NOT NULL,
       alloc_health_pct REAL NOT NULL,
       alloc_edu_pct REAL NOT NULL,
@@ -62,10 +64,144 @@ export function initDbSchema(db: Database.Database): void {
       CHECK (ROUND(alloc_infra_pct + alloc_health_pct + alloc_edu_pct + alloc_social_pct, 1) = 100)
     );
 
+    CREATE TABLE IF NOT EXISTS admins (
+      id TEXT PRIMARY KEY,
+      email TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL,
+      name TEXT NOT NULL,
+      role TEXT DEFAULT 'admin',
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
     CREATE INDEX IF NOT EXISTS idx_submissions_district ON citizen_submissions(district_id);
     CREATE INDEX IF NOT EXISTS idx_submissions_created_at ON citizen_submissions(created_at);
   `)
+
+  // Auto-migration columns if existing SQLite DB lacks author or district_name
+  try {
+    const cols = db.prepare('PRAGMA table_info(citizen_submissions)').all() as { name: string }[]
+    const colNames = cols.map((c) => c.name)
+    if (!colNames.includes('author')) {
+      db.exec("ALTER TABLE citizen_submissions ADD COLUMN author TEXT DEFAULT 'Warga Toba'")
+    }
+    if (!colNames.includes('district_name')) {
+      db.exec('ALTER TABLE citizen_submissions ADD COLUMN district_name TEXT')
+    }
+  } catch {
+    // Table may have just been created with columns
+  }
 }
+
+export const RICH_CITIZEN_SUBMISSIONS = [
+  {
+    id: 'sub-hab-1',
+    district_id: 'habinsaran',
+    district_name: 'Kecamatan Habinsaran',
+    author: 'Warga Desa Lumban Rau',
+    alloc_infra_pct: 50,
+    alloc_health_pct: 20,
+    alloc_edu_pct: 15,
+    alloc_social_pct: 15,
+    notes: 'Jalan penghubung antar desa di Habinsaran banyak yang longsor dan rusak berat. Truk pengangkut hasil tani sering terbalik saat musim hujan.',
+    created_at: new Date(Date.now() - 15 * 60000).toISOString(),
+  },
+  {
+    id: 'sub-hab-2',
+    district_id: 'habinsaran',
+    district_name: 'Kecamatan Habinsaran',
+    author: 'Warga Parsoburan',
+    alloc_infra_pct: 45,
+    alloc_health_pct: 25,
+    alloc_edu_pct: 15,
+    alloc_social_pct: 15,
+    notes: 'Mohon prioritas pengaspalan jalan usaha tani dataran tinggi dan tambahan tenaga perawat puskesmas pembantu desa.',
+    created_at: new Date(Date.now() - 60 * 60000).toISOString(),
+  },
+  {
+    id: 'sub-hab-3',
+    district_id: 'habinsaran',
+    district_name: 'Kecamatan Habinsaran',
+    author: 'Warga Borbor Julu',
+    alloc_infra_pct: 55,
+    alloc_health_pct: 15,
+    alloc_edu_pct: 15,
+    alloc_social_pct: 15,
+    notes: 'Jembatan kayu antar dusun sudah rapuh, anak sekolah harus memutar 5 kilometer tiap hari menyeberang sungai.',
+    created_at: new Date(Date.now() - 180 * 60000).toISOString(),
+  },
+  {
+    id: 'sub-por-1',
+    district_id: 'porsea',
+    district_name: 'Kecamatan Porsea',
+    author: 'Warga Desa Siruar',
+    alloc_infra_pct: 25,
+    alloc_health_pct: 45,
+    alloc_edu_pct: 15,
+    alloc_social_pct: 15,
+    notes: 'Program penanganan stunting dan gizi balita di Porsea pesisir perlu ditingkatkan dan diberi susu formula serta PMT rutin.',
+    created_at: new Date(Date.now() - 45 * 60000).toISOString(),
+  },
+  {
+    id: 'sub-por-2',
+    district_id: 'porsea',
+    district_name: 'Kecamatan Porsea',
+    author: 'Warga Patane I',
+    alloc_infra_pct: 30,
+    alloc_health_pct: 35,
+    alloc_edu_pct: 20,
+    alloc_social_pct: 15,
+    notes: 'Puskesmas rawat inap Porsea butuh alat USG dan timbangan antropometri digital terkalibrasi untuk posyandu balita.',
+    created_at: new Date(Date.now() - 120 * 60000).toISOString(),
+  },
+  {
+    id: 'sub-lag-1',
+    district_id: 'laguboti',
+    district_name: 'Kecamatan Laguboti',
+    author: 'Warga Desa Sitoluama',
+    alloc_infra_pct: 30,
+    alloc_health_pct: 20,
+    alloc_edu_pct: 35,
+    alloc_social_pct: 15,
+    notes: 'Renovasi ruang kelas SD negeri yang plafonnya jebol dan penambahan sarana komputer/internet untuk siswa desa.',
+    created_at: new Date(Date.now() - 60 * 60000).toISOString(),
+  },
+  {
+    id: 'sub-lag-2',
+    district_id: 'laguboti',
+    district_name: 'Kecamatan Laguboti',
+    author: 'Warga Pasar Laguboti',
+    alloc_infra_pct: 25,
+    alloc_health_pct: 20,
+    alloc_edu_pct: 35,
+    alloc_social_pct: 20,
+    notes: 'Bantuan beasiswa anak petani berprestasi dan perbaikan sarana sanitasi MCK sekolah dasar pelosok.',
+    created_at: new Date(Date.now() - 240 * 60000).toISOString(),
+  },
+  {
+    id: 'sub-bal-1',
+    district_id: 'balige',
+    district_name: 'Kecamatan Balige',
+    author: 'Warga Sangkar Nihuta',
+    alloc_infra_pct: 35,
+    alloc_health_pct: 25,
+    alloc_edu_pct: 20,
+    alloc_social_pct: 20,
+    notes: 'Normalisasi saluran drainase perkotaan Balige agar tidak banjir saat hujan lebat dan pengelolaan sampah pasar tradisional.',
+    created_at: new Date(Date.now() - 120 * 60000).toISOString(),
+  },
+  {
+    id: 'sub-bal-2',
+    district_id: 'balige',
+    district_name: 'Kecamatan Balige',
+    author: 'Warga Lumban Silintong',
+    alloc_infra_pct: 35,
+    alloc_health_pct: 20,
+    alloc_edu_pct: 20,
+    alloc_social_pct: 25,
+    notes: 'Penerangan lampu jalan umum menuju sentra pantai Danau Toba dan bantuan bibit kopi arabika dataran tinggi.',
+    created_at: new Date(Date.now() - 300 * 60000).toISOString(),
+  },
+]
 
 export function seedInitialData(db: Database.Database): void {
   const districtCount = db.prepare('SELECT COUNT(*) as count FROM districts').get() as { count: number }
@@ -94,75 +230,35 @@ export function seedInitialData(db: Database.Database): void {
   }
 
   const subCount = db.prepare('SELECT COUNT(*) as count FROM citizen_submissions').get() as { count: number }
-  if (subCount.count === 0) {
+  if (subCount.count < 9) {
+    // If empty or only old partial dummy data, clean and insert full 9 rich submissions
+    if (subCount.count > 0 && subCount.count < 9) {
+      db.prepare('DELETE FROM citizen_submissions').run()
+    }
+
     const insertSub = db.prepare(`
       INSERT INTO citizen_submissions (
-        id, district_id, alloc_infra_pct, alloc_health_pct, alloc_edu_pct, alloc_social_pct, notes, created_at
+        id, district_id, district_name, author, alloc_infra_pct, alloc_health_pct, alloc_edu_pct, alloc_social_pct, notes, created_at
       ) VALUES (
-        @id, @district_id, @alloc_infra_pct, @alloc_health_pct, @alloc_edu_pct, @alloc_social_pct, @notes, @created_at
+        @id, @district_id, @district_name, @author, @alloc_infra_pct, @alloc_health_pct, @alloc_edu_pct, @alloc_social_pct, @notes, @created_at
       )
     `)
 
-    const initialSubs = [
-      {
-        id: 'sub-1',
-        district_id: 'habinsaran',
-        alloc_infra_pct: 50,
-        alloc_health_pct: 20,
-        alloc_edu_pct: 15,
-        alloc_social_pct: 15,
-        notes: 'Jalan penghubung antar desa di Habinsaran banyak yang longsor dan rusak berat.',
-        created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-      },
-      {
-        id: 'sub-2',
-        district_id: 'habinsaran',
-        alloc_infra_pct: 45,
-        alloc_health_pct: 25,
-        alloc_edu_pct: 15,
-        alloc_social_pct: 15,
-        notes: 'Mohon prioritas pengaspalan jalan pertanian dan tambahan perawat puskesmas.',
-        created_at: new Date(Date.now() - 3600000).toISOString(),
-      },
-      {
-        id: 'sub-3',
-        district_id: 'porsea',
-        alloc_infra_pct: 25,
-        alloc_health_pct: 40,
-        alloc_edu_pct: 20,
-        alloc_social_pct: 15,
-        notes: 'Program penanganan stunting dan gizi balita di Porsea perlu ditingkatkan.',
-        created_at: new Date(Date.now() - 1800000).toISOString(),
-      },
-      {
-        id: 'sub-4',
-        district_id: 'laguboti',
-        alloc_infra_pct: 30,
-        alloc_health_pct: 20,
-        alloc_edu_pct: 35,
-        alloc_social_pct: 15,
-        notes: 'Renovasi ruang kelas sekolah dasar dan fasilitas belajar siswa.',
-        created_at: new Date(Date.now() - 7200000).toISOString(),
-      },
-      {
-        id: 'sub-5',
-        district_id: 'balige',
-        alloc_infra_pct: 30,
-        alloc_health_pct: 25,
-        alloc_edu_pct: 25,
-        alloc_social_pct: 20,
-        notes: 'Drainase jalan perkotaan dan penataan ruang publik.',
-        created_at: new Date(Date.now() - 9000000).toISOString(),
-      },
-    ]
-
-    const insertManySubs = db.transaction((subs) => {
+    const insertManySubs = db.transaction((subs: typeof RICH_CITIZEN_SUBMISSIONS) => {
       for (const s of subs) {
         insertSub.run(s)
       }
     })
 
-    insertManySubs(initialSubs)
+    insertManySubs(RICH_CITIZEN_SUBMISSIONS)
+  }
+
+  const adminCount = db.prepare('SELECT COUNT(*) as count FROM admins').get() as { count: number }
+  if (adminCount.count === 0) {
+    db.prepare(`
+      INSERT INTO admins (id, email, password, name, role, created_at)
+      VALUES (?, ?, ?, ?, ?, datetime('now'))
+    `).run('admin-default', 'admin@nalarpublik.id', 'AdminNalar2026!', 'Admin NalarPublik', 'admin')
   }
 }
 
@@ -289,6 +385,93 @@ export function updateDistrictBpsSync(
   return getDistrictById(id, db)!
 }
 
+export function formatSubmissionUi(sub: {
+  id: string
+  district_id: string
+  district_name?: string | null
+  author?: string | null
+  alloc_infra_pct: number
+  alloc_health_pct: number
+  alloc_edu_pct: number
+  alloc_social_pct: number
+  notes?: string | null
+  created_at: string
+}): CitizenSubmission {
+  const districtName =
+    sub.district_name ||
+    (sub.district_id === 'habinsaran'
+      ? 'Kecamatan Habinsaran'
+      : sub.district_id === 'porsea'
+        ? 'Kecamatan Porsea'
+        : sub.district_id === 'laguboti'
+          ? 'Kecamatan Laguboti'
+          : 'Kecamatan Balige')
+
+  const author = sub.author || `Warga ${districtName}`
+
+  const cleaned = author.replace(/warga|desa|kecamatan/gi, '').trim()
+  const words = cleaned.split(/\s+/).filter(Boolean)
+  let avatar = 'WT'
+  if (words.length >= 2) {
+    avatar = (words[0][0] + words[1][0]).toUpperCase()
+  } else if (words.length === 1 && words[0].length >= 2) {
+    avatar = words[0].slice(0, 2).toUpperCase()
+  } else if (words.length === 1 && words[0].length === 1) {
+    avatar = words[0].toUpperCase() + 'T'
+  }
+
+  const avatarBg =
+    sub.district_id === 'habinsaran'
+      ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400'
+      : sub.district_id === 'porsea'
+        ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
+        : sub.district_id === 'laguboti'
+          ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400'
+          : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
+
+  const createdTime = new Date(sub.created_at).getTime()
+  const diffMinutes = Math.max(1, Math.floor((Date.now() - createdTime) / 60000))
+  let timeAgo = 'Baru saja'
+  if (diffMinutes >= 60 * 24) {
+    const days = Math.floor(diffMinutes / (60 * 24))
+    timeAgo = `${days} hari lalu`
+  } else if (diffMinutes >= 60) {
+    const hours = Math.floor(diffMinutes / 60)
+    timeAgo = `${hours} jam lalu`
+  } else if (diffMinutes > 1) {
+    timeAgo = `${diffMinutes} menit lalu`
+  }
+
+  return {
+    id: sub.id,
+    district_id: sub.district_id,
+    district_name: districtName,
+    author,
+    avatar,
+    avatarBg,
+    timeAgo,
+    alloc_infra_pct: sub.alloc_infra_pct,
+    alloc_health_pct: sub.alloc_health_pct,
+    alloc_edu_pct: sub.alloc_edu_pct,
+    alloc_social_pct: sub.alloc_social_pct,
+    notes: sub.notes ?? undefined,
+    created_at: sub.created_at,
+  }
+}
+
+interface RawSubmissionRow {
+  id: string
+  district_id: string
+  district_name?: string | null
+  author?: string | null
+  alloc_infra_pct: number
+  alloc_health_pct: number
+  alloc_edu_pct: number
+  alloc_social_pct: number
+  notes?: string | null
+  created_at: string
+}
+
 export function getAllSubmissions(
   customDb?: Database.Database,
   districtId?: string,
@@ -297,15 +480,18 @@ export function getAllSubmissions(
   const db = customDb || getDb()
   const safeLimit = Math.max(1, Math.min(Number(limit) || 50, 500))
 
+  let rows: RawSubmissionRow[]
   if (districtId) {
-    return db
+    rows = db
       .prepare('SELECT * FROM citizen_submissions WHERE district_id = ? ORDER BY created_at DESC LIMIT ?')
-      .all(districtId, safeLimit) as CitizenSubmission[]
+      .all(districtId, safeLimit) as RawSubmissionRow[]
+  } else {
+    rows = db
+      .prepare('SELECT * FROM citizen_submissions ORDER BY created_at DESC LIMIT ?')
+      .all(safeLimit) as RawSubmissionRow[]
   }
 
-  return db
-    .prepare('SELECT * FROM citizen_submissions ORDER BY created_at DESC LIMIT ?')
-    .all(safeLimit) as CitizenSubmission[]
+  return rows.map((r) => formatSubmissionUi(r))
 }
 
 export function createCitizenSubmission(
@@ -316,6 +502,8 @@ export function createCitizenSubmission(
     alloc_edu_pct: number
     alloc_social_pct: number
     notes?: string
+    author?: string
+    district_name?: string
   },
   customDb?: Database.Database
 ): CitizenSubmission {
@@ -352,25 +540,83 @@ export function createCitizenSubmission(
 
   const id = `sub-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`
   const created_at = new Date().toISOString()
+  const district_name = sub.district_name || district.name
+  const author = sub.author || `Warga ${district.name}`
 
   const stmt = db.prepare(`
     INSERT INTO citizen_submissions (
-      id, district_id, alloc_infra_pct, alloc_health_pct, alloc_edu_pct, alloc_social_pct, notes, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      id, district_id, district_name, author, alloc_infra_pct, alloc_health_pct, alloc_edu_pct, alloc_social_pct, notes, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `)
 
-  stmt.run(id, district_id, alloc_infra_pct, alloc_health_pct, alloc_edu_pct, alloc_social_pct, notes || null, created_at)
+  stmt.run(id, district_id, district_name, author, alloc_infra_pct, alloc_health_pct, alloc_edu_pct, alloc_social_pct, notes || null, created_at)
 
-  return {
+  return formatSubmissionUi({
     id,
     district_id,
+    district_name,
+    author,
     alloc_infra_pct,
     alloc_health_pct,
     alloc_edu_pct,
     alloc_social_pct,
-    notes: notes || undefined,
+    notes: notes || null,
     created_at,
+  })
+}
+
+// ── Admin Functions ──────────────────────────────────────────────────────────
+export function getAdminByEmail(email: string, customDb?: Database.Database): AdminUser | null {
+  const db = customDb || getDb()
+  const row = db
+    .prepare('SELECT id, email, name, role, created_at FROM admins WHERE lower(email) = lower(?)')
+    .get(email.trim()) as AdminUser | undefined
+  return row || null
+}
+
+export function verifyAdminCredentials(
+  email: string,
+  password: string,
+  customDb?: Database.Database
+): { valid: boolean; user?: AdminUser } {
+  const db = customDb || getDb()
+  const adminEmail = email.trim().toLowerCase()
+  const row = db
+    .prepare('SELECT id, email, password, name, role, created_at FROM admins WHERE lower(email) = ?')
+    .get(adminEmail) as (AdminUser & { password: string }) | undefined
+
+  if (!row) {
+    return { valid: false }
   }
+
+  const isValid = row.password === password
+  if (!isValid) {
+    return { valid: false }
+  }
+
+  return {
+    valid: true,
+    user: {
+      id: row.id,
+      email: row.email,
+      name: row.name,
+      role: row.role,
+      created_at: row.created_at,
+    },
+  }
+}
+
+export function updateAdminPassword(
+  email: string,
+  newPassword: string,
+  customDb?: Database.Database
+): boolean {
+  const db = customDb || getDb()
+  const adminEmail = email.trim().toLowerCase()
+  const res = db
+    .prepare('UPDATE admins SET password = ? WHERE lower(email) = ?')
+    .run(newPassword, adminEmail)
+  return res.changes > 0
 }
 
 export function getAggregatedAspirations(customDb?: Database.Database): AggregatedAspiration[] {
@@ -465,6 +711,7 @@ export function generatePolicyRecommendations(customDb?: Database.Database): Pol
 export function resetDatabaseToDefaults(customDb?: Database.Database): void {
   const db = customDb || getDb()
   db.exec(`
+    DELETE FROM admins;
     DELETE FROM citizen_submissions;
     DELETE FROM districts;
   `)

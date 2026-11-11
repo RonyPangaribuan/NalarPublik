@@ -93,6 +93,7 @@ export default function SimulatorPage() {
         body: JSON.stringify({
           district_id: selectedDistrictId,
           district_name: district.name,
+          author: aspirationData.author,
           alloc_infra_pct: allocations.infra,
           alloc_health_pct: allocations.health,
           alloc_edu_pct: allocations.education,

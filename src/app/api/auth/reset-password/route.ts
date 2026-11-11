@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { verifyOtp, consumeOtp } from '@/lib/otp-store'
+import { updateAdminPassword } from '@/lib/db'
 
 export async function POST(request: Request) {
   try {
@@ -33,7 +34,9 @@ export async function POST(request: Request) {
     // Konsumsi OTP agar tidak bisa dipakai ulang
     consumeOtp(email)
 
-    // Di arsitektur demo/mock admin, password reset berhasil
+    // Perbarui kata sandi di SQLite
+    updateAdminPassword(email, newPassword)
+
     return NextResponse.json({
       success: true,
       message: 'Kata sandi berhasil diperbarui.',

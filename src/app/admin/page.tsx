@@ -45,6 +45,7 @@ import { TobaTopoBackground } from '@/components/toba-topo-background'
 export default function AdminPage() {
   const { role, setRole } = useRoleStore()
   const [districts, setDistricts] = useState<District[]>(INITIAL_DISTRICTS)
+  const { submissions: ALL_SUBMISSIONS, setSubmissions } = useSubmissionsStore()
 
   useEffect(() => {
     fetch('/api/districts')
@@ -55,7 +56,16 @@ export default function AdminPage() {
         }
       })
       .catch((err) => console.warn('Gagal memuat data districts dari API:', err))
-  }, [])
+
+    fetch('/api/submissions')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+          setSubmissions(json.data)
+        }
+      })
+      .catch((err) => console.warn('Gagal memuat data submissions dari API:', err))
+  }, [setSubmissions])
   const [selectedDistrictId, setSelectedDistrictId] = useState<string>('habinsaran')
   const [editingDistrict, setEditingDistrict] = useState<District | null>(null)
   const [syncing, setSyncing] = useState<boolean>(false)
@@ -78,9 +88,6 @@ export default function AdminPage() {
 
   const currentDistrict = districts.find((d) => d.id === selectedDistrictId) || districts[3]
   const gaps = calculateSectorGaps(currentDistrict)
-
-  // Dataset Aspirasi Komunitas Warga Toba (Tersambung Live ke Simulator via Zustand & localStorage)
-  const { submissions: ALL_SUBMISSIONS } = useSubmissionsStore()
 
   // Anomali & Rekomendasi Kebijakan Dinamis Berdasarkan Kecamatan Terpilih
   const DISTRICT_ADVISORIES: Record<

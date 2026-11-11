@@ -150,6 +150,7 @@ export const INITIAL_CITIZEN_SUBMISSIONS: CitizenAspirationItem[] = [
 
 interface SubmissionsStore {
   submissions: CitizenAspirationItem[]
+  setSubmissions: (subs: CitizenAspirationItem[]) => void
   addSubmission: (sub: Omit<CitizenAspirationItem, 'id' | 'timeAgo'>) => void
   resetToDefault: () => void
 }
@@ -158,6 +159,7 @@ export const useSubmissionsStore = create<SubmissionsStore>()(
   persist(
     (set) => ({
       submissions: INITIAL_CITIZEN_SUBMISSIONS,
+      setSubmissions: (subs) => set({ submissions: subs }),
       addSubmission: (newSub) =>
         set((state) => ({
           submissions: [
