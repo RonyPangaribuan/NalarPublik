@@ -5,8 +5,10 @@ import { District, CitizenSubmission, AggregatedAspiration, PolicyRecommendation
 import { calculateOverallGap, calculateGapStatus, calculateSectorGaps } from './gap-calculator'
 import { INITIAL_DISTRICTS } from './data'
 
-const DATA_DIR = path.join(process.cwd(), 'data')
-const DB_PATH = path.join(DATA_DIR, 'nalarpublik.db')
+const DB_PATH = process.env.SQLITE_DB_PATH
+  ? path.resolve(process.cwd(), process.env.SQLITE_DB_PATH)
+  : path.join(process.cwd(), 'data', 'nalarpublik.db')
+const DATA_DIR = path.dirname(DB_PATH)
 
 let globalDb: Database.Database | null = null
 
