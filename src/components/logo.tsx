@@ -34,7 +34,7 @@ export function Logo({
         <path
           fillRule="evenodd"
           d={ICON_PATH}
-          className={isLight ? 'fill-[#9BC5DF]' : 'fill-[#3B66E4] dark:fill-[#9BC5DF]'}
+          className={isLight ? 'fill-[#60A5FA]' : 'fill-[#3B66E4] dark:fill-[#60A5FA]'}
         />
       </svg>
 

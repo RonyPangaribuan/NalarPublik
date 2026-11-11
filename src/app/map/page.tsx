@@ -75,7 +75,7 @@ export default function MapPage() {
               className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground sm:whitespace-nowrap animate-fade-in"
               style={{ fontFamily: "'Manrope', sans-serif" }}
             >
-              Peta Kesenjangan Anggaran Kabupaten Toba
+              Peta Anggaran Kabupaten Toba
             </h1>
             <p className="text-sm text-muted-foreground max-w-2xl mt-1 animate-fade-in">
               Pilih kecamatan pada peta untuk melihat perbedaan antara kebutuhan masyarakat dan pembagian anggaran daerah.
@@ -83,18 +83,18 @@ export default function MapPage() {
           </div>
 
           {/* Quick Legend Indicator (Crisp Monospace) */}
-          <div className="flex items-center gap-3 text-[11px] font-mono bg-card border border-border rounded-xl px-4 py-2.5 shadow-sm animate-fade-in">
-            <span className="flex items-center gap-1.5 text-foreground font-medium">
-              <span className="size-1.5 rounded-full bg-rose-500" />
-              Perlu Perhatian (&ge;+20)
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-mono bg-card border border-border rounded-xl px-4 py-2.5 shadow-sm animate-fade-in">
+            <span className="flex items-center gap-1.5 font-semibold text-rose-600 dark:text-rose-400">
+              <span className="size-2 rounded-full bg-rose-500 shrink-0" />
+              Kritis (&ge;+20)
             </span>
-            <span className="flex items-center gap-1.5 text-foreground font-medium">
-              <span className="size-1.5 rounded-full bg-amber-500" />
-              Perlu Pantauan (+10..+19)
+            <span className="flex items-center gap-1.5 font-semibold text-amber-600 dark:text-amber-400">
+              <span className="size-2 rounded-full bg-amber-500 shrink-0" />
+              Waspada (+10..+19)
             </span>
-            <span className="flex items-center gap-1.5 text-foreground font-medium">
-              <span className="size-1.5 rounded-full bg-emerald-500" />
-              Sesuai Kebutuhan (&lt;+10)
+            <span className="flex items-center gap-1.5 font-semibold text-emerald-600 dark:text-emerald-400">
+              <span className="size-2 rounded-full bg-emerald-500 shrink-0" />
+              Selaras (&lt;+10)
             </span>
           </div>
         </div>
@@ -172,11 +172,17 @@ export default function MapPage() {
 
                 {/* Swiss Status Tag */}
                 <div className="text-right shrink-0">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted border border-border text-[11px] font-mono font-semibold text-foreground">
-                    <span className={cn('size-1.5 rounded-full', statusColors.dot)} />
+                  <span className={cn(
+                    'text-xs font-mono font-bold uppercase tracking-wider',
+                    statusColors.label === 'CRITICAL' || statusColors.label === 'KRITIS'
+                      ? 'text-rose-600 dark:text-rose-400'
+                      : statusColors.label === 'WARNING' || statusColors.label === 'WASPADA'
+                        ? 'text-amber-600 dark:text-amber-400'
+                        : 'text-emerald-600 dark:text-emerald-400'
+                  )}>
                     {statusColors.label}
                   </span>
-                  <div className="text-[11px] text-muted-foreground mt-1 font-mono">
+                  <div className="text-[11px] text-muted-foreground mt-0.5 font-mono">
                     Gap: <strong className="text-foreground">+{overallGap} poin</strong>
                   </div>
                 </div>
@@ -190,7 +196,7 @@ export default function MapPage() {
                 </span>
                 <span className="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-foreground">
                   <CheckCircle2 className="size-3 text-emerald-500" />
-                  LIVE BPS HYBRID (1212)
+                  BPS &amp; Dokumen APBD Kab. Toba
                 </span>
               </div>
 
@@ -202,32 +208,40 @@ export default function MapPage() {
                 </div>
 
                 {gaps.map((item) => {
+                  const isGapCritical = item.gap >= 20
+                  const isGapWarning = item.gap >= 10 && item.gap < 20
+                  const gapColor = isGapCritical
+                    ? 'text-rose-600 dark:text-rose-400'
+                    : isGapWarning
+                      ? 'text-amber-600 dark:text-amber-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
+
                   return (
                     <div
                       key={item.sector}
                       className={cn(
-                        'p-3 rounded-xl border transition-colors',
+                        'p-3.5 rounded-xl border transition-colors',
                         activeSector === item.sector
                           ? 'border-primary bg-primary/5'
                           : 'border-border bg-card'
                       )}
                     >
-                      <div className="flex items-center justify-between text-xs mb-1.5">
+                      <div className="flex items-center justify-between text-xs mb-2">
                         <span className="font-semibold text-foreground">
                           {item.label}
                         </span>
-                        <span className="font-mono font-bold text-[11px] text-foreground">
+                        <span className={cn('text-[11.5px] font-mono font-bold tracking-tight', gapColor)}>
                           {item.gap > 0 ? `+${item.gap}` : item.gap} poin
                         </span>
                       </div>
 
                       {/* Progress bars: Problem vs Budget */}
-                      <div className="space-y-1 text-[11px] font-mono">
+                      <div className="space-y-1.5 text-[11px] font-mono">
                         <div className="flex items-center gap-2">
-                          <span className="w-20 text-muted-foreground shrink-0 text-[10px]">
+                          <span className="w-20 text-muted-foreground shrink-0 text-[10px] font-semibold">
                             BPS: {item.problemPct}%
                           </span>
-                          <div className="h-1.5 w-full bg-muted rounded-sm overflow-hidden flex">
+                          <div className="h-2 w-full bg-muted rounded-sm overflow-hidden flex">
                             <div
                               className="h-full bg-primary"
                               style={{ width: `${Math.min(100, item.problemPct)}%` }}
@@ -236,10 +250,10 @@ export default function MapPage() {
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <span className="w-20 text-muted-foreground shrink-0 text-[10px]">
+                          <span className="w-20 text-muted-foreground shrink-0 text-[10px] font-semibold">
                             APBD: {item.budgetPct}%
                           </span>
-                          <div className="h-1.5 w-full bg-muted rounded-sm overflow-hidden flex">
+                          <div className="h-2 w-full bg-muted rounded-sm overflow-hidden flex">
                             <div
                               className="h-full bg-emerald-500"
                               style={{ width: `${Math.min(100, item.budgetPct)}%` }}

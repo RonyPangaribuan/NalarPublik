@@ -1,12 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { useEffect, useRef } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { District, SectorKey } from '@/types'
-import { calculateGapStatus, getStatusColor, calculateSectorGaps } from '@/lib/gap-calculator'
-import { formatRupiah } from '@/lib/data'
+import { calculateGapStatus, getStatusColor } from '@/lib/gap-calculator'
 
 interface MapViewProps {
   districts: District[]
@@ -69,61 +67,92 @@ function createPinIcon(colorHex: string, label: string, isSelected: boolean) {
   })
 }
 
-function MapController({ center }: { center: [number, number] }) {
-  const map = useMap()
-  useEffect(() => {
-    map.invalidateSize()
-    const timer = setTimeout(() => {
-      map.invalidateSize()
-      map.flyTo(center, 11, { duration: 1.2 })
-    }, 100)
-    return () => clearTimeout(timer)
-  }, [center, map])
-  return null
-}
-
 export default function MapView({
   districts,
   selectedDistrict,
   onSelectDistrict,
   activeSector,
 }: MapViewProps) {
-  const centerPosition: [number, number] = selectedDistrict
-    ? [selectedDistrict.latitude, selectedDistrict.longitude]
-    : [2.35, 99.15]
+  const containerRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<L.Map | null>(null)
+  const markersLayerRef = useRef<L.LayerGroup | null>(null)
+
+  // 1. Inisialisasi Map Leaflet murni sekali saat mounted
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    const initialCenter: [number, number] = selectedDistrict
+      ? [selectedDistrict.latitude, selectedDistrict.longitude]
+      : [2.35, 99.15]
+
+    const map = L.map(containerRef.current, {
+      center: initialCenter,
+      zoom: 11,
+      scrollWheelZoom: true,
+      zoomControl: true,
+    })
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map)
+
+    const markersLayer = L.layerGroup().addTo(map)
+    markersLayerRef.current = markersLayer
+    mapRef.current = map
+
+    const timer = setTimeout(() => {
+      map.invalidateSize()
+    }, 150)
+
+    return () => {
+      clearTimeout(timer)
+      map.remove()
+      mapRef.current = null
+      markersLayerRef.current = null
+    }
+  }, [])
+
+  // 2. Update Marker Pins saat data atau filter sektor berganti
+  useEffect(() => {
+    const map = mapRef.current
+    const markersLayer = markersLayerRef.current
+    if (!map || !markersLayer) return
+
+    markersLayer.clearLayers()
+
+    districts.forEach((d) => {
+      const status = calculateGapStatus(d, activeSector)
+      const colors = getStatusColor(status)
+      const isSelected = selectedDistrict?.id === d.id
+
+      const marker = L.marker([d.latitude, d.longitude], {
+        icon: createPinIcon(colors.hex, d.name.replace('Kecamatan ', ''), isSelected),
+      })
+
+      marker.on('click', () => {
+        onSelectDistrict(d)
+      })
+
+      marker.addTo(markersLayer)
+    })
+  }, [districts, selectedDistrict, activeSector, onSelectDistrict])
+
+  // 3. Smooth FlyTo saat selectedDistrict berganti
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !selectedDistrict) return
+
+    map.flyTo([selectedDistrict.latitude, selectedDistrict.longitude], 11, {
+      duration: 1.2,
+    })
+  }, [selectedDistrict])
 
   return (
-    <MapContainer
-      center={centerPosition}
-      zoom={11}
-      scrollWheelZoom={true}
-      className="w-full h-full rounded-xl z-0"
+    <div
+      ref={containerRef}
+      className="w-full h-full min-h-[500px] rounded-xl z-0 overflow-hidden"
       style={{ height: '100%', minHeight: '100%', width: '100%' }}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-
-      <MapController center={centerPosition} />
-
-      {districts.map((d) => {
-        const status = calculateGapStatus(d, activeSector)
-        const colors = getStatusColor(status)
-        const isSelected = selectedDistrict?.id === d.id
-
-        return (
-          <Marker
-            key={d.id}
-            position={[d.latitude, d.longitude]}
-            icon={createPinIcon(colors.hex, d.name.replace('Kecamatan ', ''), isSelected)}
-            eventHandlers={{
-              click: () => onSelectDistrict(d),
-            }}
-          />
-        )
-      })}
-    </MapContainer>
+    />
   )
 }
-

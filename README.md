@@ -2,163 +2,184 @@
 
 **Sistem Pendukung Keputusan Alokasi Anggaran Daerah Berbasis Analisis Gap Data Terbuka**
 
-> Dari data publik menuju prioritas pembangunan yang lebih transparan dan partisipatif.
+[![Next.js](https://img.shields.io/badge/Next.js-15.5-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
+[![SQLite](https://img.shields.io/badge/Database-SQLite_Embedded-003B57?style=flat-square&logo=sqlite)](https://www.sqlite.org/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-NalarPublik adalah proyek website untuk kompetisi **Web In Action (WIA) — Multimedia In Action 2026** pada subtema *Data-Driven Decision Support*. Platform ini dirancang untuk membantu warga memahami indikator pembangunan dan informasi anggaran daerah, mencoba alternatif prioritas alokasi anggaran, serta menyampaikan masukan berbasis data. Perspektif admin menyediakan ringkasan aspirasi dan indikasi kesenjangan sebagai bahan analisis, **bukan keputusan resmi pemerintah**.
+> *"Dari data publik kaku menuju prioritas pembangunan yang transparan, partisipatif, dan berbasis bukti."*
 
-> **Status:** tahap pengembangan / first draft. Fitur yang disebutkan di bawah adalah **rencana implementasi**, bukan klaim bahwa semuanya telah selesai.
+NalarPublik adalah platform *Civic-Tech* independen untuk kompetisi **Web In Action (WIA) — Multimedia In Action 2026** pada subtema **Data-Driven Decision Support**. Platform ini dirancang untuk menjembatani dokumen anggaran daerah (APBD) yang teknokratis dan data indikator lapangan (BPS) ke dalam visualisasi interaktif, simulator alokasi partisipatif bagi warga, serta dasbor analitis rekomendasi kebijakan bagi pengambil keputusan.
 
-## Ruang Lingkup Pilot
+---
 
-- **Wilayah:** Kabupaten Toba, Sumatera Utara (kode BPS `1212`).
-- **Empat kecamatan sampel:** Balige, Laguboti, Porsea, dan Habinsaran.
-- **Data yang direncanakan:** indikator publik BPS dan data APBD yang sumber, tahun, dan cakupan administratifnya akan diverifikasi.
-- **Batasan penting:** APBD pemerintah kabupaten tidak boleh dilabeli sebagai APBD masing-masing kecamatan. Alokasi menurut kecamatan hanya ditampilkan bila data yang mendukungnya tersedia dan dapat dipertanggungjawabkan.
+## Informasi Karya & Tim
 
-## Rencana Fitur
+* **Nama Tim:** Kopi Hitam Pekat
+* **Judul Karya:** NalarPublik
+* **Cabang Lomba:** Web In Action (WIA) 2026
+* **Tema Utama:** *Designing Digital Futures*
+* **Sub-Tema:** *Data-Driven Decision Support*
+* **Wilayah Pilot:** Kabupaten Toba, Sumatera Utara (Kode BPS: `1212`)
+* **Kecamatan Percontohan:** Balige, Laguboti, Porsea, dan Habinsaran
 
-### Mode Warga
+---
 
-1. **Landing Page Transparansi** — ringkasan anggaran Kabupaten Toba, indikator pembangunan, dan navigasi fitur.
-2. **Peta Gap Analysis** — peta berbasis empat *pin marker* kecamatan; detail indikator dan informasi anggaran pada setiap titik.
-3. **Simulator Anggaran Partisipatif** — slider untuk membagi **100% poin anggaran virtual** pada sektor Infrastruktur, Kesehatan, Pendidikan, dan Sosial; menyimpan hasil simulasi sebagai masukan warga.
-4. **Komparasi Head-to-Head Kecamatan** — memilih dua kecamatan dan membandingkan indikator serta data anggaran yang memang tersedia pada skala yang setara.
-5. **Portal Data Ramah Awam** — penjelasan sederhana istilah APBD, indikator, sumber, dan keterbatasan data.
+## Latar Belakang & Problem Statement
 
-### Mode Admin / Perspektif Pemerintah (Demo)
+1. **Tantangan Transparansi Dokumen:** Dokumen APBD daerah umumnya dirilis dalam format buku tebal atau file PDF ratusan halaman (Perda Penjabaran APBD & DPA SKPD) tanpa public live API, sehingga warga awam kesulitan memahaminya.
+2. **Kesenjangan Data Lapangan vs Anggaran:** Data kemiskinan dan infrastruktur dari BPS berada di portal terpisah dari anggaran daerah. Akibatnya, alokasi anggaran sering kali tidak sinkron dengan tingkat keparahan masalah nyata di lapangan (misal: jalan rusak berat di Habinsaran mencapai 46%, namun pagu infrastruktur daerah hanya 16%).
+3. **Minimnya Kanal Partisipasi Terukur:** Aspirasi masyarakat dalam Musrenbang jarang teragregasi secara kuantitatif.
 
-1. **Dasbor Agregasi Aspirasi** — merangkum rata-rata pembagian poin anggaran virtual dari kiriman warga per kecamatan, serta membandingkannya dengan referensi anggaran yang relevan.
-2. **Detektor Anomali & Rekomendasi** — menampilkan indikasi kesenjangan berdasarkan model analisis yang akan dirancang, diuji, dan dijelaskan secara transparan.
-3. **Manajemen Data Indikator** — melihat dan, jika akses telah diamankan, memperbarui data indikator dan referensi anggaran.
+NalarPublik hadir sebagai **pihak ketiga independen** yang mengolah dokumen data terbuka resmi, menyajikan kalkulasi *Gap Score*, dan memfasilitasi partisipasi warga secara dua arah.
 
-**Quick Role Switcher** memudahkan perpindahan tampilan Warga dan Admin untuk demonstrasi. Toggle tampilan **bukan** autentikasi atau otorisasi; aksi pengubahan data memerlukan pengamanan di sisi server dan database.
+---
 
-## Alur Data-Driven Decision Support
+## Fitur Utama
 
-```text
-Sumber Data BPS + APBD
-          |
-          v
-Validasi & Penyelarasan Data
-          |
-          v
-Visualisasi & Analisis Kesenjangan
-          |
-          v
-Simulator Prioritas Anggaran Virtual
-          |
-          v
-Penyimpanan Suara / Skenario Warga
-          |
-          v
-Agregasi Aspirasi & Tinjauan Admin
+### 1. Mode Warga (Open Access — Tanpa Hambatan Login)
+* **Landing Page Transparansi (`/`):** Ringkasan APBD Kabupaten Toba, KPI indikator 4 kecamatan, typewriter interaktif, dan navigasi fitur.
+* **Peta Kesenjangan Anggaran (`/map`):** Peta interaktif Leaflet dengan 4 marker kecamatan, filter sektor, inspeksi rincian masalah BPS vs pagu APBD, dan kalkulator *Gap Score*.
+* **Simulator Anggaran Partisipatif (`/simulator`):** Slider interaktif bagi warga untuk membagi kuota 100% anggaran pada 4 sektor prioritas (Infrastruktur, Kesehatan, Pendidikan, Sosial) beserta catatan aspirasi lapangan.
+* **Perbandingan Antarwilayah (`/compare`):** Komparasi *head-to-head* dua kecamatan menggunakan polygon *Radar Chart* dan progres bar indikator.
+* **Portal Data Terbuka & Penerjemah DPA (`/open-data`):** Katalog dokumen anggaran mandiri, konversi angka APBD ke bentuk fisik (km aspal, unit posyandu, ruang kelas), dan fitur unduh dataset CSV per dokumen.
+
+### 2. Mode Admin Pengelola Platform (Autentikasi Terproteksi)
+* **Autentikasi Riil (`/login`):** Halaman masuk resmi dengan proteksi session cookie HTTP-Only dan Next.js Middleware (`src/middleware.ts`). Route `/admin/**` terkunci bagi pengguna non-admin.
+* **Dasbor Pengambilan Keputusan (`/admin`):** Grafik perbandingan 3 batang per sektor (*Masalah Lapangan BPS vs Alokasi APBD vs Rata-rata Usulan Warga*), deteksi anomali selisih anggaran, dan dialog aspirasi warga.
+* **Pusat Selisih Anggaran & Realokasi:** Form simulasi perubahan pagu anggaran APBD yang otomatis menghitung ulang *Overall Gap Score* dan status wilayah (`KRITIS`, `WASPADA`, `SELARAS`).
+* **Katalog Laporan Resmi (`/admin/report`):** Manajemen laporan APBD daerah dengan pencarian, filter topik, dan tabel rincian data.
+
+---
+
+## Alur Keputusan Berbasis Data (Architecture Flow)
+
+```mermaid
+flowchart TD
+    subgraph DATA_SOURCE ["Sumber Data Terbuka Resmi"]
+        D1["Dokumen APBD Pemkab Toba 2026<br/>(Buku Perda & DPA SKPD)"]
+        D2["Data Indikator Wilayah BPS Toba<br/>(Kode 1212)"]
+    end
+
+    subgraph ENGINE ["NalarPublik Engine (Fullstack Next.js)"]
+        P1["Penerjemah Data & Baseline Kurasi"]
+        CALC["Gap Calculator Engine<br/>Gap = % Masalah BPS - % Pagu APBD"]
+        DB[(Embedded Persistent SQLite<br/>nalarpublik.db)]
+    end
+
+    subgraph CITIZEN ["Akses Publik / Warga"]
+        W1["Peta Interaktif & Portal Data Terbuka"]
+        W2["Simulator Anggaran Partisipatif<br/>(Validasi Kuota 100%)"]
+    end
+
+    subgraph ADMIN ["Dasbor Admin / Pengambil Kebijakan"]
+        A1["Autentikasi Admin & Proteksi Sesi"]
+        A2["Analisis Selisih 3 Batang<br/>(BPS vs APBD vs Usulan Warga)"]
+        A3["Rekomendasi Kebijakan & Realokasi Musrenbang"]
+    end
+
+    D1 --> P1
+    D2 --> P1
+    P1 --> DB
+    DB --> CALC
+    CALC --> W1
+    W2 -- "Kirim Aspirasi" --> DB
+    DB --> A2
+    A1 --> A2
+    A2 --> A3
 ```
 
-**Catatan metodologi:** rancangan awal mengusulkan `Gap Score = Indeks Masalah - Persentase Alokasi Anggaran`. Rumus tersebut **belum layak dipakai apa adanya** sebelum definisi indeks, normalisasi, kesetaraan unit analisis, dan relevansi anggaran diverifikasi. Nilai yang dihasilkan akan disajikan sebagai *indikasi analitis*, bukan bukti bahwa suatu kebijakan keliru.
+---
 
 ## Tech Stack
 
-| Bagian | Teknologi |
-| --- | --- |
-| Frontend dan API | Next.js (React, Route Handlers) |
-| Styling & komponen | Tailwind CSS, shadcn/ui, Lucide Icons |
-| Grafik | Recharts |
-| Peta | React-Leaflet (empat pin kecamatan) |
-| State management | Zustand |
-| Database | Supabase (PostgreSQL) |
-| Data eksternal | Web API BPS (integrasi direncanakan; *fallback* lokal) |
-| Deployment | Vercel |
+| Komponen | Teknologi | Keterangan |
+|---|---|---|
+| **Framework Fullstack** | Next.js 15 (App Router, Turbopack) | Server Actions, Route Handlers, TypeScript Strict Mode |
+| **Styling & Design** | Tailwind CSS v4, Lucide Icons | Desain Editorial Swiss, Dark/Light Mode, Responsif Mobile (375px+) |
+| **Database** | SQLite (`better-sqlite3` / embedded `.db`) | Database persisten fisik lokal dengan auto-seed data awal |
+| **Autentikasi** | HTTP-Only Cookies & Next.js Middleware | Proteksi penuh route `/admin/*` tanpa ekspos kredensial ke client |
+| **Visualisasi Data** | Recharts & React-Leaflet | Bar Chart 3 Batang, Radar Polygon, Donut Chart, Peta Interaktif Geospasial |
+| **State Management** | Zustand (dengan middleware `persist`) | Penyimpanan preferensi tema dan sinkronisasi data simulator |
 
-## Arsitektur Data Awal
+---
 
-Sesuai rencana overview, tiga tabel inti yang diusulkan:
+## Panduan Menjalankan Proyek Secara Lokal
 
-- `districts`: kecamatan pilot, koordinat, indikator, dan referensi anggaran dengan sumber yang jelas.
-- `submissions`: kiriman pembagian poin anggaran virtual dari warga.
-- `anomalies`: hasil/riwayat analisis indikasi kesenjangan atau catatan rekomendasi.
+Pastikan Anda telah menginstal **Node.js (>= 20.9.0)** dan **npm**.
 
-Skema final dan kebijakan akses database akan ditentukan saat implementasi.
-
-## Menjalankan Proyek
-
-**Prasyarat:** Node.js 20.9 atau lebih baru dan npm.
-
+### 1. Clone Repository
 ```bash
-git clone <URL_REPOSITORY_ANDA>
-cd nalarpublik
-npm install
-cp .env.example .env.local
-npm run dev
+git clone https://github.com/RonyPangaribuan/NalarPublik.git
+cd NalarPublik
 ```
 
-Buka `http://localhost:3000`.
+### 2. Instal Dependensi
+```bash
+npm install
+```
 
-Isi nilai pada `.env.local` saat integrasi Supabase dan BPS mulai dikerjakan. Ganti `<URL_REPOSITORY_ANDA>` dengan URL repo yang sebenarnya. Jangan menyimpan kunci rahasia atau `.env.local` di GitHub.
+### 3. Konfigurasi Lingkungan (Opsional)
+Aplikasi sudah memiliki *fallback* bawaan yang siap dijalankan langsung. Jika ingin mengubah kredensial admin:
+```bash
+cp .env.example .env.local
+```
+Isi konfigurasi pada `.env.local`:
+```env
+ADMIN_EMAIL=admin@nalarpublik.id
+ADMIN_PASSWORD=AdminNalar2026!
+```
 
-## Progres dan Milestone
+### 4. Jalankan Server Pengembangan
+```bash
+npm run dev
+```
+Buka browser pada: [http://localhost:3000](http://localhost:3000)
 
-| Periode | Target |
-| --- | --- |
-| 1 November 2026 | First Draft: repo publik, README, landing page, satu halaman lain, screenshot, dan materi konsep |
-| 2–4 November 2026 | Database, data awal, integrasi BPS, API, serta role switcher |
-| 5–7 November 2026 | Integrasi peta, komparasi, simulator, dan dashboard admin |
-| 8–9 November 2026 | Pengujian, perbaikan, responsivitas, deployment |
-| 10–11 November 2026 | Proposal akhir, surat orisinalitas, video pitching, dan pengumpulan |
+### 5. Verifikasi Integritas TypeScript
+```bash
+npm run typecheck
+```
 
-**Status implementasi aktual:** perbarui bagian ini berdasarkan commit dan fitur yang sudah diuji. Jangan mencentang fitur sebelum benar-benar berjalan.
+---
 
-## Tim dan Pembagian Tugas
+## Kredensial Demo Admin
 
-| Anggota | Peran | Tanggung Jawab Utama |
-| --- | --- | --- |
-| Rony | Project Manager & Hustler | Koordinasi proyek, proposal, dokumentasi, administrasi kompetisi, dan video *pitching* |
-| Boy | Data & Visualization Engineer | Pengumpulan dan pembersihan data publik APBD/BPS serta integrasi data ke grafik dan peta |
-| Max | Frontend Engineer | Kerangka Next.js, komponen UI Tailwind CSS, *routing*, dan logika **Quick Role Switcher** |
+Untuk menguji akses ke Dasbor Pengambilan Keputusan (`/admin`):
+* **URL Login:** [http://localhost:3000/login](http://localhost:3000/login)
+* **Email:** `admin@nalarpublik.id`
+* **Kata Sandi:** `AdminNalar2026!`
 
-### Rincian Tanggung Jawab
+*(Jika mencoba membuka `/admin` tanpa login, sistem otomatis mengalihkan ke `/login`).*
 
-#### Rony - Project Manager & Hustler
+---
 
-- Mengoordinasikan target, jadwal, dan hasil serahan tim pada setiap milestone.
-- Menyusun proposal final maksimal 30 halaman dan memelihara dokumentasi proyek, termasuk `README.md`.
-- Menyiapkan berkas administrasi kompetisi, termasuk Surat Orisinalitas bermeterai.
-- Menyusun materi dan memproduksi video *pitching* maksimal 5 menit.
-- Mengoordinasikan pengumpulan final melalui kanal resmi kompetisi pada 11 November 2026.
+## Status Implementasi Fitur
 
-#### Boy - Data & Visualization Engineer
+| Fitur / Halaman | Rute | Status | Catatan Teknis |
+|---|---|---|---|
+| Landing Page Transparansi | `/` | ✅ Selesai | KPI Slider, Typewriter Hero, Swiss Solid Badges |
+| Peta Kesenjangan Anggaran | `/map` | ✅ Selesai | Pin Marker Leaflet, Kontras Indikator Tinggi, Filter Sektor |
+| Simulator Anggaran Warga | `/simulator` | ✅ Selesai | Validasi Kuota Tepat 100%, Touch-friendly Slider, POST API |
+| Komparasi Antarwilayah | `/compare` | ✅ Selesai | Polygon Radar Chart Recharts, Komparasi 4 Sektor |
+| Portal Data Terbuka & DPA | `/open-data` | ✅ Selesai | 4 Sektor Card, Accordion Hasil Terjemahan, Unduh CSV |
+| Autentikasi Admin | `/login` | ✅ Selesai | Form Validasi, Session Cookie, Tombol Masuk/Keluar di Navbar |
+| Proteksi Middleware | `src/middleware.ts` | ✅ Selesai | Route `/admin/**` terkunci penuh |
+| Dasbor Keputusan Admin | `/admin` | ✅ Selesai | Chart 3 Batang, Anomali Gap, Rekomendasi Realokasi |
+| Katalog Laporan Anggaran | `/admin/report` | ✅ Selesai | Tabel Expandable, Pagination 10 Item, Pencarian Cepat |
+| Database Persisten | `SQLite` | ✅ Selesai | Skema Fisik Tabel `districts`, `submissions`, `admins` |
 
-- Mengumpulkan data publik APBD dan BPS yang relevan serta mencatat sumber, tahun, satuan, dan cakupan wilayahnya.
-- Membersihkan, memvalidasi, dan menyiapkan data agar dapat digunakan secara konsisten oleh aplikasi.
-- Mengintegrasikan data ke grafik menggunakan Recharts.
-- Mengintegrasikan data geospasial ke peta menggunakan React-Leaflet.
-- Memastikan visualisasi menggunakan data nyata yang telah diverifikasi dan memberi label yang jelas pada data simulasi atau *dummy*.
+---
 
-#### Max - Frontend Engineer
+## Profil Tim (Kopi Hitam Pekat)
 
-- Membangun dan memelihara kerangka aplikasi Next.js beserta struktur navigasi dan *routing*.
-- Merakit komponen antarmuka yang responsif menggunakan Tailwind CSS dan shadcn/ui.
-- Mengimplementasikan *landing page*, *navbar*, serta **Quick Role Switcher** untuk Mode Warga dan Mode Admin.
-- Mengelola *state* antarmuka dengan Zustand, termasuk interaksi slider pada Simulator Anggaran Partisipatif.
-- Menghubungkan komponen frontend dengan grafik, peta, dan data yang telah disiapkan.
+* **Rony Pangaribuan** — *Product Lead, Frontend Architecture & Documentation*  
+  Bertanggung jawab atas arsitektur antarmuka, routing, visualisasi data, integrasi middleware autentikasi, serta dokumentasi teknis.
+* **Boy Simamora** — *Backend, Database & Data Engineering*  
+  Bertanggung jawab atas pengumpulan dan pembersihan data APBD Toba/BPS, pemodelan skema SQLite, endpoint API backend, dan logika agregasi analitis.
 
-### Kolaborasi Lintas Peran
-
-- **Max dan Boy:** mengintegrasikan peta, grafik, data publik, dan logika simulator agar dapat digunakan secara fungsional.
-- **Rony dan seluruh tim:** meninjau kesesuaian karya dengan aturan kompetisi serta memastikan narasi proposal, demo, dan data konsisten.
-- **Seluruh tim:** melakukan pengujian, perbaikan bug, perapian UI, pengecekan deployment, dan validasi hasil sebelum penyerahan final.
-
-## Prinsip Data & Privasi
-
-- Setiap data publik harus memiliki sumber, tahun, satuan, dan tingkat wilayah yang jelas.
-- Dataset contoh atau anggaran virtual harus diberi label **simulasi**, bukan APBD aktual.
-- Data dari kecamatan tidak boleh dibandingkan langsung dengan APBD kabupaten tanpa penjelasan cakupan.
-- Kiriman warga tidak mewakili kebijakan resmi pemerintah.
-- Hak mengubah data tidak diberikan hanya berdasarkan Quick Role Switcher.
-
-## Kompetisi
-
-Dikembangkan sebagai karya tim untuk **Web In Action (WIA), Multimedia In Action 2026**.
+---
 
 ## Lisensi
-
-Belum ditentukan. Seluruh hak cipta tetap pada pemilik karya. Tambahkan berkas `LICENSE` setelah tim menyepakati ketentuannya.
+Hak Cipta © 2026 Tim Kopi Hitam Pekat. Dikembangkan khusus untuk kompetisi **Web In Action (WIA) 2026**.

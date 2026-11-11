@@ -526,9 +526,10 @@ export function NavbarSearch() {
               }
             }
           }}
-          placeholder="Cari data, wilayah, sektor..."
+          placeholder="Cari"
+          suppressHydrationWarning
           className={cn(
-            'h-8 w-44 lg:w-56 rounded-lg border border-border bg-muted/40 pl-8 pr-7 text-xs text-foreground',
+            'h-9 w-44 sm:w-52 lg:w-60 rounded-lg border border-border bg-muted/40 pl-8 pr-7 text-xs text-foreground',
             'placeholder:text-muted-foreground/70 focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary',
             'transition-all duration-200'
           )}
@@ -600,7 +601,7 @@ export function NavbarSearch() {
                     }
                   }
                 }}
-                placeholder="Cari data, wilayah, sektor..."
+                placeholder="Cari"
                 className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
                 autoFocus
               />

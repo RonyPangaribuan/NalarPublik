@@ -317,26 +317,26 @@ export default function AdminPage() {
 
         {/* ── Role Warning Banner if role === 'public' ── */}
         {role !== 'admin' && (
-          <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-card border border-border text-foreground">
+          <div className="rounded-2xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-500/30 text-amber-600 dark:text-amber-400 shrink-0">
                 <ShieldAlert className="size-4" />
               </div>
               <div>
-                <h4 className="text-xs font-mono uppercase tracking-wider text-foreground font-bold">
-                  MODE PUBLIK / TAMU AKTIF
+                <h4 className="text-xs font-mono uppercase tracking-wider text-amber-800 dark:text-amber-300 font-bold">
+                  AKSES TERBATAS — MODE PUBLIK
                 </h4>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Dasbor ini menyajikan visualisasi data independen untuk pengawalan alokasi anggaran yang berkeadilan. Beralih ke Mode Admin untuk menyimulasikan perubahan alokasi anggaran.
+                <p className="text-xs text-amber-700 dark:text-amber-400/80 mt-0.5">
+                  Dasbor ini hanya dapat dikelola oleh admin platform. Silakan masuk terlebih dahulu.
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => setRole('admin')}
-              className="rounded-xl bg-primary text-primary-foreground font-bold px-4 py-2 text-xs shrink-0 cursor-pointer shadow-sm hover:opacity-90"
+            <Link
+              href="/login"
+              className="rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-2 text-xs shrink-0 cursor-pointer shadow-sm transition-colors inline-flex items-center gap-1.5"
             >
-              Aktifkan Mode Admin
-            </button>
+              Masuk sebagai Admin
+            </Link>
           </div>
         )}
 
@@ -493,7 +493,14 @@ export default function AdminPage() {
               >
                 Pusat Selisih Anggaran
               </h3>
-              <span className={cn('text-xs font-mono font-bold uppercase tracking-wider', currentAdvisory.badgeText)}>
+              <span className={cn(
+                'text-xs font-mono font-bold uppercase tracking-wider',
+                currentAdvisory.status === 'KRITIS'
+                  ? 'text-rose-600 dark:text-rose-400'
+                  : currentAdvisory.status === 'WASPADA'
+                    ? 'text-amber-600 dark:text-amber-400'
+                    : 'text-emerald-600 dark:text-emerald-400'
+              )}>
                 {currentAdvisory.status}
               </span>
             </div>
